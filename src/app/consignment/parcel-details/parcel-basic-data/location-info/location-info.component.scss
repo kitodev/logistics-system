@@ -1,0 +1,36 @@
+.location {
+  display: flex;
+  flex-direction: row;
+
+
+  .section {
+    flex-grow: 1;
+    padding-left: 0.6rem;
+    padding-bottom: 0.4rem;
+
+    .address {
+      font-size: 0.8rem;
+    }
+
+    .important {
+      font-weight: var(--clr-forms-label-font-weight, 600);
+      font-size: 0.8rem;
+    }
+  }
+
+  .contact {
+    flex-grow: 1;
+  }
+
+  .info {
+    display: flex;
+
+    :nth-of-type(n+1) {
+      padding-left: 0.25rem;
+    }
+
+    & > div {
+      white-space: nowrap;
+    }
+  }
+}

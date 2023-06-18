@@ -1,0 +1,23 @@
+{
+  "gitFlowConfig": {
+    "masterBranch": "master",
+    "developBranch": "dev",
+    "featureBranchPrefix": "feature",
+    "bugfixBranchPrefix": "bugfix",
+    "releaseBranchPrefix": "release",
+    "hotfixBranchPrefix": "hotfix",
+    "supportBranchPrefix": "support",
+    "versionTagPrefix": null
+  },
+  "projectConfig": {
+    "projectPath": "./",
+    "changelogFileName": "CHANGELOG.md",
+    "storeLatestChangelog": false,
+    "conventionalChangelogPresent": "angular",
+    "versionFile": "package.json",
+    "bumpVersionFiles": [
+      "package.json",
+      "package-lock.json"
+    ]
+  }
+}

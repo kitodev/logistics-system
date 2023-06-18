@@ -1,0 +1,124 @@
+<ng-container *transloco="let t">
+<div class="card">
+    <div class="card-block" *ngIf="basicDataItems">
+    <div class="title">
+        {{ t('orders.orderInformation') }}
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>{{ t('orders.orderId') }}</th>
+            <th>{{ t('orders.company') }}</th>
+            <th>{{ t('orders.price') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.consignorEmployeeCompanyName }}</td>
+            <td>{{ fullPrice }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    
+    <div class="clr-col-12 editableFields">
+        <div class="clr-row">
+            <div class="clr-col-sm-2 clr-col-md-2">
+                <label class="clr-control-label" for="transportMode">{{ t('orders.transportMode') }}</label>
+                <ng-select
+                    [(ngModel)]="selectedTransportMode"
+                    [formGroup]="orderBasicDataForm"
+                    name="transportMode"
+                    [items]="transportModes"
+                    labelForId="transportMode">
+                </ng-select>
+            </div>
+            <div class="clr-col-sm-2 clr-col-md-2">
+                <label class="clr-control-label" for="travelModes">{{ t('orders.travelMode') }}</label>
+                <ng-select
+                    [(ngModel)]="selectedTravelMode"
+                    [formGroup]="orderBasicDataForm"
+                    name="travelMode"
+                    [items]="travelModes"
+                    labelForId="travelModes">
+                </ng-select>
+            </div>
+            <div class="clr-col-sm-2 clr-col-md-2">
+                <label class="clr-control-label" for="tradeTypes">{{ t('orders.tradeType') }}</label>
+                <ng-select
+                    [(ngModel)]="selectedTradeType"
+                    [formGroup]="orderBasicDataForm"
+                    name="tradeType"
+                    [items]="tradeTypes"
+                    labelForId="tradeTypes">
+                </ng-select>
+            </div>
+            <div class="clr-col-sm-2 clr-col-md-2">
+                <label class="clr-control-label" for="parity">{{ t('orders.parity') }}</label>
+                <ng-select
+                    [(ngModel)]="selectedParity"
+                    [formGroup]="orderBasicDataForm"
+                    name="parity"
+                    [items]="parityList"
+                    labelForId="parity">
+                </ng-select>
+            </div>
+            <div class="button-container">
+              <button (click)="save()" type="button"
+                class="btn btn-outline-primary btn-sm">{{t('general.save')}}
+              </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="title">
+        {{ t('orders.consignments') }}
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+          <th>{{ t('orders.consignments') }}</th>
+          <th>{{ t('orders.price') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+    
+        <ng-container *ngFor="let consignment of order.consignments">
+          <tr class="bid-row">
+            <td>
+                <a [routerLink]="'/consignment/parcel/'+consignment.consignmentId+'/details'">
+                  <div class="consignment-data">
+                    <div class="from">{{ consignment.consignmentBasicData.loadingInLocation?.premiseAddress | address}}</div>
+                    <div class="to">{{ consignment.consignmentBasicData.loadingOutLocation?.premiseAddress | address}}</div>
+                    <div class="data">
+                      <app-consignment-info [basicData]="consignment.consignmentBasicData"></app-consignment-info>
+                    </div>
+                  </div>
+                </a>
+              </td>
+              <td class="price">
+                <ng-container *ngIf="consignment.acceptedOffer.price">
+                  {{ consignment.acceptedOffer.price }}
+                  <clr-signpost>
+                    <clr-signpost-content>
+                      <table>
+                        <tbody>
+                        <tr>
+                          <td class="text-right">{{ consignment.acceptedOffer.price }}</td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </clr-signpost-content>
+                  </clr-signpost>
+                </ng-container>
+              </td>
+          </tr>
+        </ng-container>
+        </tbody>
+      </table>
+    
+    </div>
+</div>
+</ng-container>

@@ -1,0 +1,212 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row">
+    <div class="clr-col-6">
+      <button type="button" class="btn btn-primary" [routerLink]="['./new']">
+        <fa-icon [icon]="faPlus"></fa-icon> {{ t('general.addItem', { item: t('company.employee.label') }) }}
+      </button>
+    </div>
+    <div class="clr-col-6">
+      <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+    </div>
+  </div>
+
+
+  <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="isLoading" [(clrDgSelected)]="selectedEmployees"
+    cdkDropList (cdkDropListDropped)="onTableHeaderColumnDrop($event)" cdkDropListOrientation="horizontal"
+    [cdkDropListData]="userColOrder">
+
+    <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+
+    <ng-container *ngFor="let col of userColOrder; let index=index">
+      <clr-dg-column cdkDrag [cdkDragData]="index" [clrDgSortBy]="col.field" *ngIf="col.filterType === DataGridFilterType.NOFILTER">
+        <div cdkDragHandle>
+          <ng-template [clrDgHideableColumn]="{hidden: col.hidden}" (clrDgHiddenChange)="addPendingColumnSetting($event, col.field)">
+            {{ t(col.label) }}
+          </ng-template>
+        </div>
+      </clr-dg-column>
+
+      <clr-dg-column cdkDrag [cdkDragData]="index" [clrDgField]="col.field" *ngIf="col.filterType !== DataGridFilterType.NOFILTER">
+        <div cdkDragHandle>
+          <ng-template [clrDgHideableColumn]="{hidden: col.hidden}" (clrDgHiddenChange)="addPendingColumnSetting($event, col.field)">
+            {{ t(col.label) }}
+          </ng-template>
+        </div>
+
+        <clr-dg-filter *ngIf="col.filterType == DataGridFilterType.PICKER">
+          <table-select-one-filter [options]="col.filterOptions" [property]="col.field"></table-select-one-filter>
+        </clr-dg-filter>
+
+        <clr-dg-filter *ngIf="col.filterType == DataGridFilterType.DATE">
+          <table-date-range-filter [property]="col.field"></table-date-range-filter>
+        </clr-dg-filter>
+
+      </clr-dg-column>
+    </ng-container>
+
+    <!--<clr-dg-column>{{ t('general.operations') }}</clr-dg-column>-->
+
+    <clr-dg-row *clrDgItems="let employee of employees" [clrDgItem]="employee">
+      <clr-dg-action-overflow>
+        <button type="button" class="btn btn-icon" title="{{ t('general.modify') }}" (click)="edit(employee.id)">
+            <fa-icon [icon]="faEdit"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-icon btn-warning-outline" title="{{ t('general.delete') }}" (click)="delete(employee.id)">
+            <fa-icon [icon]="faTrashAlt"></fa-icon>
+        </button>
+      </clr-dg-action-overflow>
+      <ng-container *ngFor="let col of userColOrder">
+        <ng-container [ngSwitch]="col.field">
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.EMPLOYEE_NAME">{{ employee | employeeName: true }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.PHONE">{{ employee.phone }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.MOBILE">{{ employee.mobile }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.EMAIL">{{ employee.email }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.FAX">{{ employee.fax }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.DEPARTMENT">
+            <div *ngFor="let specialization of employee.employeeSpecializations">
+              {{ t('company.employee.departments.' + specialization.department) }}
+            </div>
+          </clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.POSITION">
+            <div *ngFor="let specialization of employee.employeeSpecializations">
+              {{ t('company.employee.positions.' + specialization.position) }}
+            </div>
+          </clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.SERVICE">
+              <div *ngFor="let specialization of employee.employeeSpecializations">
+                {{ t('company.employee.serviceFeatures.'  + specialization.serviceFeature) }}
+              </div>
+          </clr-dg-cell>
+            <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.FULL_WEIGHT_TYPE">
+                <div *ngFor="let type of employee.jarmuOsszTomegEnums">
+                  {{ t('company.vehicle.fullWeightTypes.' + type) }}
+                </div>
+              </clr-dg-cell>
+            <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.SPEC_INFO">
+                <div *ngFor="let type of employee.felepitmenyKialakitasEnums">
+                  {{ t('company.vehicle.felepitmenyKialakitas.' + type) }}
+                </div>
+            </clr-dg-cell>
+            <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.FROM">
+                <div *ngFor="let pair of employee.countryPairs">
+                  {{ pair.from }}
+                </div>
+            </clr-dg-cell>
+            <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.TO">
+                <div *ngFor="let pair of employee.countryPairs">
+                  {{ pair.to }}
+                </div>
+            </clr-dg-cell>
+            <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.EXPIRE">{{ employee.identificationExpire }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="EmployeeTableHeaderFields.LINE_MANAGER">{{ employeeLookupMap[employee.lineManagerId] | employeeName: true }}</clr-dg-cell>
+        </ng-container>
+      </ng-container>
+    </clr-dg-row>
+
+    <ng-template clrIfDetail let-detail (clrIfDetailChange)="onDetailOpen($event)">
+      <clr-dg-detail>
+        <clr-dg-detail-body class="table-details-pane">
+
+            <h4>{{ t('company.menu.details') }}</h4>
+            <div class="clr-row">
+              <div class="clr-col-6 no-pr">
+                <p>{{ t('company.employee.name') }}</p>
+                <p>{{ t('company.phone') }}</p>
+                <p>{{ t('company.employee.mobile') }}</p>
+                <p>{{ t('company.email') }}</p>
+                <p>{{ t('company.fax') }}</p>
+                <p>{{ t('company.employee.lineManager') }}</p>
+              </div>
+              <div class="clr-col-6 no-pl">
+                  <p>{{ detail | employeeName: true }}</p>
+                  <p>{{ detail.phone }}</p>
+                  <p>{{ detail.mobile }}</p>
+                  <p>{{ detail.email }}</p>
+                  <p>{{ detail.fax }}</p>
+                  <p>{{ detail.lineManagerId }}</p>
+              </div>
+            </div>
+
+            <h4>{{ t('company.employee.identifications') }}</h4>
+            <div class="clr-row">
+                <div class="clr-col-6 no-pr">
+                    <p *ngFor="let emplId of detail.employeeIdentification">
+                      {{ emplId.idType }}
+                    </p>
+                </div>
+                <div class="clr-col-6 no-pl">
+                  <p *ngFor="let emplId of detail.employeeIdentification">
+                    {{ emplId.idNumber }} ({{emplId.expire  | date: 'shortDate': '': t('locale')}})
+                  </p>
+                </div>
+            </div>
+
+            <h4>{{ t('company.employee.specialization') }}</h4>
+            <div class="clr-row no-margin" *ngFor="let specialization of detail.employeeSpecializations">
+              <div class="clr-col-3">
+                <div>{{ t('company.employee.department') }}:</div>
+                <div>{{ t('company.employee.position') }}:</div>
+                <div>{{ t('company.employee.serviceFeature') }}:</div>
+              </div>
+              <div class="clr-col-3">
+                <div>{{ t('company.employee.departments.' + specialization.department)}}</div>
+                <div>{{ t('company.employee.positions.' + specialization.position)}}</div>
+                <div>{{ t('company.employee.serviceFeatures.' + specialization.serviceFeature)}}</div>
+              </div>
+              <div class="clr-col-4">
+                <div *ngFor="let type of specialization.jarmuOsszTomegEnums">
+                  {{ t('company.vehicle.fullWeightTypes.' + type) }}
+                </div>
+                <div *ngFor="let type of specialization.rakomanyRogzitesEnums">
+                  {{ t('company.vehicle.rakomanyRogzites.' + type) }}
+                </div>
+                <div *ngFor="let type of specialization.felepitmenyKialakitasEnums">
+                  {{ t('company.vehicle.felepitmenyKialakitas.' + type) }}
+                </div>
+                <div *ngFor="let type of specialization.felszereltsegEnums">
+                  {{ t('company.vehicle.felszereltseg.' + type) }}
+                </div>
+                <div *ngFor="let type of specialization.csereFelepitmenyEnums">
+                  {{ t('company.vehicle.csereFelepitmeny.' + type) }}
+                </div>
+                <div *ngFor="let type of specialization.emelesEsMozgatasEnums">
+                  {{ t('company.vehicle.emelesEsMozgatas.' + type) }}
+                </div>
+              </div>
+              <div class="clr-col-2">
+                <div *ngFor="let pair of specialization.countryPairs">
+                  {{ pair.from }} - {{ pair.to }}
+                </div>
+              </div>
+            </div>
+
+            <ng-container *ngIf="details?.comments.length">
+              <h4>{{ t('general.comments') }}</h4>
+              <div class="clr-row no-margin">
+                <div class="clr-col-12">
+                  <app-comment-list [commentList]="details.comments"></app-comment-list>
+                </div>
+              </div>
+          </ng-container>
+
+            <div class="clr-row clr-justify-content-center">
+              <button type="button" class="btn btn-icon" (click)="edit(detail.id)">{{ t('general.modify') }}</button>
+            </div>
+        </clr-dg-detail-body>
+      </clr-dg-detail>
+    </ng-template>
+    
+    <clr-dg-footer>
+      <button class="btn btn-icon btn-warning-outline btn-sm"  (click)="clearFilters()"><fa-icon [icon]="faFilter"></fa-icon> {{ t('general.deleteFilter') }}</button>  
+      <button type="button" class="btn btn-icon btn-warning-outline btn-sm" *ngIf="selectedEmployees.length >= 1"><fa-icon [icon]="faTrashAlt"></fa-icon> {{ t('general.deleteSelectedItems') }}</button>
+      <a class="csv-export" (click)="export()">{{ t('file.downloadCsv') }} <fa-icon [icon]="faDownload"></fa-icon></a>
+      <clr-dg-pagination #pagination [clrDgPageSize]="PAGE_SIZE" [clrDgTotalItems]="employees.length">
+          <clr-dg-page-size [clrPageSizeOptions]="SIZE_OPTIONS">{{ t('table.perPage') }}</clr-dg-page-size>
+          {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} {{ t('table.of') }} {{ employees.length }} {{ t('table.from') }}
+      </clr-dg-pagination>
+  </clr-dg-footer>
+
+  </clr-datagrid>
+
+</ng-container>

@@ -1,0 +1,46 @@
+<ng-container *transloco="let t">
+  <clr-modal [(clrModalOpen)]="open">
+    <h3 class="modal-title">{{ t(title) }}</h3>
+
+    <div class="modal-body">
+      <ng-container [ngSwitch]="type">
+        <ng-container *ngSwitchCase="modalType.INPUT">
+          <clr-input-container>
+            <label>{{ t(body) }}</label>
+            <input clrInput type="text" [(ngModel)]="inputValue">
+          </clr-input-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="modalType.SELECT">
+          <clr-select-container>
+            <label class="clr-control-label">{{ t(body) }}</label>
+            <select clrSelect [(ngModel)]="inputValue">
+              <option *ngFor="let opt of selectItems" [value]="opt.value">{{ opt.label }}</option>
+            </select>
+          </clr-select-container>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <p *ngIf="item">{{ t(body, { item: t('modal.' + item) }) }}</p>
+          <p *ngIf="!item">{{ t(body) }}</p>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <div class="modal-footer">
+      <ng-container [ngSwitch]="type">
+        <ng-container *ngSwitchCase="modalType.INPUT">
+          <button class="btn btn-outline" (click)="clicked(false)">{{ t('general.cancel') }}</button>
+          <button class="btn btn-primary" (click)="send()" [disabled]="!inputValue">{{ t(button) }}</button>
+        </ng-container>
+        <ng-container *ngSwitchCase="modalType.SELECT">
+          <button class="btn btn-outline" (click)="clicked(false)">{{ t('general.cancel') }}</button>
+          <button class="btn btn-primary" (click)="send()" [disabled]="!inputValue">{{ t(button) }}</button>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <button class="btn btn-outline" (click)="clicked(false)">{{ t('general.decline') }}</button>
+          <button class="btn btn-danger" (click)="clicked(true)">{{ t('general.confirm') }}</button>
+        </ng-container>
+      </ng-container>
+    </div>
+
+  </clr-modal>
+</ng-container>

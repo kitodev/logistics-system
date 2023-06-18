@@ -1,0 +1,32 @@
+.error {
+  color: red;
+}
+
+.label.inactive-company {
+  font-size: 1rem;
+  padding: 0.3rem 1rem;
+  height: 1.6rem;
+  text-transform: uppercase;
+}
+
+[type=checkbox] {
+  display: none;
+}
+
+.colored-row {
+  background-color: #f0f0f0;
+}
+
+.flex-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-controls {
+  align-items: center;
+}
+
+.company .title {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}

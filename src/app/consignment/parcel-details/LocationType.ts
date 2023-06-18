@@ -1,0 +1,5 @@
+export enum LocationType {
+  LOADING_IN = 'LOADING_IN',
+  LOADING_OUT = 'LOADING_OUT',
+  TRANSSHIPMENT = 'TRANSSHIPMENT',
+}

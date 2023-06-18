@@ -1,0 +1,29 @@
+<ng-container *transloco="let t">
+  <nav class="subnav" [clr-nav-level]="2">
+    <ul class="nav">
+      <li class="nav-item"><a [routerLink]="['./partners']" class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faUsers"></fa-icon>
+        {{ t('company.menu.companies') }}</a></li>
+      <li class="nav-item"><a [routerLink]="['./contacts']" class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faAddressBook"></fa-icon>
+        {{ t('company.menu.contacts') }}</a></li>
+    </ul>
+
+    <ul class="nav right">
+      <li class="nav-item"
+          *appEmployeeRole="[Role.AGENCY_FINANCIAL, Role.AGENCY_ADMIN, Role.AGENCY_MANAGER, Role.AGENCY_FREIGHT_ORGANISER]">
+        <a [routerLink]="['/company/new']" class="nav-link">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          {{ t('general.addItem', { item: t('company.label') }) }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="openInvitationModal()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          {{ t('company.invitation.label') }}</a>
+      </li>
+    </ul>
+  </nav>
+  <div class="content-area">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>

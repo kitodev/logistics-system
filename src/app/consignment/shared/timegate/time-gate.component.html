@@ -1,0 +1,43 @@
+<ng-container *transloco="let t">
+  <div class="time-gate">
+
+    <div class="from-label clr-control-label">
+      {{ t('consignment.openFrom') }}:
+    </div>
+    <div class="from-date">
+      <form-date-time-picker
+        type="both"
+        mode="single"
+        [datetime]="timeGate?.earliestArrival"
+        [parentForm]="timeGateForm"
+        [name]="'earliestArrival'"></form-date-time-picker>
+    </div>
+
+
+    <div class="to-label clr-control-label">
+      {{ t('consignment.openTo') }}:
+    </div>
+    <div class="to-date">
+      <form-date-time-picker
+        type="both"
+        mode="single"
+        [datetime]="timeGate?.latestArrival"
+        [parentForm]="timeGateForm"
+        [name]="'latestArrival'"></form-date-time-picker>
+    </div>
+
+    <div class="interval custom">
+      <clr-signpost>
+        <button type="button" class="btn btn-outline-primary btn-sm"
+                clrSignpostTrigger>{{ t('consignment.openingHours') }}</button>
+        <clr-signpost-content [clrPosition]="'bottom-middle'">
+          <div class="day" *ngFor="let day of timeGate?.openingDays | defaultOrderKeyValue">
+            <span>{{ t('daysofweek.' + $any(day.key))}}:</span> <span
+            class="day-interval">{{ $any(day.value)["openFrom"]}} - {{ $any(day.value)["openTo"]}}</span>
+          </div>
+        </clr-signpost-content>
+      </clr-signpost>
+
+    </div>
+  </div>
+</ng-container>

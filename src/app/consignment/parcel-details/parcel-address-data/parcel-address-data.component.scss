@@ -1,0 +1,23 @@
+.control {
+  text-align: center;
+
+  button.btn-primary {
+    margin: 0.5rem 0.25rem 0 0.25rem;
+  }
+}
+
+.loading-in {
+  margin-bottom: 0.5rem;
+}
+
+.no-consignment {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.8rem;
+  line-height: 2rem;
+
+  fa-icon {
+    font-size: 2rem;
+    color: #efc006;
+  }
+}

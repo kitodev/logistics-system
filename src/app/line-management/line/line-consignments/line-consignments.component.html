@@ -1,0 +1,58 @@
+<ng-container *transloco="let t">
+  <div class="card">
+    <div class="card-block">
+      <div *ngIf="!legs?.length" class="no-consignments">
+        {{ t('lines.noConsignments') }}
+        <br>
+        <a routerLink="/line-organization" class="btn btn-primary">{{ t('header.organize') }}</a>
+      </div>
+
+      <div *ngFor="let leg of legs">
+        <h3>
+          <div>
+            <span class="country-code">{{ leg.address?.countryCode }}</span>
+            {{ leg.address.city }} {{ leg.address.streetName }} {{ leg.address.streetType }} {{ leg.address.streetNumber }}
+            - {{ leg.companyName }}
+          </div>
+          <div>
+            <button class="btn btn-icon btn-sm btn-link" (click)="print(leg)">
+              <fa-icon [icon]="faPrint" size="lg"></fa-icon>
+            </button>
+          </div>
+        </h3>
+        <div class="consignments">
+          <div class="consignment">
+            <div class="up">
+              <fa-icon [icon]="faTruckLoading" size="lg"></fa-icon>
+            </div>
+            <div class="items">
+              <div class="item" *ngFor="let consignment of leg.upConsignments">
+                <app-line-lots-info *ngIf="consignmentsById.get(consignment.consignmentId)"
+                                    [companies]="companies"
+                                    [direction]="ConsignmentDirection.LoadIn"
+                                    [consignment]="consignmentsById.get(consignment.consignmentId)"></app-line-lots-info>
+              </div>
+              <span class="no-item" *ngIf="!leg.upConsignments.length">{{ t('lines.noConsignmentUp') }}</span></div>
+          </div>
+          <div class="consignment">
+            <div class="down">
+              <fa-icon [icon]="faTruckLoading" flip="horizontal" size="lg"></fa-icon>
+            </div>
+            <div class="items">
+              <div class="item">
+                <ng-container *ngFor="let consignment of leg.downConsignments">
+                  <app-line-lots-info *ngIf="consignmentsById.get(consignment.consignmentId)"
+                                      [companies]="companies"
+                                      [direction]="ConsignmentDirection.LoadOut"
+                                      [consignment]="consignmentsById.get(consignment.consignmentId)"></app-line-lots-info>
+                </ng-container>
+                <span class="no-item" *ngIf="!leg.downConsignments.length">{{ t('lines.noConsignmentDown') }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-container>

@@ -1,0 +1,68 @@
+<ng-container *transloco="let t">
+
+  <div class="bg">
+    <div class="clr-row container">
+
+      <div class="clr-col"></div>
+
+      <div class="clr-col-sm-8 clr-col-md-6 clr-col-lg-4 box">
+        <h1>{{ t('account.title') }}</h1>
+        <div class="clr-row">
+          <div class="clr-col-2"></div>
+          <div class="clr-col-8 code-input">
+            <clr-input-container class="input">
+              <label>{{ t('account.code') }}</label>
+              <input clrInput [placeholder]="''"
+                     name="input"
+                     [(ngModel)]="code"
+                     [disabled]="activated"
+                     type="text" />
+            </clr-input-container>
+          </div>
+          <div class="clr-col-2"></div>
+          <div class="clr-col-2"></div>
+          <div class="clr-col-8 code-input">
+            <clr-input-container class="input">
+              <label>{{ t('account.email') }}</label>
+              <input clrInput [placeholder]="''"
+                     name="input"
+                     [(ngModel)]="email"
+                     [disabled]="activated"
+                     type="email" />
+            </clr-input-container>
+          </div>
+          <div class="clr-col-2"></div>
+          <div class="clr-col-2"></div>
+          <div class="clr-col-8 pass-input">
+            <clr-input-container class="input">
+              <label>{{ t('account.password') }}</label>
+              <input clrInput [placeholder]="''"
+                     name="input"
+                     [(ngModel)]="password"
+                     [disabled]="activated"
+                     type="password" />
+              <clr-control-helper>{{ t('account.minLength', { len: minLen }) }}</clr-control-helper>
+            </clr-input-container>
+          </div>
+          <div class="clr-col-2"></div>
+          <div class="clr-col-12 text-center">
+            <button type="button"
+                    class="btn btn-primary"
+                    (click)="setPassword()"
+                    [disabled]="activated || password?.length < minLen || !email || !code">
+              {{ t('account.setPassword') }}
+            </button>
+          </div>
+        </div>
+        <div class="clr-row activated" *ngIf="activated">
+          {{ t('account.activated') }}
+          <a href="/login">{{t('account.backToLogin')}}</a>
+        </div>
+      </div>
+
+      <div class="clr-col"></div>
+
+    </div>
+  </div>
+
+</ng-container>

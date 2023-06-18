@@ -1,0 +1,17 @@
+<ng-container *transloco="let t">
+  <clr-checkbox-container [formGroup]="formGroup">
+    <clr-checkbox-wrapper>
+      <input type="checkbox" clrCheckbox [formControlName]="name" />
+      <label class="form-checkbox" [ngClass]="{'required': required}">{{ label }}</label>
+    </clr-checkbox-wrapper>
+    <clr-control-error *ngIf="control.invalid && (control.dirty || control.touched)">
+      <div *ngIf="control.errors.required">
+        {{ t('messages.error.required') }}
+      </div>
+      <div *ngIf="control.errors.email">
+        {{ t('messages.error.email') }}
+      </div>
+    </clr-control-error>
+    <clr-control-helper *ngIf="helper">{{ helper }}</clr-control-helper>
+  </clr-checkbox-container>
+</ng-container>

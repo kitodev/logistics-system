@@ -1,0 +1,70 @@
+<ng-container *transloco="let t">
+    <clr-modal [(clrModalOpen)]="open">
+        <h3 class="modal-title">{{ t('consignment.bulkEdit.title') }}</h3>
+  
+        <div class="modal-body">
+            <ng-container>
+                <p>{{ t('consignment.bulkEdit.selected') + selectedItems?.length }}</p>
+                <div class="clr-row" [formGroup]="consignmentForm">
+
+                    <div class="clr-col-12">
+                        <div class="custom-form-input-container">
+                            <label class="clr-control-label" for="travelMode">{{ t('consignment.travelMode.label') }}</label>
+                            <ng-select
+                                [(ngModel)]="selectedTravelMode"
+                                formControlName="travelMode"
+                                name="travelMode"
+                                [items]="travelModes"
+                                labelForId="travelMode"
+                            ></ng-select>
+                        </div>
+                
+                        <div class="custom-form-input-container">
+                            <label class="clr-control-label" for="transportMode">{{ t('company.employee.transportType') }}</label>
+                            <ng-select
+                                [(ngModel)]="selectedTransportMode"
+                                formControlName="transportMode"
+                                name="transportMode"
+                                [items]="transportModes"
+                                labelForId="transportMode"
+                            ></ng-select>
+                        </div>
+
+                        <div class="custom-form-input-container">
+                            <label class="clr-control-label" for="tradeType">{{ t('consignment.tradeType') }}</label>
+                            <ng-select
+                                [(ngModel)]="selectedTradeType"
+                                formControlName="tradeType"
+                                name="tradeType"
+                                [items]="tradeTypes"
+                                labelForId="tradeType"
+                            ></ng-select>
+                        </div>
+
+                        <div class="custom-form-input-container">
+                            <label class="clr-control-label" for="parity">{{ t('consignment.parity') }}</label>
+                            <ng-select
+                                [(ngModel)]="selectedParity"
+                                formControlName="parity"
+                                name="parity"
+                                [items]="parityList"
+                                labelForId="parity"
+                            ></ng-select>
+                        </div>
+                        
+                    </div>
+                </div>    
+
+            </ng-container>
+        </div>
+    
+        <div class="modal-footer">
+            <ng-container>
+            <ng-container>
+                <button class="btn btn-danger" (click)="save()">{{ t('general.save') }}</button>
+            </ng-container>
+            </ng-container>
+        </div>
+  
+    </clr-modal>
+</ng-container>

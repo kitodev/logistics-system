@@ -1,0 +1,47 @@
+<ng-container *transloco="let t">
+    <div class="clr-row clr-justify-content-center">
+        <div class="clr-col-xl-4 clr-col-lg-5 clr-col-md-6 clr-col-sm-7 clr-col-12">
+
+            <!-- <div class="alert alert-success" *ngIf="success">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <fa-icon [icon]="faCheck"></fa-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ t('messages.success', { action: t('messages.' + success) }) }}
+                        </span>
+                        <div class="alert-close" (click)="close()">
+                            <fa-icon [icon]="faTimes"></fa-icon>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="alert alert-danger" *ngIf="errors">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <fa-icon [icon]="faExclamation"></fa-icon>
+                        </div>
+                        <div class="alert-text" *ngIf="errorMsg; else errorsArray">
+                            {{ errorMsg }}
+                        </div>
+                        <div class="alert-close" (click)="close()">
+                            <fa-icon [icon]="faTimes"></fa-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #errorsArray>
+                <div class="alert-text">
+                    <div *ngFor="let error of errorArray">
+                        {{ error.message }}
+                    </div>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,230 @@
+<ng-container *transloco="let t">
+  <clr-main-container>
+    <clr-header class="header-6">
+      <div class="logo"></div>
+    </clr-header>
+
+    <div class="clr-row">
+      <div class="clr-offset-xl-2 clr-col-xl-8 clr-offset-lg-1 clr-col-lg-10 clr-col-md-12">
+        <div class="card">
+          <div class="card-header">
+            {{ t('company.invitation.registration') }}: {{ isNextStep? t('company.invitation.employeeData') :  t('company.invitation.companyData') }}
+          </div>
+          <div class="card-block">
+  
+            <div *ngIf="!isNextStep">
+      
+              <div class="clr-row">
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="companyForm">
+                    <label [ngClass]="{'required': companyForm.get('companyName').errors?.required}">{{t('company.companyName')}}</label>
+                      <input clrInput type="text" formControlName="companyName">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="companyForm">
+                    <label [ngClass]="{'required': companyForm.get('phone').errors?.required}">{{t('company.phone')}}</label>
+                      <input clrInput type="text" formControlName="phone">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="companyForm">
+                    <label [ngClass]="{'required': companyForm.get('email').errors?.required}">{{t('company.email')}}</label>
+                      <input clrInput type="text" formControlName="email">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="companyForm">
+                    <label [ngClass]="{'required': companyForm.get('fax').errors?.required}">{{t('company.fax')}}</label>
+                      <input clrInput type="text" formControlName="fax">
+                  </clr-input-container>
+                </div>
+              </div>
+          
+              <div class="clr-row">
+                <div class="clr-col">
+                  <div [formGroup]="companyForm">
+                    <clr-input-container>
+                      <label [ngClass]="{'required': companyForm.get('companyProfiles').errors?.required}">{{t('company.companyProfiles')}}</label>
+                    </clr-input-container>
+                    <ng-select [items]="companyProfiles"
+                               bindLabel="label"
+                               dropdownPosition="auto"
+                               bindValue="value"
+                               [virtualScroll]="true"
+                               [multiple]="true"
+                               [closeOnSelect]="false"
+                               [hideSelected]="true"
+                               formControlName="companyProfiles"
+                               labelForId="companyProfiles">
+                      <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                        <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="companyForm">
+                    <label [ngClass]="{'required': companyForm.get('taxNumber').errors?.required}">{{t('company.taxNumber')}}</label>
+                    <input clrInput type="text" formControlName="taxNumber">
+                  </clr-input-container>
+                  <clr-input-container [formGroup]="companyForm">
+                    <label [ngClass]="{'required': companyForm.get('registrationNumber').errors?.required}">{{t('company.registrationNumber')}}</label>
+                    <input clrInput type="text" formControlName="registrationNumber">
+                  </clr-input-container>
+                  <clr-input-container [formGroup]="companyForm">
+                    <label [ngClass]="{'required': companyForm.get('euTaxNumber').errors?.required}">{{t('company.euTaxNumber')}}</label>
+                    <input clrInput type="text" formControlName="euTaxNumber">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  
+                  <clr-input-container>
+                    <label>{{ t('company.logo') }}</label>
+                  </clr-input-container>
+                  <ngx-file-drop
+                    [dropZoneLabel]="t('company.dropLogo')"
+                    (onFileDrop)="dropped($event)"
+                    [multiple]="false"
+                    [directory]="false">
+                    <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+      
+                      <ng-container *ngIf="file; else noLogo">
+                        {{file.name}}
+                      </ng-container>
+                      <ng-template #noLogo>
+                        {{ t('company.dropLogo') }}
+                      </ng-template>
+      
+                      <button type="button" class="btn btn-primary-outline"
+                              (click)="openFileSelector()">{{ t('general.browseImage') }}</button>
+                      <div class="file-error" *ngIf="fileError">
+                        <fa-icon [icon]="faExclamationCircle"></fa-icon>
+                        {{ t('general.fileError.' + fileError) }}
+                      </div>
+                    </ng-template>
+                  </ngx-file-drop>
+                  
+                </div>
+              </div>
+          
+              <div class="clr-row">
+                <div class="clr-col">
+                  <form-address [formGroup]="$any(seatForm.controls.address)"></form-address>
+                </div>
+                <div class="clr-col">
+      
+                  <clr-checkbox-container>
+                    <clr-checkbox-wrapper>
+                      <input type="checkbox" clrCheckbox [(ngModel)]="sameAddress" (change)="copyAddress()"
+                            [ngModelOptions]="{standalone: true}" />
+                      <label>{{ t('company.copyAddress') }}</label>
+                    </clr-checkbox-wrapper>
+                  </clr-checkbox-container>
+      
+                  <form-address [formGroup]="$any(companyForm.controls.mailingAddress)"></form-address>
+                </div>
+              </div>
+              
+              <div class="clr-row buttons">
+                <div class="clr-col clr-justify-content-center">
+                  <button class="btn btn-outline" (click)="validateCompanyForm()">{{ t('company.invitation.next') }}</button>
+                </div>
+              </div>
+      
+            </div>
+            <div *ngIf="isNextStep">
+      
+              <div class="clr-row">
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="employeeForm">
+                    <label [ngClass]="{'required': employeeForm.get('title').errors?.required}">{{t('company.employee.title')}}</label>
+                      <input clrInput type="text" formControlName="title">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="employeeForm">
+                    <label [ngClass]="{'required': employeeForm.get('lastName').errors?.required}">{{t('company.employee.lastName')}}</label>
+                      <input clrInput type="text" formControlName="lastName">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="employeeForm">
+                    <label [ngClass]="{'required': employeeForm.get('firstName').errors?.required}">{{t('company.employee.firstName')}}</label>
+                      <input clrInput type="text" formControlName="firstName">
+                  </clr-input-container>
+                </div>
+              </div>
+            
+              <div class="clr-row">
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="employeeForm">
+                    <label [ngClass]="{'required': employeeForm.get('phone').errors?.required}">{{t('company.phone')}}</label>
+                      <input clrInput type="text" formControlName="phone">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="employeeForm">
+                    <label [ngClass]="{'required': employeeForm.get('mobile').errors?.required}">{{t('company.employee.mobile')}}</label>
+                      <input clrInput type="text" formControlName="mobile">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="employeeForm">
+                    <label [ngClass]="{'required': employeeForm.get('email').errors?.required}">{{t('company.email')}}</label>
+                      <input clrInput type="text" formControlName="email">
+                  </clr-input-container>
+                </div>
+              </div>
+            
+              <div class="clr-row" *ngFor="let control of employeeForm.controls.employeeIdentification['controls']; let i=index">
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="$any(control)">
+                    <label [ngClass]="{'required': $any(control).get('idType').errors?.required}">{{t('company.employee.identificationType')}}</label>
+                      <input clrInput type="text" formControlName="idType">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <clr-input-container [formGroup]="$any(control)">
+                    <label [ngClass]="{'required': $any(control).get('idNumber').errors?.required}">{{t('company.employee.identificationNumber')}}</label>
+                      <input clrInput type="text" formControlName="idNumber">
+                  </clr-input-container>
+                </div>
+                <div class="clr-col">
+                  <form-date-time-picker [parentForm]="$any(control)"
+                                              [datetime]="control.value?.expire"
+                                              type="calendar"
+                                              name="expire"
+                                              mode="single"
+                                              [required]="$any(control).get('expire').errors?.required"
+                                              [label]="t('company.employee.identificationExpire')"></form-date-time-picker>
+      
+                </div>
+              </div>
+      
+              <div class="clr-row">
+                <div class="clr-col">
+                  <clr-input-container class="input">
+                    <label>{{ t('account.password') }}</label>
+                    <input clrInput [(ngModel)]="password" type="password" />
+                    <clr-control-helper>{{ t('account.minLength', { len: minLen }) }}</clr-control-helper>
+                  </clr-input-container>
+                </div>
+              </div>
+      
+              <div class="clr-row buttons">
+                <div class="clr-col clr-justify-content-center">
+                  <button class="btn btn-outline" (click)="backToCompany()">{{ t('company.invitation.back') }}</button>
+                  <button class="btn btn-primary" (click)="createPartner()">{{ t('company.invitation.finish') }}</button>
+                </div>
+              </div>
+      
+            </div>
+  
+          </div>
+        </div>
+      </div>  
+    </div>
+
+  </clr-main-container>
+</ng-container>

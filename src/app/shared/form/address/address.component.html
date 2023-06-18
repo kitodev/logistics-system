@@ -1,0 +1,66 @@
+<ng-container *transloco="let t" [formGroup]="formGroup">
+  <div class="clr-row">
+    <div class="clr-col-md-6 clr-col-sm-12">
+      <clr-select-container>
+        <label [ngClass]="{'required': formGroup.get('country').errors?.required}">{{ t('address.country') }}</label>
+        <select clrSelect formControlName="country">
+          <optgroup *ngFor="let continentGroup of countries"
+                    [label]=" t('countries.continent.'+continentGroup[0])">
+            <option *ngFor="let country of continentGroup[1]"
+                    [value]="country">{{ t('countries.' + country) }}</option>
+          </optgroup>
+        </select>
+      </clr-select-container>
+    </div>
+    <div class="clr-col-md-6 clr-col-sm-12">
+      <!--suppress XmlInvalidId -->
+      <div class="custom-form-input-container" [ngClass]="{'disabled': formGroup.disabled}">
+        <label class="clr-control-label">{{  t('address.county') }}</label>
+        <ng-select [items]="counties"
+                   [addTag]="true"
+                   [addTagText]="t('address.add')"
+                   [formGroup]="formGroup"
+                   bindLabel="name"
+                   [multiple]="false"
+                   formControlName="county">
+        </ng-select>
+      </div>
+    </div>
+  </div>
+  <div class="clr-row">
+    <div class="clr-col-md-7 clr-col-sm-12">
+      <form-input type="text" [formGroup]="formGroup" name="city" [label]="t('address.city')"
+      [required]="formGroup.get('city').errors?.required" [autocomplete]="'address-level2'"></form-input>
+    </div>
+    <div class="clr-col-md-5 clr-col-sm-12">
+      <form-input type="text" [formGroup]="formGroup" name="postCode" [label]="t('address.postCode')"
+      [required]="formGroup.get('postCode').errors?.required" [autocomplete]="'postal-code'"></form-input>
+    </div>
+  </div>
+  <div class="clr-row">
+    <div class="clr-col-md-4 clr-col-sm-12">
+      <form-input type="text" [formGroup]="formGroup" name="streetName" [label]="t('address.streetName')"
+      [required]="formGroup.get('streetName').errors?.required" [autocomplete]="'street-address'"></form-input>
+    </div>
+    <div class="clr-col-md-5 clr-col-sm-12">
+      <!--suppress XmlInvalidId -->
+      <div class="custom-form-input-container" [ngClass]="{'disabled': formGroup.disabled}">
+      <label class="clr-control-label"
+      [ngClass]="{'required': formGroup.get('streetType').errors?.required}">{{  t('address.streetType') }}</label>
+        <ng-select [items]="streetTypes"
+                   [addTag]="true"
+                   [addTagText]="t('address.add')"
+                   [formGroup]="formGroup"
+                   bindLabel="name"
+                   [multiple]="false"
+                   formControlName="streetType"
+                   ></ng-select>
+      
+    </div>
+  </div>
+    <div class="clr-col-md-3 clr-col-sm-12">
+      <form-input type="text" [formGroup]="formGroup" name="streetNumber"
+      [required]="formGroup.get('streetNumber').errors?.required" [label]="t('address.streetNumber')"></form-input>
+    </div>
+  </div>
+</ng-container>

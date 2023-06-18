@@ -1,0 +1,30 @@
+.offer-lifecycle {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  padding: 0.25rem 0;
+
+  > div {
+    padding: 0.6em 0;
+    cursor: default;
+  }
+
+  fa-icon {
+    color: var(--clr-nav-link-color, #8c8c8c);
+  }
+
+  .not-important, .not-important fa-icon {
+    color: #bebebe;
+  }
+
+  .active {
+    color: #000000;
+    text-decoration: underline;
+    font-weight: bold;
+    border: 1px solid #333;
+    padding: 6px 12px;
+    border-radius: 6px;
+  }
+}

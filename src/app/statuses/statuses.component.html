@@ -1,0 +1,33 @@
+<ng-container *transloco="let t">
+  <nav class="subnav" [clr-nav-level]="2">
+    <ul class="nav">
+      <li class="nav-item">
+        <a [routerLink]="['./lines']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faRoad"></fa-icon>
+          {{ t('status.menu.errorLines') }}
+          <ng-container *ngIf="faultyStations | async as faultyStations">
+            <div class="badge"
+                 [ngClass]="{'badge-danger':faultyStations.length > 0}">
+              {{ faultyStations.length }}
+            </div>
+          </ng-container>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['./consignments']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faBox"></fa-icon>
+          {{ t('status.menu.errorConsignments') }}
+          <ng-container *ngIf="(faultyConsignments | async) as faultyConsignments">
+            <div class="badge"
+                 [ngClass]="{'badge-danger':faultyConsignments.length > 0}">
+              {{ faultyConsignments.length }}
+            </div>
+          </ng-container>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <router-outlet></router-outlet>
+
+</ng-container>

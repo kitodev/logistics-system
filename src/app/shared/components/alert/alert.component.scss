@@ -1,0 +1,15 @@
+.alert-close {
+    cursor: pointer;
+}
+
+// .alert-success {
+//     color: var(--clr-alert-success-border-color, hsl(93, 100%, 21%));
+// }
+
+.alert.alert-danger {
+    color: var(--clr-alert-danger-border-color, hsl(9, 100%, 30%));
+}
+
+.clr-row {
+    margin-bottom: 15px;
+}

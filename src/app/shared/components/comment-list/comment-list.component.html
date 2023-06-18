@@ -1,0 +1,11 @@
+<ng-container *transloco="let t">
+    <div *ngFor="let note of commentList" class="comment">
+        <div>
+          <span class="user">{{ note | employeeName: true }} | {{ note.companyName }}</span>
+          <span class="date"> {{ note.created | date:'short' :'' : t('locale') }}</span>
+        </div>
+        <div>
+          {{ note.note }}
+        </div>
+    </div>
+</ng-container>

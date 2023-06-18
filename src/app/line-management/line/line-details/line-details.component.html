@@ -1,0 +1,352 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row">
+    <div class="clr-col-6"></div>
+    <div class="clr-col-6">
+      <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!isLoading; else loading">
+    <div class="clr-row">
+      <div class="clr-col-12">
+        <div class="card">
+          <div class="card-header">
+            {{ !isNew ? t('general.modify') : t('general.addNew') }}
+          </div>
+          <div class="card-block" [formGroup]="lineForm">
+            <div class="clr-row">
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <clr-checkbox-container>
+                  <clr-checkbox-wrapper>
+                    <input type="checkbox" clrCheckbox [(ngModel)]="ownLine" (change)="onMyOwnLineChanged()"
+                           [ngModelOptions]="{standalone: true}" />
+                    <label>{{ t('lines.ownLine') }}</label>
+                  </clr-checkbox-wrapper>
+                </clr-checkbox-container>
+              </div>
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <label class="clr-control-label" for="conveyorCompany"
+                       [ngClass]="{'required': !selectedConveyorCompany}">{{ t('lines.conveyorCompany') }}</label>
+                <ng-select [items]="partners"
+                           [bindLabel]="'companyName'"
+                           dropdownPosition="auto"
+                           [clearable]="false"
+                           [(ngModel)]="selectedConveyorCompany"
+                           [ngModelOptions]="{standalone: true}"
+                           (change)="conveyorInputChanged()"
+                           [closeOnSelect]="true"
+                           labelForId="conveyorCompany"
+                >
+                  <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                    <div><span [ngOptionHighlight]="search">{{item.companyName}}</span></div>
+                  </ng-template>
+                </ng-select>
+
+              </div>
+              <div class="clr-col-md-3 clr-col-sm-12">
+                                <span *ngIf="selectedConveyorCompany">
+                                    {{$any(selectedConveyorCompany.premises| selectSeat:'address') | address }}
+                                </span>
+              </div>
+              <div class="clr-col-md-5 clr-col-sm-12" *ngIf="selectedConveyorCompany && contactEmployees.length">
+                <form-employee-selector
+                  [parentForm]="lineForm"
+                  controlName="contactOfConveyor"
+                  [employees]="contactEmployees"
+                  [label]="t('lines.contactOfConveyor')"></form-employee-selector>
+              </div>
+            </div>
+            <div class="clr-row">
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <div class="custom-form-input-container">
+                  <label class="clr-control-label" for="travelMode"
+                         [ngClass]="{'required': lineForm.get('travelMode').errors?.required}">{{ t('lines.travelMode') }}</label>
+                  <ng-select [items]="travelModes"
+                             bindLabel="label"
+                             dropdownPosition="auto"
+                             bindValue="value"
+                             [closeOnSelect]="true"
+                             formControlName="travelMode"
+                             labelForId="travelMode">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <div class="custom-form-input-container">
+                  <label class="clr-control-label" for="transportMode"
+                         [ngClass]="{'required': lineForm.get('transportMode').errors?.required}">{{ t('lines.transportMode') }}</label>
+                  <ng-select [items]="transportModes"
+                             bindLabel="label"
+                             dropdownPosition="auto"
+                             bindValue="value"
+                             [closeOnSelect]="true"
+                             formControlName="transportMode"
+                             labelForId="transportMode">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <div class="custom-form-input-container">
+                  <label class="clr-control-label" for="trailer"
+                         [ngClass]="{'required': lineForm.get('trailer').errors?.required}">{{ t('lines.trailer') }}</label>
+                  <ng-select [items]="vehicles"
+                             [placeholder]="t('lines.trailer')"
+                             bindLabel="licensePlate"
+                             bindValue="id"
+                             dropdownPosition="auto"
+                             [closeOnSelect]="true"
+                             formControlName="trailer"
+                             labelForId="trailer">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <form-date-time-picker [parentForm]="lineForm"
+                                       [required]="lineForm.get('start').errors?.required"
+                                       [datetime]="lineForm.value?.start"
+                                       type="calendar"
+                                       name="start"
+                                       mode="single"
+                                       [label]="t('lines.start')"></form-date-time-picker>
+              </div>
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <form-date-time-picker [parentForm]="lineForm"
+                                       [required]="lineForm.get('arrival').errors?.required"
+                                       [datetime]="lineForm.value?.arrival"
+                                       type="calendar"
+                                       name="arrival"
+                                       mode="single"
+                                       [label]="t('lines.arrival')"></form-date-time-picker>
+              </div>
+              <div class="clr-col-md-1 clr-col-sm-12" [formGroup]="$any(lineForm.controls.countryPair)">
+                <clr-select-container>
+                  <label
+                    [ngClass]="{'required': $any(lineForm.controls.countryPair).get('from').errors?.required}">{{ t('lines.countryPair') }}</label>
+                  <select clrSelect formControlName="from">
+                    <option></option>
+                    <optgroup *ngFor="let continentGroup of countries"
+                              [label]="continentGroup[0]">
+                      <option *ngFor="let country of continentGroup[1]"
+                              [value]="country">{{country}}</option>
+                    </optgroup>
+                  </select>
+                </clr-select-container>
+              </div>
+              <div class="clr-col-md-1 clr-col-sm-12" [formGroup]="$any(lineForm.controls.countryPair)">
+                <clr-select-container>
+                  <label
+                    [ngClass]="{'required': $any(lineForm.controls.countryPair).get('to').errors?.required}">{{ t('lines.countryPair') }}</label>
+                  <select clrSelect formControlName="to">
+                    <option></option>
+                    <optgroup *ngFor="let continentGroup of countries"
+                              [label]="continentGroup[0]">
+                      <option *ngFor="let country of continentGroup[1]"
+                              [value]="country">{{country}}</option>
+                    </optgroup>
+                  </select>
+                </clr-select-container>
+              </div>
+            </div>
+
+            <div class="clr-row tractor" *ngIf="selectedConveyorCompany">
+              <div class="clr-col-md-4 clr-col-sm-12">
+
+                <label class="clr-control-label" for="selectedVehicle"
+                       [ngClass]="{'required': !selectedVehicle}">{{ t('lines.vehicle') }}</label>
+                <ng-select [items]="vehicles"
+                           bindLabel="licensePlate"
+                           dropdownPosition="auto"
+                           [closeOnSelect]="true"
+                           [(ngModel)]="selectedVehicle"
+                           [ngModelOptions]="{standalone: true}"
+                           labelForId="selectedVehicle">
+                </ng-select>
+
+                <div *ngIf="selectedVehicle" class="properties">
+                  <div class="short"><p>{{ t('company.vehicle.vehicleType')}}:
+                    <b>{{ t('company.vehicle.vehicleTypes.' + selectedVehicle.vehicleType) }}</b>
+                  </p>
+                    <p>{{ t('company.vehicle.fullWeight')}}:
+                      <b>{{ t('company.vehicle.fullWeightTypes.' + selectedVehicle.fullWeightType) }}</b>
+                    </p>
+                  </div>
+
+                  <clr-signpost>
+                    <fa-icon class="btn btn-link" [icon]="faInfo" size="lg" clrSignpostTrigger></fa-icon>
+                    <clr-signpost-content>
+                      <p>{{ t('company.vehicle.netWeight')}}:
+                        <b>{{ selectedVehicle.netWeight.quantity }} {{ t('company.vehicle.weightUnits.' + selectedVehicle.netWeight.unit) }}</b>
+                      </p>
+                      <p>{{ t('company.vehicle.superStructure')}}:
+                        <b>{{ t('company.vehicle.structureTypes.' + selectedVehicle.superStructureType) }}</b></p>
+                      <p>{{ t('company.vehicle.cargoSpaceWidth')}}: <b>{{ selectedVehicle.cargoSpaceWidth }}</b></p>
+                      <p>{{ t('company.vehicle.cargoSpaceHeight')}}: <b>{{ selectedVehicle.cargoSpaceHeight }}</b></p>
+                      <p>{{ t('company.vehicle.cargoSpaceLength')}}: <b>{{ selectedVehicle.cargoSpaceLength }}</b></p>
+                      <p>{{ t('company.vehicle.cargoSpaceVolume')}}: <b>{{ selectedVehicle.cargoSpaceVolume }}</b></p>
+                      <p>{{ t('company.vehicle.palletCount')}}: <b>{{ selectedVehicle.palletCount }}</b></p>
+                    </clr-signpost-content>
+                  </clr-signpost>
+                </div>
+
+              </div>
+              <div class="clr-col-md-3 clr-col-sm-12">
+                <label class="clr-control-label" for="selectedDriver"
+                       [ngClass]="{'required': !selectedDriver}">{{ t('lines.driver') }}</label>
+                <ng-select [items]="drivers"
+                           [searchFn]="employeeSearchFn"
+                           dropdownPosition="auto"
+                           appendTo="body"
+                           [closeOnSelect]="true"
+                           [(ngModel)]="selectedDriver"
+                           [ngModelOptions]="{standalone: true}"
+                           labelForId="selectedDriver">
+                  <ng-template ng-label-tmp let-item="item">
+                    {{ item | employeeName }} <small>{{item.title ? '| ' + item.title : '' }}</small>
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                    <div><span [ngOptionHighlight]="search">{{ item | employeeName }}
+                      <small>{{ item.title }}</small></span></div>
+                  </ng-template>
+                </ng-select>
+
+                <div *ngIf="selectedDriver" class="properties">
+                  <p>{{ t('company.phone') }}: <b>{{ selectedDriver.phone }}</b></p>
+                  <p>{{ t('company.email') }}: <b>{{ selectedDriver.email }}</b></p>
+                </div>
+
+              </div>
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <button type="button" class="btn btn-icon btn-outline btn-sm"
+                        [disabled]="!(selectedVehicle && selectedDriver)" (click)="addPair()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
+                  {{ t('general.add') }}
+                </button>
+              </div>
+            </div>
+
+            <div class="clr-row" *ngIf="selectedConveyorCompany">
+              <div class="clr-col-12">
+                <table class="table vehicles">
+                  <thead>
+                  <tr>
+                    <th>{{ t('company.vehicle.licensePlate') }}</th>
+                    <th>{{ t('company.vehicle.vehicleType') }}</th>
+                    <th>{{ t('company.vehicle.fullWeight') }}</th>
+                    <th>{{ t('company.vehicle.netWeight') }}</th>
+                    <th>{{ t('company.vehicle.superStructure') }}</th>
+                    <th>{{ t('company.vehicle.cargoSpaceVolume') }}</th>
+                    <th>{{ t('company.vehicle.cargoSpaceHeight') }}</th>
+                    <th>{{ t('company.vehicle.palletCount') }}</th>
+                    <th>{{ t('lines.activeVehicle') }}</th>
+                    <th>{{ t('lines.driver') }}</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody *ngIf="(vehicleAndDriverPairing | json) != '{}'; else noData" [formGroup]="lineForm">
+                  <tr *ngFor="let pair of vehicleAndDriverPairing | keyvalue">
+                    <td>
+                      <span>{{ t('company.vehicle.licensePlate') }}</span>
+                      <span>{{ pair.value['vehicle'].licensePlate }}</span>
+                    </td>
+                    <td>
+                      <span>{{ t('company.vehicle.vehicleType') }}</span>
+                      <span>{{ t('company.vehicle.vehicleTypes.' + pair.value['vehicle'].vehicleType) }}</span>
+                    </td>
+                    <td>
+                      <span>{{ t('company.vehicle.fullWeight') }}</span>
+                      <span>{{ t('company.vehicle.fullWeightTypes.' + pair.value['vehicle'].fullWeightType) }}</span>
+                    </td>
+                    <td>
+                      <span>{{ t('company.vehicle.netWeight') }}</span>
+                      <span>{{pair.value['vehicle'].netWeight.quantity}} {{ t('company.vehicle.weightUnits.' + pair.value['vehicle'].netWeight.unit) }}</span>
+                    </td>
+                    <td>
+                      <span>{{ t('company.vehicle.superStructure') }}</span>
+                      <span>{{ t('company.vehicle.structureTypes.' + pair.value['vehicle'].superStructureType) }}</span>
+                    </td>
+                    <td>
+                      <span>{{ t('company.vehicle.cargoSpaceVolume') }}</span>
+                      <span>{{ pair.value['vehicle'].cargoSpaceVolume }}</span>
+                    </td>
+                    <td>
+                      <span>{{ t('company.vehicle.cargoSpaceHeight') }}</span>
+                      <span>{{ pair.value['vehicle'].cargoSpaceHeight }}</span>
+                    </td>
+                    <td>
+                      <span>{{ t('company.vehicle.palletCount') }}</span>
+                      <span>{{ pair.value['vehicle'].palletCount }}</span>
+                    </td>
+                    <td>
+                      <span>{{ t('lines.activeVehicle') }}</span>
+                      <span>
+                                                    <input type="radio" clrRadio [value]="pair.key"
+                                                           formControlName="activeVehicleId" />
+                                                </span>
+                    </td>
+                    <td class="text-left">
+                      <span>{{ t('lines.driver') }}</span>
+                      <span class="driver" *ngFor="let driverObj of pair.value['drivers']">
+                                                    <div>
+                                                        {{ driverObj.driver | employeeName }}
+                                                    </div>
+                                                    <div>
+                                                        <button type="button"
+                                                                (click)="deleteDriver($any(pair.key), driverObj.id)"
+                                                                *ngIf="pair.value['drivers'].length > 1"
+                                                                class="btn btn-sm btn-icon btn-warning-outline">
+                                                            <fa-icon [icon]="faTimes"></fa-icon>
+                                                        </button>
+                                                    </div>
+                                                </span>
+                    </td>
+                    <td>
+                      <button type="button" (click)="deleteVehicle($any(pair.key))"
+                              class="btn btn-icon btn-warning-outline">
+                        <fa-icon [icon]="faTrashAlt"></fa-icon>
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                  <ng-template #noData>
+                    <tbody>
+                    <tr>
+                      <td colspan="3">{{ t('general.noData') }}</td>
+                    </tr>
+                    </tbody>
+                  </ng-template>
+                </table>
+
+              </div>
+            </div>
+
+            <div class="clr-row clr-justify-content-center">
+              <button type="button" class="btn btn-primary" (click)="createLine()"
+                      *ngIf="isNew">{{ t('general.create') }}</button>
+              <button type="button" class="btn btn-primary" (click)="updateLine()" [disabled]="lineForm.pristine"
+                      *ngIf="!isNew">{{ t('general.save') }}</button>
+              <button type="button" class="btn btn-outline" (click)="cancelEdit()" [disabled]="lineForm.pristine"
+                      *ngIf="!isNew">{{ t('general.cancel') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row" *ngIf="!isNew">
+      <div class="clr-col-12">
+        <div class="card">
+          <div class="card-header">
+            {{t('general.comment')}}
+          </div>
+          <div class="card-block">
+            <app-comments [chosenApi]="commentApi" [chosenId]="lineId"></app-comments>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #loading>
+    <span class="spinner"></span>
+  </ng-template>
+</ng-container>

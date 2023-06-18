@@ -1,0 +1,37 @@
+<ng-container *transloco="let t">
+
+  <div class="insert">
+    <button type="button" class="btn btn-outline" (click)="add(0)">
+      <fa-icon [icon]="faPlusSquare"></fa-icon>
+    </button>
+  </div>
+
+  <ng-container *ngFor="let item of locationList; let locationPosition = index;">
+
+    <div class="transshipment">
+      <div class="location" [formGroup]="item.formGroup">
+        <app-location-selector [location]="item.location"
+                               [consignmentId]="consignmentId"
+                               [legs]="legs"
+                               [locationType]="LocationType.TRANSSHIPMENT"
+                               [transshipmentLocationPosition]="locationPosition"
+                               [transshipmentLocationCount]="locationList.length"
+                               [isNew]="!item.location.id"
+                               [showStatus]="true"
+                               [controlName]="locationControlName"
+                               [companies]="partners"
+                               [parentForm]="$any(item.formGroup)"
+                               (onMoveUp)="moveUp(locationPosition)"
+                               (onMoveDown)="moveDown(locationPosition)"
+                               (onRemove)="remove(locationPosition)"></app-location-selector>
+      </div>
+    </div>
+
+    <div class="insert">
+      <button type="button" class="btn btn-outline" (click)="add(locationPosition+1)">
+        <fa-icon [icon]="faPlusSquare"></fa-icon>
+      </button>
+    </div>
+  </ng-container>
+
+</ng-container>

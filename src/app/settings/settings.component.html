@@ -1,0 +1,108 @@
+<ng-container *transloco="let t">
+    <nav class="subnav" [clr-nav-level]="2">
+        <!-- <ul class="nav">
+            <li class="nav-item"><a [routerLink]="['./details']" class="nav-link" routerLinkActive="active"><fa-icon ></fa-icon> {{ t('company.menu.details') }}</a></li>
+        </ul> -->
+        <ul class="nav right">
+            <li class="nav-item">{{ t('header.settings') }}</li>
+        </ul>
+    </nav>
+    <div class="content-area">
+        <div class="clr-row">
+            <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('header.switchLang') }}
+                    </div>
+                    <div class="card-block">
+                        <div class="clr-row">
+                            <div class="clr-col-sm-12">
+                                <a (click)="switchLang('en')">
+                                    {{ t('lang.English') }}
+                                </a>
+                            </div>
+                            <div class="clr-col-sm-12">
+                                <a (click)="switchLang('hu')">
+                                    {{ t('lang.Hungarian') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('auth.changePassword') }}
+                    </div>
+                    <div class="card-block" [formGroup]="changePasswordFrom">
+                        <div class="clr-row">
+                            <div class="clr-col-md-6 clr-col-sm-12">
+                                <div class="clr-row">
+                                    <div class="clr-col-sm-12">
+                                        <form-input
+                                            [formGroup]="changePasswordFrom"
+                                            [required]="changePasswordFrom.get('oldPassword').errors?.required"
+                                            type="password" name="oldPassword"
+                                            [label]="t('auth.oldPassword')">
+                                        </form-input>
+                                        <div class="validation-error" *ngIf="changePasswordFrom.get('oldPassword').errors?.minlength">
+                                            {{ t('messages.error.minlength', { field: t('auth.password'), length: PASS_MIN_LENGTH }) }}
+                                        </div>
+                                    </div>
+                                    <div class="clr-col-sm-12">
+                                        <form-input
+                                            [formGroup]="changePasswordFrom"
+                                            [required]="changePasswordFrom.get('newPassword').errors?.required"
+                                            type="password" name="newPassword"
+                                            [label]="t('auth.newPassword')">
+                                        </form-input>
+                                        <div class="validation-error" *ngIf="changePasswordFrom.get('newPassword').errors?.minlength">
+                                            {{ t('messages.error.minlength', { field: t('auth.password'), length: PASS_MIN_LENGTH }) }}
+                                        </div>
+                                    </div>
+                                    <div class="clr-col-sm-12">
+                                        <form-input
+                                            [formGroup]="changePasswordFrom"
+                                            [required]="changePasswordFrom.get('newPasswordRepeat').errors?.required"
+                                            type="password" name="newPasswordRepeat"
+                                            [label]="t('auth.newPasswordRepeat')">
+                                        </form-input>
+                                        <div class="validation-error" *ngIf="changePasswordFrom.get('newPasswordRepeat').errors?.minlength">
+                                            {{ t('messages.error.minlength', { field: t('auth.password'), length: PASS_MIN_LENGTH }) }}
+                                        </div>
+                                    </div>
+                                    <button [disabled]="changePasswordFrom.invalid" type="button" class="btn btn-secondary-outline" (click)="changePassword()">
+                                        {{ t('auth.changePassword') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('header.notifications') }}
+                    </div>
+                    <div class="card-block">
+                        <div class="clr-row">
+                            <div class="clr-col-md-6 clr-col-sm-12">
+                                <!-- <p>Notification settings</p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('header.settings') }}
+                    </div>
+                    <div class="card-block">
+                        <div class="clr-row">
+                            <div class="clr-col-md clr-col-sm-12">
+                                <app-text-editor></app-text-editor>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

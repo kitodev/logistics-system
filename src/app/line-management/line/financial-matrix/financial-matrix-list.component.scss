@@ -1,0 +1,17 @@
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.table.basic-data {
+    width: auto;
+    margin: 20px auto;
+  
+    td {
+      text-align: right;
+      &.button {
+          text-align: center;
+      }
+    }
+}

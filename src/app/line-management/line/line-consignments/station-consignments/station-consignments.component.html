@@ -1,0 +1,68 @@
+<ng-container *transloco="let t">
+<div class="page">
+  <h3 *ngIf="leg.downConsignments.length">{{t('consignment.loadingOut.label')}}</h3>
+  <table class="font-size: 16px;" cellPadding=10 cellSpacing=0 *ngIf="leg.downConsignments.length">
+    <thead>
+      <tr>
+        <td>{{ t('consignment.orderId') }}<br>{{ t('company.companyName') }}</td>
+        <td>{{ t('consignment.lots') }}</td>
+        <td>{{ t('consignment.openTo') }}</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let consignment of leg.downConsignments">
+        <td style="vertical-align:text-top;">
+          {{ consignment.consignmentOrderID }}<br>
+          {{ leg.companyName }}
+        </td>
+        <td>
+          <table cellPadding=5 cellSpacing=0>
+            <tr *ngFor="let lot of consignment['basicData'].lots">
+              <td>{{ lot.lotIdentifier }}</td>
+              <td>{{ lot.name }}</td>
+              <td>{{ lot.quantity }} {{ lot.translatedQuantityType }}</td>
+              <td>{{ lot.weight }} kg</td>
+            </tr>
+          </table>
+        </td>
+        <td style="vertical-align:text-top;">
+          {{ consignment['locationInfo']?.timeGate.latestArrival | date:'yyyy.MM.MM hh:mm' }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <h3 *ngIf="leg.upConsignments.length">{{t('consignment.loadingIn.label')}}</h3>
+  <table class="font-size: 16px;" cellPadding=10 cellSpacing=0 *ngIf="leg.upConsignments.length">
+    <thead>
+      <tr>
+        <td>{{ t('consignment.orderId') }}<br>{{ t('company.companyName') }}</td>
+        <td>{{ t('consignment.lots') }}</td>
+        <td>{{ t('consignment.openTo') }}</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let consignment of leg.upConsignments">
+        <td style="vertical-align:text-top;">
+          {{ consignment.consignmentOrderID }}<br>
+          {{ leg.companyName }}
+        </td>
+        <td>
+          <table cellPadding=5 cellSpacing=0>
+            <tr *ngFor="let lot of consignment['basicData'].lots">
+              <td>{{ lot.lotIdentifier }}</td>
+              <td>{{ lot.name }}</td>
+              <td>{{ lot.quantity }} {{ lot.translatedQuantityType }}</td>
+              <td>{{ lot.weight }} kg</td>
+            </tr>
+          </table>
+        </td>
+        <td style="vertical-align:text-top;">
+          {{ consignment['locationInfo']?.timeGate.latestArrival | date:'yyyy.MM.MM hh:mm' }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</ng-container>

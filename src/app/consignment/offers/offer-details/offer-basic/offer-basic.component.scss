@@ -1,0 +1,79 @@
+.offer-control {
+  background-color: #ffffff;
+  border-radius: 2px;
+  margin: 0;
+  align-items: baseline;
+
+  .offer-save {
+    text-align: right;
+  }
+}
+
+.control {
+
+  & > div {
+    padding: 0.5rem 0;
+  }
+
+  .clr-form-control {
+    margin-top: 0;
+  }
+
+  .clr-control-container, input, .clr-input-group, .clr-select-wrapper, select {
+    width: auto;
+  }
+}
+
+.route {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+  align-items: center;
+  font-size: 0.75rem;
+
+  .from {
+
+  }
+
+  .to {
+    padding-right: 0.5rem;
+  }
+}
+
+.addressee-item {
+  display: inline;
+
+  a {
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+}
+
+.addressee-content a {
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+.converted {
+  text-align: center;
+  width: 100%;
+}
+
+.draft {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+
+  .deadline-container {
+    display: flex;
+
+    .deadline {
+      padding-right: 1rem;
+      display: inline-block;
+      margin-left: auto;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+.container {
+  padding-left: 0.5rem;
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &.load-in {
+    .head {
+      background-color: #e3f5fc;
+    }
+  }
+
+  &.load-out {
+    .head {
+      background-color: #dff0d0;
+    }
+  }
+}

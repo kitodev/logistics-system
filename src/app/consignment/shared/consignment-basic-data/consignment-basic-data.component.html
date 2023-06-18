@@ -1,0 +1,105 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row">
+    <div class="clr-col-6"></div>
+    <div class="clr-col-6">
+      <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+
+    <div class="clr-row" *ngIf="consignmentBasicDataForm">
+
+      <div class="clr-col-12">
+
+        <div class="title">
+          <fa-icon [icon]="faTable"></fa-icon>
+          {{ t('consignment.basicData') }}
+        </div>
+
+        <div class="clr-row">
+          <!-- <div class="clr-col-sm-2 clr-col-md-2">
+            <form-select [formGroup]="consignmentBasicDataForm" name="travelMode"
+                         [required]="consignmentBasicDataForm.get('travelMode').errors?.required"
+                         [label]="t('consignment.travelMode.label')" [optionsArray]="travelModes"></form-select>
+          </div>
+
+          <div class="clr-col-sm-2 clr-col-md-2">
+            <form-select [formGroup]="consignmentBasicDataForm" name="transportMode"
+            [required]="consignmentBasicDataForm.get('transportMode').errors?.required"
+                         [label]="t('consignment.transportMode')" [optionsArray]="transportModes"></form-select>
+          </div>
+
+          <div class="clr-col-sm-2 clr-col-md-1">
+            <form-select [formGroup]="consignmentBasicDataForm" name="tradeType"
+            [required]="consignmentBasicDataForm.get('tradeType').errors?.required"
+                         [label]="t('consignment.tradeType')" [optionsArray]="tradeTypes"></form-select>
+          </div>
+
+          <div class="clr-col-sm-2 clr-col-md-1">
+            <form-select [formGroup]="consignmentBasicDataForm" name="parity" [label]="t('consignment.parity')"
+            [required]="consignmentBasicDataForm.get('parity').errors?.required"             
+            [optionsArray]="parityList"></form-select>
+          </div> -->
+
+          <div class="clr-col-sm-3 clr-col-md-2">
+            <form-input type="text" [formGroup]="consignmentBasicDataForm" name="orderId"
+            [required]="consignmentBasicDataForm.get('orderId').errors?.required"
+                        [label]="t('consignment.orderId')"></form-input>
+          </div>
+
+          <div class="clr-col-sm-3 clr-col-md-2">
+            <form-input type="text" [formGroup]="consignmentBasicDataForm" name="ekaer"
+            [required]="consignmentBasicDataForm.get('ekaer').errors?.required"            
+            [label]="t('consignment.ekaer')"></form-input>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="clr-col-12">
+        <div class="block">
+          <app-location-selector
+            controlName="loadingInLocation"
+            [simpleMode]="true"
+            [isNew]="isNew"
+            [editable]="locationEditable"
+            [companies]="partners"
+            [showStatus]="false"
+            [parentForm]="consignmentBasicDataForm"
+            [locationType]="LocationType.LOADING_IN"
+            [location]="consignmentBasicData.loadingInLocation"></app-location-selector>
+        </div>
+      </div>
+
+      <div class="clr-col-12">
+        <div class="block">
+          <app-location-selector
+            controlName="loadingOutLocation"
+            [simpleMode]="true"
+            [companies]="partners"
+            [isNew]="isNew"
+            [showStatus]="false"
+            [editable]="locationEditable"
+            [parentForm]="consignmentBasicDataForm"
+            [locationType]="LocationType.LOADING_OUT"
+            [location]="consignmentBasicData.loadingOutLocation"></app-location-selector>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="clr-row">
+      <div class="clr-col-12" *ngIf="consignmentBasicDataForm">
+        <app-consignment-lots [isNew]="isNew"
+                              [editable]="lotsEditable"
+                              [lots]="consignmentBasicData.lots"
+                              [chargeableWeight]="consignmentBasicData.chargeableWeight"
+                              [parentForm]="consignmentBasicDataForm"
+        (onPrint)="print($event)"></app-consignment-lots>
+      </div>
+    </div>
+
+  </ng-container>
+</ng-container>

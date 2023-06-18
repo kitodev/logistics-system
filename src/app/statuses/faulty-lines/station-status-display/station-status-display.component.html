@@ -1,0 +1,7 @@
+<ng-container *transloco="let t">
+  <div class="station">
+    <div class="description" *ngIf="stationStatus.errorDescription">{{ stationStatus.errorDescription }}</div>
+    <div class="status" *ngIf="stationStatus.statusType">{{ t('status.loading.' + stationStatus.statusType) }}</div>
+    <div class="timestamp">{{ stationStatus.timestamp | date : 'medium' }}</div>
+  </div>
+</ng-container>

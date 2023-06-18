@@ -1,0 +1,187 @@
+<ng-container *transloco="let t">
+  <div class="card" *ngIf="consignmentDataForm">
+    <div class="card-block parcel-container">
+      <div class="clr-col">
+        <div class="clr-row">
+          <div class="control">
+            <button
+              *ngIf="isNew"
+              type="button"
+              (click)="createConsignment()"
+              class="btn btn-primary"
+            >
+              {{ t('general.addItem', { item: t('consignment.label') }) }}
+            </button>
+            <button
+              *ngIf="!isNew"
+              type="button"
+              [disabled]="consignmentDataForm.pristine"
+              (click)="updateConsignment()"
+              class="btn btn-primary"
+            >
+              {{ t('general.update', { item: t('consignment.label') }) }}
+            </button>
+          </div>
+        </div>
+
+        <div class="errors">
+          <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+        </div>
+        <div class="clr-row">
+          <div
+            class="clr-col-md consignor-data"
+            [formGroup]="consignmentDataForm"
+          >
+            <div class="title">
+              <fa-icon [icon]="faUser"></fa-icon>
+              {{ t('consignment.consignor') }}
+            </div>
+            <div class="clr-row">
+              <!--          Consignor Selector -->
+              <div class="clr-col-md clr-col-lg partner-selector">
+                <div>
+                  <ng-container *ngIf="partners">
+                    <div class="custom-form-input-container">
+                      <label
+                        [ngClass]="{ required: !selectedPartnerCompany }"
+                        class="clr-control-label"
+                        for="partner"
+                        >{{ t('consignment.partner') }}</label
+                      >
+
+                      <ng-select
+                        [items]="partners"
+                        [bindLabel]="'companyName'"
+                        dropdownPosition="auto"
+                        [(ngModel)]="selectedPartnerCompany"
+                        [clearable]="false"
+                        (change)="partnerInputChanged()"
+                        [virtualScroll]="true"
+                        [ngModelOptions]="{ standalone: true }"
+                        labelForId="partner"
+                      >
+                        <ng-template
+                          ng-option-tmp
+                          let-item="item"
+                          let-search="searchTerm"
+                        >
+                          <div>
+                            <span [ngOptionHighlight]="search">{{
+                              item.companyName
+                            }}</span>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="!partners">
+                    <clr-input-container>
+                      <label>{{ t('consignment.partner') }}</label>
+                      <input clrInput type="text" disabled />
+                    </clr-input-container>
+                  </ng-container>
+                </div>
+                <div class="partner-data" *ngIf="selectedPartnerCompany">
+                  <fa-icon [icon]="faMapMarker"></fa-icon>
+                  <span
+                    [innerHTML]="
+                      $any(
+                        selectedPartnerCompany.premises | selectSeat: 'address'
+                      ) | address: true
+                    "
+                  ></span>
+                </div>
+              </div>
+              <!--          Consignor Contact Selector -->
+              <div class="clr-col-md clr-col-lg">
+                <div class="custom-form-input-container">
+                  <label
+                    [ngClass]="{
+                      required: consignmentDataForm.get('consignorEmployeeId')
+                        .errors?.required
+                    }"
+                    class="clr-control-label"
+                    for="consignorEmployeeId"
+                  >
+                    {{ t('consignment.contact') }}
+                  </label>
+                  <ng-select
+                    [items]="contacts"
+                    [formGroup]="consignmentDataForm"
+                    bindLabel="name"
+                    dropdownPosition="auto"
+                    bindValue="id"
+                    [searchFn]="employeeSearchFn"
+                    [virtualScroll]="true"
+                    (change)="onContactSelect($event)"
+                    formControlName="consignorEmployeeId"
+                    labelForId="consignorEmployeeId"
+                  >
+                    <ng-template ng-label-tmp let-item="item">
+                      {{ item | employeeName }}
+                    </ng-template>
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-search="searchTerm"
+                    >
+                      <div>
+                        <span [ngOptionHighlight]="search">{{
+                          item | employeeName: true
+                        }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <div class="partner-data" *ngIf="selectedContact">
+                  <app-contact-info
+                    [phone]="selectedContact?.phone"
+                    [email]="selectedContact?.email"
+                    [fax]="selectedContact?.fax"
+                    [mobile]="selectedContact?.mobile"
+                  >
+                  </app-contact-info>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="clr-col comments" *ngIf="consignment.id">
+            <div class="title">
+              <div>
+                <fa-icon [icon]="faStickyNote"></fa-icon>
+                {{ t('general.comments') }}
+              </div>
+              <div>
+                <button
+                  class="btn btn-success btn-sm"
+                  (click)="sendVerification()"
+                >
+                  {{ t('consignment.verify') }}
+                </button>
+              </div>
+            </div>
+            <app-comments
+              [chosenApi]="CommentApis.CONSIGNMENT_ENDPOINT"
+              [chosenId]="consignment.id"
+              [refresh]="refreshComments.asObservable()"
+            >
+            </app-comments>
+          </div>
+        </div>
+      </div>
+
+      <div class="basic-data">
+        <app-consignment-basic-data
+          [partners]="partners"
+          [consignmentBasicData]="consignment.consignmentBasicData"
+          [parentForm]="consignmentDataForm"
+          [locationEditable]="isNew"
+          [isNew]="isNew"
+          (onPrint)="print($event)"
+        >
+        </app-consignment-basic-data>
+      </div>
+    </div>
+  </div>
+</ng-container>

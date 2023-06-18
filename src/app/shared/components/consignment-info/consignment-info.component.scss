@@ -1,0 +1,11 @@
+.info-container {
+  display: flex;
+  flex-direction: row;
+  > div {
+    padding: 0.1rem 0.4rem;
+  }
+
+  .lot-item span {
+    font-weight: bold;
+  }
+}

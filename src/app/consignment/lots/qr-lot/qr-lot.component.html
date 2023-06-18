@@ -1,0 +1,31 @@
+<div class="page" style="size: landscape; text-align: center;">
+  <ng-container *ngFor="let lotItem of lots">
+    <div style="display: inline-block; border: 1mm solid #000000; margin: 3mm; max-width: 200mm">
+      <table>
+        <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center">
+            <qrcode [qrdata]="lotItem.id+'#'+lotItem.index"
+                    [width]="200"
+                    [errorCorrectionLevel]="'H'"></qrcode>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <h2 style="margin:0; font-size: 8mm;">{{ data.lot.lotIdentifier }}</h2>
+          </td>
+        </tr>
+        <tr *ngIf="data.sender && data.addressee">
+          <td colspan="2">From: <h3 style="font-size: 5mm; margin:0">{{ data.sender }}</h3></td>
+          <td colspan="2">To: <h3 style="font-size: 5mm; margin:0">{{ data.addressee }}</h3></td>
+        </tr>
+        <tr>
+          <td colspan="2">{{ lotItem.id }} </td>
+          <td>#{{ lotItem.index }}</td>
+          <td style="text-align: right">{{ lotItem.index + 1 }} / {{ lots.length }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</div>

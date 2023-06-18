@@ -1,0 +1,214 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row offer-control">
+    <div class="clr-col-md-9">
+      <app-offer-lifecycle [status]="offer?.offerStatus"></app-offer-lifecycle>
+    </div>
+    <div class="clr-col-md-3 offer-save">
+      <button class="btn btn-primary" type="button" (click)="saveAddressee()" [disabled]="!isDirty">
+        <fa-icon [icon]="faSave"></fa-icon>
+        {{ t('offer.save') }}
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-block">
+      <div class="clr-row">
+        <div class="clr-col-md">
+          <div class="custom-form-input-container">
+            <label class="clr-control-label" htmlFor="department">{{ t('company.employee.department') }}</label>
+            <ng-select [items]="departments"
+            [(ngModel)]="selectedDepartment"
+                bindLabel="label"
+                dropdownPosition="auto"
+                bindValue="value"
+                [virtualScroll]="true"
+                (change)="onDepartmentChange($event)"
+                [closeOnSelect]="true"
+                [hideSelected]="false"
+                labelForId="department">             
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="clr-col-md">
+          <div class="custom-form-input-container">
+            <label class="clr-control-label" for="position">{{ t('company.employee.position') }}</label>
+            <ng-select [readonly]="positions?.length === 0"
+            [(ngModel)]="selectedPosition"
+                [items]="positions"
+                bindLabel="label"
+                dropdownPosition="auto"
+                bindValue="value"
+                [virtualScroll]="true"
+                [closeOnSelect]="true"
+                [hideSelected]="false"
+                labelForId="position">             
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="clr-col-md">
+          <div class="custom-form-input-container">
+            <label class="clr-control-label" for="serviceFeature">{{ t('company.employee.serviceFeature') }}</label>
+            <ng-select [items]="serviceFeatures"
+            [(ngModel)]="selectedServiceFeature"
+                bindLabel="label"
+                dropdownPosition="auto"
+                bindValue="value"
+                [virtualScroll]="true"
+                [closeOnSelect]="true"
+                [hideSelected]="false"
+                labelForId="serviceFeature">             
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="clr-col-md"></div>
+      </div>
+      <div class="clr-row search-row">
+        <div class="clr-col-md">
+          <div class="custom-form-input-container">
+            <label class="clr-control-label" for="jarmuOsszTomegEnums">{{ t('company.employee.transportType') }}</label>
+            <ng-select [items]="fullWeightTypes"
+                [(ngModel)]="selectedFullWeightTypes"
+                bindLabel="label"
+                dropdownPosition="auto"
+                bindValue="value"
+                [virtualScroll]="true"
+                [multiple]="true"
+                [closeOnSelect]="false"
+                [hideSelected]="true"
+                labelForId="jarmuOsszTomegEnums">
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="clr-col-md">
+          <div class="custom-form-input-container">
+            <label class="clr-control-label">{{ t('company.employee.specInfo') }}</label>
+            <ng-select [items]="specialInformation"
+                      [(ngModel)]="selectedSpecialInformation"
+                      bindLabel="label"
+                      groupBy="options"
+                      [multiple]="true"
+                      [hideSelected]="true"
+                      [closeOnSelect]="false">
+                <ng-template ng-optgroup-tmp let-item="item">
+                    {{item.label}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                    {{item.label}}
+                </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="clr-col clr-row">
+          <div class="clr-col-md-6">
+            <!-- TODO: ng-select -->
+            <clr-select-container>
+              <label class="clr-control-label">{{ t('company.employee.routeFrom') }}</label>
+              <select clrSelect [(ngModel)]="selectedRouteFrom">
+                <option></option>
+                <optgroup *ngFor="let continentGroup of countries" [label]="continentGroup[0]">
+                  <option *ngFor="let country of continentGroup[1]" [value]="country" >{{country}}</option>
+                </optgroup>
+              </select>
+            </clr-select-container>
+          </div>
+          <div class="clr-col-md-6">
+            <clr-select-container>
+              <label class="clr-control-label">{{ t('company.employee.routeTo') }}</label>
+              <select clrSelect [(ngModel)]="selectedRouteTo">
+                <option></option>
+                <optgroup *ngFor="let continentGroup of countries" [label]="continentGroup[0]">
+                  <option *ngFor="let country of continentGroup[1]" [value]="country">{{country}}</option>
+                </optgroup>
+              </select>
+            </clr-select-container>
+          </div>
+        </div>
+        <div class="clr-col button">
+          <button type="button" class="btn" (click)="filter()">
+            <fa-icon [icon]="faSearch"></fa-icon> Keresés
+          </button>
+        </div>
+      </div>
+      
+      <div class="clr-row">
+        
+        <div class="clr-col-md-9">
+          <h3>{{ t('header.clients') }}</h3>
+          
+          <clr-datagrid [clrDgLoading]="isLoading" [(clrDgSelected)]="selectedContacts" class="small-table" [clrDgPreserveSelection]="true">
+            <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+            
+            <ng-container *ngFor="let col of tableCols">    
+                <clr-dg-column [clrDgField]="col.field">
+                  {{ t(col.label) }}
+                </clr-dg-column>
+            </ng-container>
+    
+            <clr-dg-row *clrDgItems="let contact of contactList" [clrDgItem]="contact">
+                <clr-dg-cell>{{ contact | employeeName: true }}</clr-dg-cell>
+                <clr-dg-cell>{{ contact.companyName }}</clr-dg-cell>
+                <clr-dg-cell>{{ contact.phone }}</clr-dg-cell>
+                <clr-dg-cell>{{ contact.mobile }}</clr-dg-cell>
+                <clr-dg-cell>{{ contact.email }}</clr-dg-cell>
+            </clr-dg-row>
+            
+            <clr-dg-footer>
+              <clr-dg-action-bar *ngIf="selectedContacts?.length">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-secondary" (click)="onAdd()">
+                    <fa-icon [icon]="faPlus"></fa-icon> Kiválasztottak hozzáadása
+                  </button>
+                </div>
+              </clr-dg-action-bar>
+              
+              <a class="csv-export" (click)="export()">{{ t('file.downloadCsv') }} <fa-icon [icon]="faDownload"></fa-icon></a>
+              <clr-dg-pagination #pagination [clrDgPageSize]="PAGE_SIZE" [clrDgTotalItems]="contactList?.length">
+                <clr-dg-page-size [clrPageSizeOptions]="SIZE_OPTIONS">{{ t('table.perPage') }}</clr-dg-page-size>
+                {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} {{ t('table.of') }} {{ contactList?.length }} {{ t('table.from') }}
+              </clr-dg-pagination>
+            </clr-dg-footer>
+    
+          </clr-datagrid>
+
+        </div>
+
+        <div class="clr-col-md-3 selected-container"
+             [ngClass]="{'add-enabled': offer?.offerStatus === OfferStatus.DRAFT}">
+          <h3>{{ t('offer.selectedAddressee') }}</h3>
+          <ul class="list-unstyled addressee">
+            <li *ngFor="let addressee of offer?.receiverEmployees">
+              <div class="addressee-item">
+                <div class="name">
+                  {{addressee.firstName}} {{addressee.lastName}}
+                </div>
+                <div class="control" *ngIf="offer?.offerStatus === OfferStatus.DRAFT">
+                  <button type="button" class="btn-icon btn btn-danger-outline" (click)="removeAddressee(addressee)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
+                </div>
+                <div class="company">
+                  {{addressee.companyName}}
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-container>

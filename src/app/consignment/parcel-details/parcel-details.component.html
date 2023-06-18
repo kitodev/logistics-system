@@ -1,0 +1,53 @@
+<ng-container *transloco="let t">
+  <nav class="subnav" [clr-nav-level]="2">
+    <ul class="nav">
+
+      <li class="nav-item"><a [routerLink]="['/consignment']" class="nav-link">
+        <fa-icon [icon]="faArrowLeft"></fa-icon>
+        {{ t('consignment.menu.parcel') }}</a>
+      </li>
+
+      <li class="nav-item"><a [routerLink]="['./details']" class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faTable"></fa-icon>
+        {{ t('consignment.menu.details') }}</a>
+      </li>
+
+      <li class="nav-item" *ngIf="id !== 'new'">
+        <a [routerLink]="['./address']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
+          {{ t('consignment.menu.address') }}</a>
+      </li>
+
+      <li class="nav-item" *ngIf="id !== 'new'">
+        <a [routerLink]="['./map']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faMapMarkedAlt"></fa-icon>
+          {{ t('consignment.menu.map') }}
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="id !== 'new'"><a [routerLink]="['./financial-matrix']"
+                                                  class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faCoins"></fa-icon>
+        {{ t('general.financialMatrix') }}</a>
+      </li>
+
+      <li class="nav-item" *ngIf="id !== 'new'">
+        <a [routerLink]="['./documents']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faFile"></fa-icon>
+          {{ t('header.documents') }}
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="id !== 'new'">
+        <a [routerLink]="['./history']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faHistory"></fa-icon>
+          {{ t('history.label') }}
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+  <div class="content-area">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>

@@ -1,0 +1,22 @@
+[type=checkbox] {
+  display: none;
+}
+
+.clr-justify-content-center {
+  display: flex;
+}
+
+.logo {
+  background-image: url('../../../assets/images/logo.png');
+  background-repeat: no-repeat;
+  width: 400px;
+  background-position: center;
+}
+
+clr-header {
+  margin-bottom: 20px;
+}
+
+.buttons {
+  margin-top:20px
+}

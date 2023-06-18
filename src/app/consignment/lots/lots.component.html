@@ -1,0 +1,163 @@
+<ng-container *transloco="let t">
+  <div class="lots">
+    <div class="title">
+      <fa-icon [icon]="faCubes"></fa-icon>
+      {{ t('consignment.lots') }}
+    </div>
+    <div class="block section-content">
+
+      <div class="table-container">
+        <table class="table">
+          <thead>
+          <tr>
+            <th></th>
+            <th>{{ t('consignment.lot.name') }}</th>
+            <th>{{ t('consignment.lot.lotIdentifier') }}</th>
+            <th>{{ t('consignment.lot.quantity') }}</th>
+            <th>{{ t('consignment.lot.quantityType') }}</th>
+            <th>{{ t('consignment.lot.weight') }}</th>
+            <th>{{ t('consignment.lot.lmeter') }}</th>
+            <th>{{ t('consignment.lot.length') }}</th>
+            <th>{{ t('consignment.lot.width') }}</th>
+            <th>{{ t('consignment.lot.height') }}</th>
+            <th>{{ t('consignment.lot.cbm') }}</th>
+            <th>{{ t('consignment.lot.stackable') }}</th>
+            <th>{{ t('consignment.lot.adr') }}</th>
+            <th>{{ t('consignment.lot.adrIdentifier') }}</th>
+            <th>{{ t('consignment.lot.customs') }}</th>
+            <th>{{ t('general.operations') }}</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody *ngIf="lots.length; else noData">
+          <tr *ngFor="let lot of lots; let i=index" [ngClass]="{'editing': editedLot.index == i}">
+            <td>
+              <button *ngIf="lot.id" type="button" class="btn btn-link qr-print" (click)="qr(lot)">
+                <fa-icon [icon]="faQrcode" size="lg"></fa-icon>
+              </button>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.name') }}</span>
+              <span>
+                {{ lot.name }}
+              </span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.lotIdentifier') }}</span>
+              <span>{{ lot.lotIdentifier }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.quantity') }}</span>
+              <span>{{ lot.quantity }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.quantityType') }}</span>
+              <span>{{ t('consignment.lot.qtyTypes.' + lot.quantityType) }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.weight') }}</span>
+              <span>{{ lot.weight }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.lmeter') }}</span>
+              <span>{{ lot.lmeter }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.length') }}</span>
+              <span>{{ lot.length }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.width') }}</span>
+              <span>{{ lot.width }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.height') }}</span>
+              <span>{{ lot.height }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.cbm') }}</span>
+              <span>{{ lot.cbm }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.stackable') }}</span>
+              <span>
+               <ng-container *ngIf="lot.stackable; else nope">
+                 <fa-icon [icon]="faCheck"></fa-icon>
+               </ng-container>
+              </span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.adr') }}</span>
+              <span>
+                <ng-container *ngIf="lot.adr; else nope">
+                 <fa-icon [icon]="faCheck"></fa-icon>
+                </ng-container>
+              </span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.adrIdentifier') }}</span>
+              <span>{{ lot.adrIdentifier }}</span>
+            </td>
+            <td>
+              <span>{{ t('consignment.lot.customs') }}</span>
+              <span>
+                <ng-container *ngIf="lot.customs; else nope">
+                 <fa-icon [icon]="faCheck"></fa-icon>
+                </ng-container>
+              </span>
+            </td>
+            <td *ngIf="editable" class="operations">
+              <button type="button" class="btn btn-link btn-primary" title="{{ t('general.modify') }}" (click)="editLot(lot, i)">
+                <fa-icon [icon]="faEdit"></fa-icon>
+              </button>
+              <button type="button" class="btn btn-link btn-danger" title="{{ t('general.delete') }}" (click)="delLot(lot, i)">
+                <fa-icon [icon]="faTrashAlt"></fa-icon>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="editedLot.index >= 0">
+            <td [colSpan]="columnNumber+1">
+              <app-lot-edit
+                [lot]="editedLot.lot"
+                (onAddLot)="saveModifiedLot($event)"
+                [discardEnabled]="true"
+                [isEdit]="true"
+                (onDiscard)="discardLotEdit()" i></app-lot-edit>
+            </td>
+          </tr>
+          </tbody>
+          <tfoot>
+          <tr>
+            <td [colSpan]="columnNumber+1">
+              {{ t('consignment.lot.allWeight') }}: {{ weightSum }} kg |
+              {{ t('consignment.lot.allCbm') }}: {{ cbmSum }} m<sup>3</sup>
+              <ng-container *ngIf="chargeableWeight != null && !lotFormArray.dirty">
+                | {{ t('consignment.chargeableWeight') }}: {{ chargeableWeight }} kg
+              </ng-container>
+            </td>
+          </tr>
+          </tfoot>
+
+          <ng-template #noData>
+            <tbody>
+            <tr>
+              <td colspan="15">{{ t('general.noData') }}</td>
+            </tr>
+            </tbody>
+          </ng-template>
+        </table>
+      </div>
+
+      <div class="new-lot">
+        <app-lot-edit *ngIf="editable" [lot]="emptyLot" (onAddLot)="addLot($event)" [isEdit]="false"></app-lot-edit>
+      </div>
+
+      <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #nope>
+  <fa-icon [icon]="faTimes"></fa-icon>
+</ng-template>

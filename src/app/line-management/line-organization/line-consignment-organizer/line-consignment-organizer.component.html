@@ -1,0 +1,156 @@
+<ng-container *transloco="let t">
+
+    <div class="clr-row">
+        <div class="clr-col-6"></div>
+        <div class="clr-col-6">
+          <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+        </div>
+    </div>
+
+    <ng-container *ngIf="!isLoading; else loading">
+        <div class="clr-row clr-justify-content-center">
+            <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!legsChanged">{{ t('general.save') }}</button>
+        </div>
+
+        <div class="clr-row" cdkDropListGroup>
+            <div class="clr-col-6 dg-fixed-height">
+                <clr-datagrid *ngIf="!isLoading" class="no-bulk-selection">
+                    <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+
+                    <ng-container *ngFor="let col of linesTableCols; let index=index">
+                        <clr-dg-column [clrDgSortBy]="col.field"
+                         *ngIf="col.filterType === DataGridFilterType.NOFILTER">
+                            <ng-template [clrDgHideableColumn]="{hidden: col.hidden}"
+                             (clrDgHiddenChange)="changeLineColumnHidden($event, col.field)">
+                                {{ t(col.label) }}
+                            </ng-template>
+                        </clr-dg-column>
+                        
+                        <clr-dg-column [clrDgField]="col.field" *ngIf="col.filterType !== DataGridFilterType.NOFILTER">
+
+                            <ng-template [clrDgHideableColumn]="{hidden: col.hidden}"
+                                         (clrDgHiddenChange)="changeLineColumnHidden($event, col.field)">
+                              {{ t(col.label) }}
+                            </ng-template>
+                    
+                            <clr-dg-numeric-filter *ngIf="col.filterType === DataGridFilterType.NUMERIC"
+                                                   [clrDgNumericFilter]="col.filter"></clr-dg-numeric-filter>
+                    
+                            <clr-dg-filter *ngIf="col.filterType === DataGridFilterType.DATE">
+                              <table-date-range-filter [property]="col.field"></table-date-range-filter>
+                            </clr-dg-filter>
+                    
+                            <clr-dg-filter *ngIf="col.filterType === DataGridFilterType.PICKER">
+                              <table-select-one-filter [options]="col.filterOptions" [property]="col.field"></table-select-one-filter>
+                            </clr-dg-filter>
+                        </clr-dg-column>               
+                    </ng-container>
+                    <clr-dg-row *clrDgItems="let line of lineList; let i=index" [clrDgItem]="line" [ngClass]="{'expanded': linesExpanded[i]}">
+                        <clr-dg-action-overflow>
+                            <button type="button" class="btn btn-icon btn-outline btn-sm" title="{{ t('lines.menu.stations') }}" routerLink="/line-management/line/{{line.lineId}}/stations">
+                                <fa-icon [icon]="faRoute" size="lg"></fa-icon>
+                            </button>
+                        </clr-dg-action-overflow>
+                        <clr-dg-cell>{{ line.countryPair.from }}</clr-dg-cell>
+                        <clr-dg-cell>{{ line.countryPair.to }}</clr-dg-cell>
+                        <clr-dg-cell>{{ line.conveyor.companyName }}</clr-dg-cell>
+                        <clr-dg-cell>{{ t('consignment.type.' + line.transportMode) }}</clr-dg-cell>
+                        <clr-dg-cell>{{ line.activeVehicle.licensePlate }}</clr-dg-cell>
+                        <clr-dg-cell>{{ line.trailer?.trailerLicensePlate }}</clr-dg-cell>
+                        <clr-dg-cell>{{ t('company.vehicle.vehicleTypes.'+ line.activeVehicle.vehicleType) }}</clr-dg-cell>
+                        <clr-dg-cell>{{ t('company.vehicle.fullWeightTypes.'+ line.activeVehicle.fullWeightType) }}</clr-dg-cell>
+                        <clr-dg-cell>{{ t('company.vehicle.structureTypes.'+ line.activeVehicle.superStructureType) }}</clr-dg-cell>
+                        <clr-dg-row-detail [(clrIfExpanded)]="linesExpanded[i]" class="leg-details"
+                            cdkDropList [id]="line.lineId" (cdkDropListDropped)="onLineDrop($event)" [cdkDropListData]="line.allLegs">
+
+                            <div *ngFor="let leg of line.allLegs" cdkDrag class="leg clr-row">
+                                <div class="clr-col-1"><button class="btn btn-danger-outline btn-icon btn-sm" (click)="removeLeg(leg)"><fa-icon [icon]="faTimes"></fa-icon></button></div>
+                                <div class="clr-col">
+                                    <fa-icon [icon]="faArrowUp"></fa-icon> {{ leg.locationFrom.premiseAddress.country }} | {{ leg.locationFrom.premiseAddress.city }}</div>
+                                <div class="clr-col">
+                                    <fa-icon [icon]="faArrowDown"></fa-icon> {{ leg.locationTo.premiseAddress.country }} | {{ leg.locationTo.premiseAddress.city }}</div>
+                                <div class="clr-col">{{ leg.locationFrom.timeGate.earliestArrival | date: 'short': '': t('locale') }}</div>
+                                <div class="clr-col">{{ leg.locationTo.timeGate.earliestArrival | date: 'short': '': t('locale') }}</div>
+                            </div>
+
+                        </clr-dg-row-detail>
+
+                    </clr-dg-row>
+
+                    <clr-dg-footer></clr-dg-footer>
+                </clr-datagrid>
+            </div>
+            <div class="clr-col-6 dg-fixed-height">
+                <clr-datagrid *ngIf="!isLoading" class="no-bulk-selection">
+                    <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+
+                    <ng-container *ngFor="let col of consignmentTableCols; let index=index">
+                        <clr-dg-column [clrDgSortBy]="col.field" *ngIf="col.filterType === DataGridFilterType.NOFILTER">
+                            <ng-template [clrDgHideableColumn]="{hidden: col.hidden}" (clrDgHiddenChange)="changeConsignmentColumnHidden($event, col.field)">
+                                {{ t(col.label) }}
+                            </ng-template>
+                        </clr-dg-column>
+                        <clr-dg-column [clrDgField]="col.field" *ngIf="col.filterType !== DataGridFilterType.NOFILTER">
+
+                            <ng-template [clrDgHideableColumn]="{hidden: col.hidden}"
+                                         (clrDgHiddenChange)="changeConsignmentColumnHidden($event, col.field)">
+                              {{ t(col.label) }}
+                            </ng-template>
+                    
+                            <clr-dg-numeric-filter *ngIf="col.filterType === DataGridFilterType.NUMERIC"
+                                                   [clrDgNumericFilter]="col.filter"></clr-dg-numeric-filter>
+                    
+                            <clr-dg-filter *ngIf="col.filterType === DataGridFilterType.DATE">
+                              <table-date-range-filter [property]="col.field"></table-date-range-filter>
+                            </clr-dg-filter>
+                    
+                            <clr-dg-filter *ngIf="col.filterType === DataGridFilterType.PICKER">
+                              <table-select-one-filter [options]="col.filterOptions" [property]="col.field"></table-select-one-filter>
+                            </clr-dg-filter>
+                        </clr-dg-column> 
+                    </ng-container>
+                    <clr-dg-row *clrDgItems="let consignment of consignments; let i=index" [clrDgItem]="consignment" [ngClass]="{'expanded': consignmentsExpanded[i]}">
+                        <clr-dg-action-overflow>
+                            <button type="button" class="btn btn-icon btn-outline btn-sm" title="{{ t('lines.menu.consignments') }}" routerLink="/consignment/parcel/{{consignment.consignmentId}}/address">
+                                <fa-icon [icon]="faRoute" size="lg"></fa-icon>
+                            </button>
+                        </clr-dg-action-overflow>
+                        <clr-dg-cell>{{ consignment.consignmentBasicData.loadingInLocation.premiseAddress.country }}</clr-dg-cell>
+                        <clr-dg-cell>{{ consignment.consignmentBasicData.loadingOutLocation.premiseAddress.country }}</clr-dg-cell>
+                        <clr-dg-cell>{{ consignment.legs.length }} / {{ consignment.allLegs.length }}</clr-dg-cell>
+                        <clr-dg-cell>{{ consignment.consignmentBasicData.loadingInLocation.premiseAddress.city }}</clr-dg-cell>
+                        <clr-dg-cell>{{ consignment.consignmentBasicData.loadingInLocation.timeGate.earliestArrival | date: 'shortDate': '': t('locale')}}</clr-dg-cell>
+                        <clr-dg-cell>{{ consignment.consignmentBasicData.loadingOutLocation.premiseAddress.city }}</clr-dg-cell>
+                        <clr-dg-cell>{{ consignment.consignmentBasicData.loadingOutLocation.timeGate.earliestArrival | date: 'shortDate': '': t('locale')}}</clr-dg-cell>
+                        <clr-dg-cell>{{ consignment.cbmSum }} m<sup>3</sup></clr-dg-cell>
+                        <clr-dg-cell>{{ consignment.weightSum }} kg</clr-dg-cell>
+                        <clr-dg-row-detail [(clrIfExpanded)]="consignmentsExpanded[i]" class="leg-details"
+                            cdkDropList [id]="consignment.consignmentId" [cdkDropListData]="consignment.allLegs"
+                            [cdkDropListEnterPredicate]="canDrop" cdkDropListSortingDisabled="true">
+
+                            <div *ngFor="let leg of consignment.allLegs" cdkDrag class="leg clr-row" [cdkDragDisabled]="!!leg.lineId || !!leg.chosenLineId"
+                                [ngClass]="{'onLine': leg.lineId, 'waiting': leg.chosenLineId && !leg.lineId}">
+                                <div class="clr-col-1">
+                                    <fa-icon [icon]="faTruck" class="truckIcon"></fa-icon>
+                                </div>
+                                <div class="clr-col">
+                                    <fa-icon [icon]="faArrowUp"></fa-icon> {{ leg.locationFrom.premiseAddress.country }} | {{ leg.locationFrom.premiseAddress.city }}
+                                </div>
+                                <div class="clr-col">
+                                    <fa-icon [icon]="faArrowDown"></fa-icon> {{ leg.locationTo.premiseAddress.country }} | {{ leg.locationTo.premiseAddress.city }}
+                                </div>
+                                <div class="clr-col">{{ leg.locationFrom.timeGate.earliestArrival | date: 'shortDate': '': t('locale') }}</div>
+                                <div class="clr-col">{{ leg.locationTo.timeGate.earliestArrival | date: 'shortDate': '': t('locale') }}</div>
+                            </div>
+                        </clr-dg-row-detail>
+                        
+                    </clr-dg-row>
+                    <clr-dg-footer></clr-dg-footer>
+                </clr-datagrid>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #loading>
+        <span class="spinner"></span>
+    </ng-template>
+</ng-container>

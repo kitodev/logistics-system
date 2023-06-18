@@ -1,0 +1,41 @@
+.bg {
+  min-height: 100vh;
+  background: url('../../../assets/images/registration_bg.jpg') no-repeat center center;
+  background-size: cover;
+  display: grid;
+  place-items: center;
+
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: var(--clr-color-action-600);
+    opacity: 0.5;
+
+  }
+}
+
+
+.container {
+  width: 100vw;
+  padding: 10rem 0;
+  margin: 0;
+}
+
+.box {
+  padding: 1rem 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: saturate(100%) blur(8px);
+  backdrop-filter: saturate(100%) blur(8px);
+  border-radius: 4px;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  z-index: 2;
+
+  .pass-input {
+    padding-bottom: 1rem;
+  }
+}

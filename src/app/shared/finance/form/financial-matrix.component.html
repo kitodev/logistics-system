@@ -1,0 +1,123 @@
+<ng-container *transloco="let t">
+    <div [formGroup]="financeForm" class="clr-row">
+        <div class="clr-col-md-6">
+            <div class="clr-row">
+                <div class="clr-col-md-6">
+                    <div class="custom-form-input-container">
+                        <label class="clr-control-label" for="financialSigns"
+                        [ngClass]="{'required': financeForm.get('financialSign').errors?.required}">{{ t('finance.financialSign') }}</label>
+                        <ng-select 
+                            [items]="financialSigns"
+                            bindLabel="label"
+                            dropdownPosition="auto"
+                            bindValue="value"
+                            [multiple]="false"
+                            [virtualScroll]="true"
+                            [closeOnSelect]="true"
+                            [hideSelected]="false"
+                            formControlName="financialSign"
+                            labelForId="financialSign"
+                            ></ng-select>
+                    </div>
+                </div>
+                <div class="clr-col-md-6">
+                    <form-date-time-picker [parentForm]="financeForm"
+                        [datetime]="entry?.dateOfFulfillment"
+                        type="calendar"
+                        name="dateOfFulfillment"
+                        mode="single"
+                        [required]="financeForm.get('dateOfFulfillment').errors?.required"
+                        [label]="t('finance.dateOfFulfillment')"></form-date-time-picker>
+                </div>
+            </div>
+
+            <div class="custom-form-input-container">
+                <label class="clr-control-label" for="typeOfServiceOrGoods"
+                [ngClass]="{'required': financeForm.get('typeOfServicesOrGoods').errors?.required}">
+                {{ t('finance.typeOfServicesOrGoods') }}</label>
+                <ng-select 
+                    [items]="typeOfServiceOrGoods"
+                    bindLabel="label"
+                    dropdownPosition="auto"
+                    bindValue="value"
+                    [multiple]="false"
+                    [virtualScroll]="true"
+                    [closeOnSelect]="true"
+                    [hideSelected]="false"
+                    formControlName="typeOfServicesOrGoods"
+                    labelForId="typeOfServiceOrGoods"
+                    ></ng-select>
+            </div>
+
+            <form-input [formGroup]="financeForm" type="text" name="description" [label]="t('finance.description')"
+            [required]="financeForm.get('description').errors?.required"></form-input>
+
+            <ng-container *ngIf="partners">
+                <div class="custom-form-input-container">
+                  <label [ngClass]="{'required': financeForm.get('partnerId').errors?.required}"
+                         class="clr-control-label" for="partner">{{ t('consignment.partner') }}</label>
+                  <ng-select [items]="partners"
+                             [bindLabel]="'companyName'"
+                             [bindValue]="'id'"
+                             dropdownPosition="auto"
+                             [clearable]="false"
+                             [virtualScroll]="true"
+                             labelForId="partner"
+                             formControlName="partnerId"
+                  >
+                    <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                      <div><span [ngOptionHighlight]="search">{{item.companyName}}</span></div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </ng-container>
+
+        </div>
+        <div class="clr-col-md-6">
+            <div class="clr-row">
+                <div class="clr-col-md-6">
+                    <form-input [formGroup]="financeForm" type="number" name="amount" [label]="t('finance.amount')"
+                    [required]="financeForm.get('amount').errors?.required"></form-input>
+                </div>
+                <div class="clr-col-md-6">
+                    <form-select [formGroup]="financeForm" name="amountUnit" [label]="t('finance.amountUnit')"
+                        [required]="financeForm.get('amountUnit').errors?.required"
+                        [optionsArray]="amountUnits"></form-select>
+                </div>
+            </div>
+            <div class="clr-row">
+                <div class="clr-col-md-6">
+                    <form-input [formGroup]="$any(financeForm.controls.unitPrice)" type="number" name="amount" [label]="t('finance.unitPrice')"
+                    [required]="$any(financeForm.controls.unitPrice).get('amount').errors?.required"></form-input>
+                </div>
+                <div class="clr-col-md-6">
+                    <ng-container [formGroup]="$any(financeForm.controls.unitPrice)">
+                        <div class="custom-form-input-container">
+                            <label class="clr-control-label" for="currency"
+                            [ngClass]="{'required': $any(financeForm.controls.unitPrice).get('currency').errors?.required}">{{  t('finance.currency') }}</label>
+                            <ng-select [items]="Currencies"
+                                [multiple]="false"
+                                [virtualScroll]="true"
+                                [closeOnSelect]="true"
+                                formControlName="currency"
+                                labelForId="currency"></ng-select>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        
+            <form-input [formGroup]="financeForm" type="number" name="vat" [label]="t('finance.vat')"
+            [required]="financeForm.get('vat').errors?.required"></form-input>
+            <form-input [formGroup]="financeForm" type="text" name="notes" [label]="t('finance.notes')"
+            [required]="financeForm.get('notes').errors?.required"></form-input>
+        </div>
+
+    </div>
+    <div class="clr-row clr-justify-content-center">
+        <button type="button" class="btn btn-primary" (click)="createFinance()" [disabled]="!financeForm.valid"
+            *ngIf="isNew">{{ t('general.addNew') }}</button>
+        <button type="button" class="btn btn-primary" (click)="updateFinance()"
+            [disabled]="!financeForm.valid || financeForm.pristine"
+            *ngIf="!isNew">{{ t('general.save') }}</button>
+    </div>
+</ng-container>

@@ -1,0 +1,77 @@
+.table {
+  margin-top: 0;
+}
+.bid-row {
+  border-bottom: 1px solid #666666;
+
+  &.accepted td:not(.bidder){
+    border-top: 1px solid #3c8500;
+    border-bottom: 1px solid #3c8500;
+    box-shadow: 0px 0 2px 0px #3c8500 inset;
+  }
+
+  td.bidder {
+    vertical-align: middle;
+
+    .company {
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .contact {
+      font-size: 0.75rem;
+      line-height: 1.25rem;
+      padding-top: 0.5rem;
+    }
+  }
+
+  td.price {
+    font-size: 0.8rem;
+    font-weight: bold;
+    vertical-align: middle;
+
+    clr-signpost {
+      padding: 0.25rem;
+
+      clr-signpost-content {
+        font-size: 0.7rem;
+        font-weight: normal;
+        padding-bottom: 0.25rem;
+
+        .status {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  td.expiration, td.control {
+    vertical-align: middle;
+  }
+
+  .consignment-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.4rem 0px;
+    grid-template-areas:
+    "from to"
+    "data data";
+  }
+
+  .from {
+    grid-area: from;
+    justify-self: self-start;
+    font-size: 0.75rem;
+  }
+
+  .to {
+    grid-area: to;
+    justify-self: self-end;
+    font-size: 0.75rem;
+  }
+
+  .data {
+    grid-area: data;
+  }
+
+}

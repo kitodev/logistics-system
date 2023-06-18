@@ -1,0 +1,57 @@
+<ng-container *transloco="let t">
+  <div class="location">
+    <div class="section">
+      <div class="important">
+        <a [routerLink]="['/company/'+locationCompany?.id]">
+          {{locationCompany?.companyName}}
+        </a>
+      </div>
+      <div class="address">{{location?.premiseAddress | address}}</div>
+      <div class="info">
+        <div *ngIf="location?.companyPhone">
+          <fa-icon [icon]="faPhone"></fa-icon>
+          {{location?.companyPhone}}
+        </div>
+        <div *ngIf="location?.companyEmail">
+          <fa-icon [icon]="faEnvelope"></fa-icon>
+          <a href="mailto:{{location?.companyEmail}}">{{location?.companyEmail}}</a>
+        </div>
+        <div *ngIf="location?.companyFax">
+          <fa-icon [icon]="faFax"></fa-icon>
+          {{location?.companyFax}}
+        </div>
+      </div>
+      <div class="contact">
+        <div class="important">
+          <a
+            [routerLink]="['/company/',locationCompany?.id,'employees',contactEmployee?.id]">{{contactEmployee | employeeName }}</a>
+        </div>
+        <div class="info">
+          <div *ngIf="contactEmployee?.phone">
+            <fa-icon [icon]="faPhone"></fa-icon>
+            {{contactEmployee?.phone}}
+          </div>
+          <wbr>
+          <div *ngIf="contactEmployee?.mobile">
+            <fa-icon [icon]="faMobile"></fa-icon>
+            {{contactEmployee?.mobile}}
+          </div>
+          <wbr>
+          <div *ngIf="contactEmployee?.email">
+            <fa-icon [icon]="faEnvelope"></fa-icon>
+            <a href="mailto:{{contactEmployee?.email}}">{{contactEmployee?.email}}</a>
+          </div>
+          <wbr>
+          <div *ngIf="contactEmployee?.fax">
+            <fa-icon [icon]="faFax"></fa-icon>
+            {{contactEmployee?.fax}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <app-time-gate-info [timeGate]="location?.timeGate"></app-time-gate-info>
+    </div>
+  </div>
+
+</ng-container>

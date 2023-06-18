@@ -1,0 +1,67 @@
+.consignor-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.consignor-contact {
+  display: flex;
+  flex-direction: row;
+}
+
+.partner-selector {
+  display: flex;
+  flex-direction: column;
+
+  .partner-data {
+    padding-left: 1em;
+
+    span {
+      white-space: nowrap;
+    }
+  }
+}
+
+.parcel-container {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  grid-template-rows: 1fr auto auto auto;
+  gap: 0 0;
+  grid-template-areas:
+    "control comments"
+    "errors comments"
+    "consignor-data comments"
+    "basic-data basic-data";
+}
+
+.control {
+  grid-area: control;
+  align-self: center;
+  text-align: center;
+}
+
+.errors {
+  grid-area: errors;
+}
+
+.comments {
+  grid-area: comments;
+
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+.consignor-data {
+  grid-area: consignor-data;
+}
+
+.basic-data {
+  grid-area: basic-data;
+}
+

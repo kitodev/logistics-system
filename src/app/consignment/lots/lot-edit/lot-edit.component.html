@@ -1,0 +1,125 @@
+<ng-container *transloco="let t">
+  <div [formGroup]="lotForm">
+    <div class="clr-row">
+      <div class="clr-col-md-3 clr-col-lg-2">
+        <form-input type="text" [formGroup]="lotForm" name="name"
+        [required]="lotForm.get('name').errors?.required"
+                    [label]="t('consignment.lot.name')"></form-input>
+      </div>
+      <div class="clr-col-md-3 clr-col-lg-2">
+        <form-input type="text" [formGroup]="lotForm" name="lotIdentifier"
+        [required]="lotForm.get('lotIdentifier').errors?.required"
+                    [label]="t('consignment.lot.lotIdentifier')"></form-input>
+      </div>
+      <div class="clr-col-md-2 clr-col-lg-1">
+        <form-input type="number" [formGroup]="lotForm" name="quantity"
+        [required]="lotForm.get('quantity').errors?.required"
+                    [label]="t('consignment.lot.quantity')"></form-input>
+      </div>
+      <div class="clr-col-md-2 clr-col-lg-1">
+        <form-select [formGroup]="lotForm" name="quantityType" [label]="t('consignment.lot.quantityType')"
+        [required]="lotForm.get('quantityType').errors?.required"             
+        [optionsArray]="quantityTypes"></form-select>
+      </div>
+      <div class="clr-col-md-2 clr-col-lg-1">
+        <form-input type="number" [formGroup]="lotForm" name="weight"
+        [required]="lotForm.get('weight').errors?.required"
+                    [label]="t('consignment.lot.weight')"></form-input>
+      </div>
+      <div class="clr-col-md-2 clr-col-lg-1">
+        <form-input type="number" [formGroup]="lotForm" name="lmeter"
+        [required]="lotForm.get('lmeter').errors?.required"
+                    [label]="t('consignment.lot.lmeter')"></form-input>
+      </div>
+      <div class="clr-col-md-2 clr-col-lg-1">
+        <form-input type="number" [formGroup]="lotForm" name="cbm"
+        [required]="lotForm.get('cbm').errors?.required"
+                    [label]="t('consignment.lot.cbm')"></form-input>
+      </div>
+      <div class="clr-col-md-6 clr-col-lg-3">
+        <div class="clr-row">
+          <div class="clr-col-md-4">
+            <form-input type="number" [formGroup]="lotForm" name="length"
+            [required]="lotForm.get('length').errors?.required"
+                        [label]="t('consignment.lot.length')"></form-input>
+          </div>
+          <div class="clr-col-md-4">
+            <form-input type="number" [formGroup]="lotForm" name="width"
+            [required]="lotForm.get('width').errors?.required"
+                        [label]="t('consignment.lot.width')"></form-input>
+          </div>
+          <div class="clr-col-md-4">
+            <form-input type="number" [formGroup]="lotForm" name="height"
+            [required]="lotForm.get('height').errors?.required"
+                        [label]="t('consignment.lot.height')"></form-input>
+          </div>
+        </div>
+      </div>
+      <div class="clr-col-md-2">
+        <form-checkbox
+          [formGroup]="lotForm"
+          [label]="t('consignment.lot.stackable')"
+          name="stackable"></form-checkbox>
+      </div>
+      <div class="clr-col-md-2">
+        <form-checkbox
+          [formGroup]="lotForm"
+          [label]="t('consignment.lot.customs')"
+          name="customs"></form-checkbox>
+      </div>
+      <div class="clr-col-md-1">
+        <form-checkbox [formGroup]="lotForm" [label]="t('consignment.lot.adr')" name="adr"></form-checkbox>
+      </div>
+      <div class="clr-col-md-2 clr-col-lg-1">
+        <form-input
+          [required]="lotForm.get('unNumber').errors?.required"
+          [disabled]="lotForm.controls['adr'].value !== true"
+          type="text"
+          [formGroup]="lotForm"
+          name="unNumber"
+          [label]="t('consignment.lot.unNumber')"></form-input>
+      </div>
+
+      <div class="clr-col-md-2 clr-col-lg-2">
+        <form-select
+          [required]="lotForm.get('lotGroup').errors?.required"
+          [disabled]="lotForm.controls['adr'].value !== true"
+          [formGroup]="lotForm"
+          name="lotGroup"
+          [label]="t('consignment.lot.lotGroup')"
+          [optionsArray]="lotGroups"></form-select>
+      </div>
+      <div class="clr-col-md-2 clr-col-lg-1">
+        <form-select [disabled]="lotForm.controls['adr'].value !== true"
+                     [formGroup]="lotForm"
+                     name="classification"
+                     [label]="t('consignment.lot.classification')"
+                     [required]="lotForm.get('classification').errors?.required"
+                     [optionsArray]="classifications"></form-select>
+      </div>
+      <div class="clr-col-md-3 clr-col-lg-2">
+        <form-input [disabled]="lotForm.controls['adr'].value !== true"
+                    type="text" [formGroup]="lotForm" name="adrIdentifier"
+                    [required]="lotForm.get('adrIdentifier').errors?.required"
+                    [label]="t('consignment.lot.adrIdentifier')"></form-input>
+      </div>
+    </div>
+
+    <div class="clr-row">
+      <div class="clr-col clr-justify-content-center">
+        <button type="button"
+                (click)="discard()"
+                class="btn btn-secondary-outline"
+                *ngIf="discardEnabled">
+          {{ t('general.discard') }}
+        </button>
+        <button type="button"
+                [disabled]="!lotForm.valid"
+                (click)="addLot()"
+                class="btn btn-primary">
+          {{ isEdit ? t('general.save') : t('general.addItem', { item: t('consignment.lot.label') }) }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>

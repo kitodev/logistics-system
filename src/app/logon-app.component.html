@@ -1,0 +1,108 @@
+<ng-container *transloco="let t">
+  <clr-main-container>
+
+    <clr-header class="header-6" *ngIf="isLoggedIn()">
+      <div class="branding">
+        <a routerLink="/stats"></a>
+      </div>
+      <div class="header-actions">
+        <clr-dropdown>
+          <button class="nav-link nav-icon-text" clrDropdownTrigger aria-label="open user profile">
+            <div class="user-menu">
+              <div class="profile-picture"></div>
+              <!--<fa-icon [icon]="faUserIcon"></fa-icon>-->
+              <span class="nav-text" *ngIf="currentUser">{{ currentUser.userName }}</span>
+              <fa-icon [icon]="faAngleDown"></fa-icon>
+            </div>
+          </button>
+          <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+            <a href="#" clrDropdownItem>
+              <fa-icon [icon]="faEnvelope"></fa-icon>
+              {{ t('header.messages') }}</a>
+            <a [routerLink]="'/my-company/'+currentUser.companyId" clrDropdownItem>
+              <fa-icon [icon]="faBuilding"></fa-icon>
+              {{ t('header.myCompany') }}</a>
+            <a [routerLink]="'/company/'+currentUser.companyId+'/employees/'+currentUser.employee.employeeId"
+               clrDropdownItem>
+              <fa-icon [icon]="faUserAlt"></fa-icon>
+              {{ t('header.profile') }}</a>
+            <a [routerLink]="'/settings/'" clrDropdownItem>
+              <fa-icon [icon]="faCog"></fa-icon>
+              {{ t('header.settings') }}</a>
+            <a href="#" (click)="logout()" [disabled]="!currentUser" clrDropdownItem>
+              <fa-icon [icon]="faSignOut"></fa-icon>
+              {{ t('header.logout') }}</a>
+          </clr-dropdown-menu>
+        </clr-dropdown>
+
+      </div>
+    </clr-header>
+    <nav class="subnav top" [clr-nav-level]="1" *ngIf="isLoggedIn()">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/stats" routerLinkActive="active">
+            {{ t('header.statistics') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/company" routerLinkActive="active">
+            {{ t('header.clients') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/offer/offer-outgoing"
+            routerLinkActive="active">
+            {{ t('header.offers') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/order"
+            routerLinkActive="active">
+            {{ t('header.orders') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/consignment"
+            routerLinkActive="active">
+            {{ t('header.consignments') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/line-management"
+            routerLinkActive="active">
+            {{ t('header.lines') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/line-organization"
+            routerLinkActive="active">
+            {{ t('header.organize') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/statuses"
+            routerLinkActive="active">
+            {{ t('header.errors') }}
+            <ng-container *ngIf="errorCount | async">
+              <span class="error-count">{{ errorCount | async | largeNumber: 2}}</span>
+            </ng-container>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-text" routerLink="/notifications"
+            routerLinkActive="active">
+            {{ t('header.notifications') }}
+            <!--<ng-container *ngIf="errorCount | async">
+              <span class="error-count">{{ errorCount | async | largeNumber: 2}}</span>
+            </ng-container>-->
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="content-container">
+
+      <router-outlet></router-outlet>
+    </div>
+
+  </clr-main-container>
+</ng-container>

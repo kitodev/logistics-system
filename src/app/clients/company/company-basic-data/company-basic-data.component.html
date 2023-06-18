@@ -1,0 +1,249 @@
+<ng-container *transloco="let t">
+
+  <div class="card company" *ngIf="!isLoading">
+    <div class="card-block" [formGroup]="companyBasicDataForm">
+
+      <div class="clr-row control">
+        <div class="clr-col a-s-center">
+          <label class="inactive-company label label-warning"
+                 *ngIf="!isNew && !company.active">{{ t('company.inactive') }}</label>
+        </div>
+        <div class="clr-col clr-row text-right admin-controls">
+          <ng-container *ngIf="myCompanyId !== company.id && company.connectedAgencyId !== undefined">
+            <button *appEmployeeRole="[Role.SUPER_ADMIN, Role.AGENCY_ADMIN]"
+                    type="button"
+                    class="btn btn-primary-outline"
+                    (click)="activateCompany()">
+              {{ company.active ? t('company.inactivate') : t('company.activate') }}
+            </button>
+            <button *appEmployeeRole="[Role.SUPER_ADMIN]"
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="promoteCompany()">
+              {{ t('company.promote') }}
+            </button>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="title">
+        {{ t('company.companyInformation') }}
+      </div>
+      <div class="clr-row colored-row">
+        <div class="clr-col-md-9 clr-row">
+          <div class="clr-col-md-4">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="companyName"
+                        [label]="t('company.companyName')"
+                        [required]="companyBasicDataForm.get('companyName').errors?.required"></form-input>
+          </div>
+          <div class="clr-col-md-3">
+            <form-input type="email" [formGroup]="companyBasicDataForm" name="email" [label]="t('company.email')"
+                        [required]="companyBasicDataForm.get('email').errors?.required"></form-input>
+          </div>
+          <div class="clr-col-md-3">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="phone"
+                        [label]="t('company.phone')"
+                        [required]="companyBasicDataForm.get('phone').errors?.required"></form-input>
+          </div>
+          <div class="clr-col-md-2">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="fax"
+                        [label]="t('company.fax')"
+                        [required]="companyBasicDataForm.get('fax').errors?.required"></form-input>
+          </div>
+
+          <div class="clr-col-md-3">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="taxNumber"
+                        [label]="t('company.taxNumber')"
+                        [required]="companyBasicDataForm.get('taxNumber').errors?.required"></form-input>
+          </div>
+          <div class="clr-col-md-3">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="euTaxNumber"
+                        [label]="t('company.euTaxNumber')"
+                        [required]="companyBasicDataForm.get('euTaxNumber').errors?.required"></form-input>
+          </div>
+          <div class="clr-col-md-3">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="registrationNumber"
+                        [label]="t('company.registrationNumber')"
+                        [required]="companyBasicDataForm.get('registrationNumber').errors?.required"></form-input>
+          </div>
+          <div class="clr-col-md-3" *ngIf="this.seatForm?.get('address').value.country === 'HU'">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="groupIdentificationNumber"
+                        [label]="t('company.groupIdentificationNumber')"
+                        [required]="companyBasicDataForm.get('groupIdentificationNumber').errors?.required"></form-input>
+          </div>
+          <div class="clr-col-md-3">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="creditLimit"
+                        [label]="t('company.creditLimit')"
+                        [required]="companyBasicDataForm.get('creditLimit').errors?.required"></form-input>
+          </div>
+          <div class="clr-col-md">
+            <form-checkbox
+              clrCheckbox
+              [formGroup]="companyBasicDataForm"
+              [label]="t('company.billingElectronic')"
+              name="billingElectronic">
+              [required]="companyBasicDataForm.get('billingElectronic').errors?.required" />
+            </form-checkbox>
+          </div>
+          <div class="clr-col-md">
+            <form-input type="text" [formGroup]="companyBasicDataForm" name="billingPaymentDeadlineDays"
+              [label]="t('company.billingPaymentDeadlineDays')"
+              [required]="companyBasicDataForm.get('billingPaymentDeadlineDays').errors?.required">
+            </form-input>
+          </div>
+            <div class="clr-col-md">
+              <div class="custom-form-input-container">
+                <label class="clr-control-label" for="billingLanguage" [ngClass]="{'required': companyBasicDataForm.get('billingLanguage').errors?.required}">{{  t('company.billingLanguage') }}</label>
+                <ng-select
+                  [items]="billingLanguages"
+                  bindLabel="label"
+                  bindValue="value"
+                  [formGroup]="companyBasicDataForm"
+                  formControlName="billingLanguage"
+                  [multiple]="false"
+                  labelForId="billingLanguage"
+                  class="ng-select-gray"
+                  [required]="companyBasicDataForm.get('billingLanguage').errors?.required">
+                  ></ng-select>
+              </div>
+            </div>
+            <div class="clr-col-md">
+              <div class="custom-form-input-container">
+                <label class="clr-control-label" for="billingPaymentMethod" [ngClass]="{'required': companyBasicDataForm.get('billingPaymentMethod').errors?.required}">{{  t('company.billingPaymentMethod') }}</label>
+                <ng-select
+                [items]="billingPaymentMethods"
+                  bindLabel="label"
+                  bindValue="value"
+                  [formGroup]="companyBasicDataForm"
+                  formControlName="billingPaymentMethod"
+                  [multiple]="false"
+                  labelForId="billingPaymentMethod"
+                  class="ng-select-gray"
+              ></ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="clr-col-md-3">
+          <clr-input-container>
+            <label>{{ t('company.logo') }}</label>
+          </clr-input-container>
+          <ngx-file-drop
+            [dropZoneLabel]="t('company.dropLogo')"
+            (onFileDrop)="dropped($event)"
+            (change)="onSelectFile($event)"
+            [multiple]="false"
+            [directory]="false">
+            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+
+              <ng-container *ngIf="file; else originalLogo">
+                {{file.name}}
+              </ng-container>
+              <ng-template #originalLogo>
+                <ng-container
+                  *ngIf="company.companyLogoAssetId; else noLogo">
+                  <div>
+                    <fa-icon [icon]="faFileImage"></fa-icon>
+                    {{ t('company.logoExist') }}</div>
+                </ng-container>
+              </ng-template>
+              <ng-template #noLogo>
+                {{ t('company.dropLogo') }}
+              </ng-template>
+
+              <button type="button" class="btn btn-primary-outline"
+                      (click)="openFileSelector()">{{ t('general.browseImage') }}</button>
+              <div class="file-error" *ngIf="fileError">
+                <fa-icon [icon]="faExclamationCircle"></fa-icon>
+                {{ t('general.fileError.' + fileError) }}
+              </div>
+            </ng-template>
+          </ngx-file-drop>
+        </div>
+      </div>
+
+      <div class="clr-row">
+        <div class="clr-col-md">
+          <div class="title">
+            {{ t('company.seatAddress') }}
+          </div>
+          <div *ngIf="seatForm">
+            <form-address [formGroup]="$any(seatForm.controls.address)"></form-address>
+          </div>
+        </div>
+        <div class="clr-col-md">
+          <div class="flex-header">
+            <div class="title">
+              {{ t('company.mailingAddress') }}
+            </div>
+
+            <clr-checkbox-container>
+              <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox [(ngModel)]="sameAddress" (change)="copyAddress()"
+                       [ngModelOptions]="{standalone: true}" />
+                <label>{{ t('company.copyAddress') }}</label>
+              </clr-checkbox-wrapper>
+            </clr-checkbox-container>
+          </div>
+
+          <div formGroupName="mailingAddress">
+            <form-address [formGroup]="$any(companyBasicDataForm.controls.mailingAddress)"></form-address>
+          </div>
+        </div>
+      </div>
+
+      <div class="clr-row">
+        <div class="clr-col-md-6 clr-col-lg-4">
+          <div class="title">
+            {{ t('company.companyProfiles') }}
+          </div>
+          <div>
+            <ng-select [items]="companyProfiles"
+                       bindLabel="label"
+                       dropdownPosition="auto"
+                       bindValue="value"
+                       [virtualScroll]="true"
+                       [multiple]="true"
+                       [closeOnSelect]="false"
+                       [hideSelected]="true"
+                       [formGroup]="companyBasicDataForm"
+                       formControlName="companyProfiles"
+                       labelForId="companyProfiles">
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+              </ng-template>
+            </ng-select>
+          </div>
+          <clr-control-error
+            *ngIf="profilesFormArray.invalid && (profilesFormArray.dirty || profilesFormArray.touched)">
+            <div *ngIf="profilesFormArray.errors.required">
+              {{ t('messages.error.requiredArray') }}
+            </div>
+          </clr-control-error>
+        </div>
+        <div class="clr-col-md-6" *ngIf="!isNew">
+          <div class="title">
+            {{t('company.financialContact')}}
+          </div>
+          <form-employee-selector
+            [parentForm]="companyBasicDataForm"
+            controlName="financialContactId"
+            [employees]="companyEmployees"
+          >
+          </form-employee-selector>
+        </div>
+      </div>
+      <div class="clr-col text-center">
+        <button *ngIf="isNew" type="button" (click)="createCompany()"
+                class="btn btn-primary">{{ t('general.addItem', { item: t('company.label') }) }}</button>
+        <button *ngIf="!isNew" type="button" [disabled]="companyBasicDataForm.pristine && seatForm.pristine"
+                (click)="updateCompany()"
+                class="btn btn-primary">{{ t('general.update', { item: t('company.label') }) }}</button>
+      </div>
+    </div>
+  </div>
+
+
+  <app-documents *ngIf="!isNew" [type]="AssetTypes.COMPANY" [id]="companyId"></app-documents>
+
+
+</ng-container>

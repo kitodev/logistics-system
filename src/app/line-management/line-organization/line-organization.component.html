@@ -1,0 +1,18 @@
+<ng-container *transloco="let t">
+  <nav class="subnav" [clr-nav-level]="2">
+    <ul class="nav">
+      <li class="nav-item"><a [routerLink]="['./lines']" class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faRoad"></fa-icon>
+        {{ t('header.lines') }}</a></li>
+    </ul>
+    <ul class="nav">
+      <li class="nav-item"><a [routerLink]="['./lines']" class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faBoxOpen"></fa-icon>
+        {{ t('header.consignments') }}</a></li>
+    </ul>
+  </nav>
+
+  <div class="content-area">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>

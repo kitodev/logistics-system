@@ -1,0 +1,31 @@
+.container {
+  display: grid;
+  grid-template-columns: auto auto auto 30px;
+  grid-template-rows: auto auto;
+  gap: 0 0;
+  grid-template-areas:
+    "mode  parity"
+    "volume weight";
+  padding-bottom: 0.5rem;
+
+  &:last-of-type {
+    padding-bottom: 0;
+  }
+
+  .mode {
+    font-weight: bold;
+    grid-area: mode;
+  }
+
+  .volume {
+    grid-area: volume;
+  }
+
+  .weight {
+    grid-area: weight;
+  }
+
+  .parity {
+    grid-area: parity;
+  }
+}

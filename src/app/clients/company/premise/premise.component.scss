@@ -1,0 +1,20 @@
+.form-days-label {
+  display: flex;
+  align-items: flex-end;
+}
+
+.contact-control {
+  align-items: baseline;
+  padding: 0.5rem 0 0 0.25rem;
+}
+
+.status fa-icon {
+  color: var(--clr-forms-invalid-color, #c21d00)
+}
+
+.seat {
+  font-size: 0.8rem;
+  padding-top: 1rem;
+  color: var(--clr-forms-label-color, #454545);
+  font-weight: var(--clr-forms-label-font-weight, 600);
+}

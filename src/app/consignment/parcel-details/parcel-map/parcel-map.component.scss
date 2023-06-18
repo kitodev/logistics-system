@@ -1,0 +1,135 @@
+.card {
+  height: 100%;
+  margin: 0;
+
+  .card-block {
+    height: 100%;
+    overflow: auto;
+  }
+
+  app-map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .info {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .stations {
+    width: auto;
+    display: inline-block;
+    order: 2;
+
+    & > div {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto auto auto;
+      gap: 0 0.5rem;
+      grid-template-areas:
+      "index company"
+      "index address"
+      "leg leg"
+      "line line";
+      padding: 0.5rem;
+
+      .address {
+        grid-area: address;
+        cursor: pointer;
+        line-height: 30px;
+        font-size: 0.8rem;
+      }
+
+      .company {
+        cursor: pointer;
+        grid-area: company;
+      }
+
+      .leg {
+        grid-area: leg;
+        text-align: right;
+        font-weight: bold;
+        font-size: 0.8rem;
+
+        table {
+          margin-left: 14px;
+          border-left: 3px solid #ff4177;
+        }
+
+        label {
+          font-size: 0.6rem;
+          font-weight: normal;
+        }
+      }
+
+      .index {
+        cursor: pointer;
+        grid-area: index;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 26px;
+        align-self: center;
+        box-sizing: border-box;
+        border-radius: 50%;
+        border: 3px solid #346beb;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .line {
+        grid-area: line;
+        text-align: right;
+      }
+    }
+  }
+
+  .stat {
+    display: flex;
+    order: 1;
+    flex-direction: column;
+    padding-right: 2rem;
+
+    h3 {
+      margin: 0.5rem 0 1rem 0;
+      border-bottom: 3px solid #ff4177;
+    }
+
+    & > div {
+      padding: 0.2rem 0;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: right;
+
+      label {
+        font-size: 0.8rem;
+        font-weight: normal;
+      }
+    }
+
+    .error {
+      display: flex;
+      font-size: 0.65rem;
+
+      fa-icon {
+        color: red;
+      }
+    }
+
+    .current h3{
+      display: inline-block;
+      width:auto;
+      border-bottom: 3px solid #68c71a;
+      cursor: pointer;
+    }
+
+    .current-marker {
+      display: inline-block;
+      width: 1.3rem;
+      height: 1.3rem;
+      border-radius: 50%;
+      border: 0.15rem solid #68c71a;
+    }
+  }
+}

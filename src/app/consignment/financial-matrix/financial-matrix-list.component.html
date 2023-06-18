@@ -1,0 +1,171 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row" *ngIf="!isAddingNew && !isLoading">
+    <div class="clr-col">
+      <button type="button" class="btn btn-primary" (click)="addNew()">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        {{ t('general.addNew') }}
+      </button>
+    </div>
+    <div class="clr-col">
+      <app-financial-summary [financialEntries]="consignmentEntries"></app-financial-summary>
+    </div>
+    <div class="clr-col-1"></div>
+  </div>
+
+  <div class="clr-row" *ngIf="isAddingNew">
+    <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+      <div class="card">
+        <div class="card-header">
+
+          {{ t('general.new') }}
+
+          <button type="button" class="btn btn-outline btn-sm" (click)="reset()">
+            <fa-icon [icon]="faTimes"></fa-icon>
+            {{ t('general.close') }}
+          </button>
+        </div>
+        <div class="card-block">
+          <app-financial-matrix-form
+            [isNew]="true"
+            [type]="FinanceType.CONSIGNMENT"
+            [id]="consignmentEntries.id"
+            [version]="consignmentEntries.version"
+            (financeSave)="loadData()"
+          ></app-financial-matrix-form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <clr-datagrid [clrDgLoading]="isLoading" *ngIf="!isLoading && !isAddingNew" [(clrDgSelected)]="selectedEntries">
+    <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+
+    <clr-dg-column *ngFor="let col of tableCols" [clrDgSortBy]="col.field">
+      <ng-template [clrDgHideableColumn]="{hidden: col.hidden}"
+                   (clrDgHiddenChange)="addPendingColumnSetting($event, col.field)">
+        {{ t(col.label) }}
+      </ng-template>
+    </clr-dg-column>
+
+    <!--<clr-dg-column>{{ t('general.operations') }}</clr-dg-column>-->
+
+    <clr-dg-row *clrDgItems="let entry of consignmentEntries?.entries" [clrDgItem]="entry">
+      <clr-dg-action-overflow>
+        <button type="button" class="btn btn-icon btn-primary-outline" (click)="quickEdit(entry)" title="{{ t('general.modify') }}" >
+          <fa-icon [icon]="faEdit"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-icon btn-outline-warning" (click)="delete(entry.id)" title="{{ t('general.delete') }}" >
+          <fa-icon [icon]="faTrashAlt"></fa-icon>
+        </button>
+      </clr-dg-action-overflow>
+      <clr-dg-cell>{{ t('finance.typeOfServiceOrGoods.' + entry.typeOfServicesOrGoods) }}</clr-dg-cell>
+      <clr-dg-cell>{{ t('finance.financialSigns.' + entry.financialSign) }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.description }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.dateOfFulfillment }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.unitPrice.amount }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.netPrice.amount }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.vat }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.totalPrice.amount }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.unitPrice.currency }}</clr-dg-cell>
+      <clr-dg-cell>{{ entry.notes }}</clr-dg-cell>
+
+    </clr-dg-row>
+
+    <ng-template [(clrIfDetail)]="detailState" let-detail (clrIfDetailChange)="onDetailOpen($event)">
+      <clr-dg-detail>
+        <clr-dg-detail-body class="table-details-pane">
+
+          <table *ngIf="!isEditing" class="basic-data table table-vertical">
+            <tr>
+              <td>{{ t('finance.typeOfServicesOrGoods') }}</td>
+              <td>{{ t('finance.typeOfServiceOrGoods.' + detail.typeOfServicesOrGoods) }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.financialSign') }}</td>
+              <td>{{ t('finance.financialSigns.' + detail.financialSign) }}</td>
+            </tr>
+            <!-- <tr>
+              <td>{{ t('consignment.partner') }}</td>
+              <td>{{ detail.partnerId }}</td>
+            </tr> -->
+            <tr>
+              <td>{{ t('finance.description') }}</td>
+              <td>{{ detail.description }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.dateOfFulfillment') }}</td>
+              <td>{{ detail.dateOfFulfillment }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.amount') }}</td>
+              <td>{{ detail.amount }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.amountUnit') }}</td>
+              <td>{{ t('finance.amountUnits.' + detail.amountUnit) }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.unitPrice') }}</td>
+              <td>{{ detail.unitPrice.amount }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.totalPrice') }}</td>
+              <td>{{ detail.totalPrice.amount }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.currency') }}</td>
+              <td>{{ detail.unitPrice.currency }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.vat') }}</td>
+              <td>{{ detail.vat }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.netPrice') }}</td>
+              <td>{{ detail.netPrice.amount }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('finance.notes') }}</td>
+              <td>{{ detail.notes }}</td>
+            </tr>
+            <tr>
+              <td colspan="2" class="button">
+                <button type="button" class="btn btn-icon btn-sm" (click)="edit()">
+                  <fa-icon [icon]="faEdit"></fa-icon>
+                  {{t('general.modify')}}
+                </button>
+              </td>
+            </tr>
+          </table>
+
+          <ng-container *ngIf="isEditing">
+            <app-financial-matrix-form
+              [isNew]="false"
+              [entry]="detail"
+              [type]="FinanceType.CONSIGNMENT"
+              [id]="consignmentEntries.id"
+              [version]="consignmentEntries.version"
+              (financeSave)="loadData()"
+            ></app-financial-matrix-form>
+
+            <button type="button" class="btn btn-outline btn-sm" (click)="reset()">{{ t('general.cancel') }}</button>
+          </ng-container>
+
+        </clr-dg-detail-body>
+      </clr-dg-detail>
+    </ng-template>
+
+    <clr-dg-footer>
+      <button type="button" class="btn btn-icon btn-warning-outline btn-sm" *ngIf="selectedEntries.length >= 1"><fa-icon [icon]="faTrashAlt"></fa-icon> {{ t('general.deleteSelectedItems') }}</button>
+      <a class="csv-export" (click)="export()">{{ t('file.downloadCsv') }} <fa-icon [icon]="faDownload"></fa-icon></a>
+      <clr-dg-pagination #pagination [clrDgPageSize]="PAGE_SIZE" [clrDgTotalItems]="consignmentEntries?.entries?.length">
+        <clr-dg-page-size [clrPageSizeOptions]="SIZE_OPTIONS">{{ t('table.perPage') }}</clr-dg-page-size>
+        {{ pagination.firstItem + 1 }}
+        - {{ pagination.lastItem + 1 }} {{ t('table.of') }} {{ consignmentEntries?.entries?.length }} {{ t('table.from') }}
+      </clr-dg-pagination>
+    </clr-dg-footer>
+
+  </clr-datagrid>
+
+</ng-container>

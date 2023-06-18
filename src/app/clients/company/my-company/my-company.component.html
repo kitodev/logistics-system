@@ -1,0 +1,17 @@
+<ng-container *transloco="let t">
+    <nav class="subnav" [clr-nav-level]="2">
+        <ul class="nav">
+            <li class="nav-item"><a [routerLink]="['./details']" class="nav-link" routerLinkActive="active"><fa-icon [icon]="faTable"></fa-icon> {{ t('company.menu.details') }}</a></li>
+            <li class="nav-item"><a [routerLink]="['./premises']" class="nav-link" routerLinkActive="active"><fa-icon [icon]="faWarehouse"></fa-icon> {{ t('company.menu.premise') }}</a></li>
+            <li class="nav-item"><a [routerLink]="['./employees']" class="nav-link" routerLinkActive="active"><fa-icon [icon]="faUserTie"></fa-icon> {{ t('company.menu.employees') }}</a></li>
+            <li class="nav-item"><a [routerLink]="['./vehicles']" class="nav-link" routerLinkActive="active"><fa-icon [icon]="faTruckMoving"></fa-icon> {{ t('company.menu.vehicles') }}</a></li>
+            <li class="nav-item"><a [routerLink]="['./documents']" class="nav-link" routerLinkActive="active"><fa-icon [icon]="faFile"></fa-icon> {{ t('header.documents') }}</a></li>
+        </ul>
+        <ul class="nav right">
+            <li class="nav-item">{{ t('header.myCompany') }}</li>
+        </ul>
+    </nav>
+    <div class="content-area">
+        <router-outlet></router-outlet>
+    </div>
+</ng-container>

@@ -1,0 +1,71 @@
+<ng-container *transloco="let t">
+
+  <div class="card">
+    <div class="card-block">
+      <div *ngIf="!lineLegs?.length" class="no-data">{{ t('map.noConsignments') }}</div>
+      <app-map #map></app-map>
+      <div class="stats" *ngIf="lineLegs?.length">
+        <div class="summary {{ RouteTypes.PLANNED }}">
+          <h3>
+            <fa-icon [icon]="faRoute"></fa-icon>
+            {{ t('map.' + RouteTypes.PLANNED) }}
+          </h3>
+          <ng-container *ngIf="stats[RouteTypes.PLANNED]?.time">
+            <div>
+              <label>{{ t('map.totalTime') }}:
+                <span>{{ stats[RouteTypes.PLANNED]?.time * 1000 | date:'h:mm:ss' }}</span>
+              </label>
+            </div>
+            <div>
+              <label>{{ t('map.totalDistance') }}: <span>{{ stats[RouteTypes.PLANNED]?.distance / 1000 }}
+                km</span>
+              </label>
+            </div>
+          </ng-container>
+          <div class="error" *ngIf="missingCoordinate">
+            <fa-icon [icon]="faExclamation"></fa-icon> {{ t('map.error.missingLocation') }}
+          </div>
+        </div>
+        <div class="summary  {{ RouteTypes.LOGGED }}">
+          <h3>
+            <fa-icon [icon]="faCrosshairs"></fa-icon>
+            {{ t('map.' + RouteTypes.LOGGED) }}
+          </h3>
+          <ng-container *ngIf="locations?.length">
+            <div>
+              <label>{{ t('map.totalTime') }}: <span>
+            {{ stats[RouteTypes.LOGGED]?.time * 1000 | date:'h:mm:ss' }}
+              </span>
+              </label>
+            </div>
+            <div>
+              <label>{{ t('map.totalDistance') }}: <span>
+                {{ stats[RouteTypes.LOGGED]?.distance / 1000 }} km
+              </span>
+              </label>
+            </div>
+          </ng-container>
+          <div *ngIf="lineLegs?.length && !locations?.length" class="no-history">
+            {{ t('map.noHistory') }}
+          </div>
+        </div>
+        <div class="stations">
+          <div *ngFor="let leg of lineLegs; let i = index;">
+            <div class="index">{{ i +1 }}</div>
+            <div class="address"><strong>{{ leg.companyName }}</strong>
+              {{ {
+                country: leg.address.countryCode,
+                postCode: '',
+                city: leg.address.city,
+                streetName: leg.address.streetName,
+                streetType: leg.address.streetType,
+                streetNumber: leg.address.streetNumber
+              } | address }}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ng-container>

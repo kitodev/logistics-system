@@ -1,0 +1,53 @@
+.editableFields {
+    margin: 3rem 0.5rem;
+}
+
+td.price {
+    font-size: 0.8rem;
+    font-weight: bold;
+    vertical-align: middle;
+
+    clr-signpost {
+      padding: 0.25rem;
+
+      clr-signpost-content {
+        font-size: 0.7rem;
+        font-weight: normal;
+        padding-bottom: 0.25rem;
+
+        .status {
+          font-weight: bold;
+        }
+      }
+    }
+}
+
+.consignment-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.4rem 0px;
+    grid-template-areas:
+    "from to"
+    "data data";
+}
+
+.from {
+    grid-area: from;
+    justify-self: self-start;
+    font-size: 0.75rem;
+}
+
+.to {
+    grid-area: to;
+    justify-self: self-end;
+    font-size: 0.75rem;
+}
+
+.data {
+    grid-area: data;
+}
+
+.clr-row {
+  justify-content: space-around;
+}

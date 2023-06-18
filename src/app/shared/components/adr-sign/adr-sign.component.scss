@@ -1,0 +1,27 @@
+.adr {
+  width: 1rem;
+  height: 1rem;
+  position:relative;
+  display: inline-block;
+
+  .background {
+    width: 1rem;
+    height: 1rem;
+    background-color: #ff8200;
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg); /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Safari and Chrome */
+    position: absolute;
+    border: 1px solid #000000;
+    box-shadow: 0 0 0 2px #ff8200;
+  }
+  .text {
+    color: #000000;
+    font-size: 0.4rem;
+    position: absolute;
+    line-height: 1rem;
+    font-weight: bold;
+    text-align: center;
+    width: 1rem;
+  }
+}

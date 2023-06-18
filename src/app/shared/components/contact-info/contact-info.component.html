@@ -1,0 +1,18 @@
+<div class="contact">
+  <div *ngIf="phone">
+    <fa-icon [icon]="faPhone"></fa-icon>
+    {{phone}}
+  </div>
+  <div *ngIf="mobile">
+    <fa-icon [icon]="faMobile"></fa-icon>
+    {{mobile}}
+  </div>
+  <div *ngIf="email">
+    <fa-icon [icon]="faEnvelope"></fa-icon>
+    <a href="mailto:{{email}}">{{email}}</a>
+  </div>
+  <div *ngIf="fax">
+    <fa-icon [icon]="faFax"></fa-icon>
+    {{fax}}
+  </div>
+</div>

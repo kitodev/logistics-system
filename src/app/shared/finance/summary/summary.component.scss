@@ -1,0 +1,18 @@
+.labels {
+    font-weight: bold;
+
+    border: 2px solid white;
+    text-align: left;
+    
+    .income {
+        background-color:hsl(48, 100%, 83%);
+        border-right: 2px solid white;
+    }
+    .spendings {
+        background-color:hsl(9, 91%, 86%);
+        border-right: 2px solid white;
+    }
+    .profit {
+        background-color:hsl(93, 58%, 75%);
+    }
+}

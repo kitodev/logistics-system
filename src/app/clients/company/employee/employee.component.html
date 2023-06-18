@@ -1,0 +1,412 @@
+<ng-container *transloco="let t">
+
+  <ng-container *ngIf="!isLoading">
+  <div class="clr-row">
+    <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+      <div class="card">
+          <div class="card-header">
+            {{ !isNew ? t('general.modify') : t('general.addNew') }}
+          </div>
+          <div class="card-block" [formGroup]="employeeForm">
+              <div class="clr-row">
+                  <div class="clr-col-md-6 clr-col-sm-12">
+                    <div class="clr-row">
+                      <div class="clr-col-md-4 clr-col-sm-12">
+                        <form-input
+                          [formGroup]="employeeForm"
+                          [autocomplete]="'honorific-prefix'"
+                          type="text" name="title"
+                          [required]="employeeForm.get('title').errors?.required"
+                          [label]="t('company.employee.title')"></form-input>
+                      </div>
+                      <div class="clr-col-md-4 clr-col-sm-12">
+                        <form-input
+                          [formGroup]="employeeForm"
+                          [autocomplete]="'family-name'"
+                          type="text" name="lastName"
+                          [required]="employeeForm.get('lastName').errors?.required"
+                          [label]="t('company.employee.lastName')"></form-input>
+                      </div>
+                      <div class="clr-col-md-4 clr-col-sm-12">
+                        <form-input
+                          [formGroup]="employeeForm"
+                          [autocomplete]="'given-name'"
+                          type="text" name="firstName"
+                          [required]="employeeForm.get('firstName').errors?.required"
+                          [label]="t('company.employee.firstName')"></form-input>
+                      </div>
+                    </div>
+                    <div class="clr-row">
+                      <div class="clr-col-md-4 clr-col-sm-12">
+                        <form-input
+                          [formGroup]="employeeForm"
+                          [autocomplete]="'email'"
+                          type="email"
+                          name="email"
+                          [label]="t('company.email')"
+                          [required]="employeeForm.get('email').errors?.required"></form-input>
+                      </div>
+                      <div class="clr-col-md-4 clr-col-sm-12">
+                        <form-input
+                          [formGroup]="employeeForm"
+                          [autocomplete]="'tel'"
+                          type="text" name="phone" [label]="t('company.phone')"
+                          [required]="employeeForm.get('phone').errors?.required"></form-input>
+                      </div>
+                      <div class="clr-col-md-4 clr-col-sm-12">
+                        <form-input [formGroup]="employeeForm" type="text" name="mobile" [label]="t('company.employee.mobile')"
+                          [required]="employeeForm.get('mobile').errors?.required"></form-input>
+                      </div>
+                    </div>
+                    <div class="clr-row">
+                      <div class="clr-col-md-4 clr-col-sm-12">
+                        <form-input [formGroup]="employeeForm" type="text" name="fax" [label]="t('company.fax')"
+                        [required]="employeeForm.get('fax').errors?.required"></form-input>
+                      </div>
+                      <div class="clr-col-md-8 clr-col-sm-12">
+                        <div class="custom-form-input-container">
+                          <form-employee-selector
+                            labelForId="lineManager"
+                            [parentForm]="employeeForm"
+                            controlName="lineManagerId"
+                            [employees]="employees"
+                            [label]="t('company.employee.lineManager')"></form-employee-selector>
+                        </div>
+                      </div>
+                    </div>
+        
+                  </div>
+                  <div class="clr-col-md-6 clr-col-sm-12" *ngIf="isDriver()">
+                    <h4>{{ t('company.employee.identifications') }}</h4>
+                    <div class="clr-row" *ngFor="let control of employeeForm.controls.employeeIdentification['controls']; let i=index">
+                      <div class="clr-col-md-4 clr-col-sm-12">
+                        <form-input [formGroup]="$any(control)" type="text" name="idType"
+                        [required]="$any(control).get('idType').errors?.required"
+                                    [label]="t('company.employee.identificationType')"></form-input>
+                      </div>
+                      <div class="clr-col-md-3 clr-col-sm-12">
+                        <form-input [formGroup]="$any(control)" type="text" name="idNumber"
+                        [required]="$any(control).get('idNumber').errors?.required"
+                                    [label]="t('company.employee.identificationNumber')"></form-input>
+                      </div>
+                      <div class="clr-col-md-3 clr-col-sm-12">
+                        <form-date-time-picker [parentForm]="$any(control)"
+                                              [datetime]="control.value?.expire"
+                                              type="calendar"
+                                              name="expire"
+                                              mode="single"
+                                              [required]="$any(control).get('expire').errors?.required"
+                                              [label]="t('company.employee.identificationExpire')"></form-date-time-picker>
+                      </div>
+                      <div class="clr-col-2 minus-btn-cell" *ngIf="employeeForm.controls.employeeIdentification['controls'].length > 1">
+                        <button type="button" class="btn btn-icon btn-sm btn-warning-outline" (click)="deleteIdentification(i)">
+                          <fa-icon [icon]="faTrashAlt"></fa-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="clr-row clr-justify-content-center">
+
+                        <button type="button" class="btn btn-icon btn-sm" (click)="addNewIdentification()">
+                          <fa-icon [icon]="faPlus"></fa-icon>
+                        </button>
+                
+                    </div>
+                  </div>
+              </div>
+              <div class="clr-row">
+                <div class="clr-col-md-6 clr-col-sm-12">
+
+                  <button type="button" class="btn btn-primary" (click)="createEmployee()"
+                          *ngIf="isNew">{{ t('general.addNew') }}</button>
+
+                  <button type="button" class="btn btn-primary" (click)="updateEmployee()"
+                          [disabled]="employeeForm.pristine" *ngIf="!isNew">{{ t('general.save') }}</button>
+                          
+                  <button type="button" class="btn btn-outline" (click)="reset()" *ngIf="!isNew"
+                          [disabled]="employeeForm.pristine">{{ t('general.cancel') }}</button>
+                  <button *ngIf="!isNew" type="button" class="btn btn-secondary-outline" (click)="inviteUser()"
+                          [disabled]="sent">
+                    {{ t('company.employee.invite') }}
+                  </button>
+                </div>
+                <div class="clr-col-md-6 clr-col-sm-12">
+                  <button *ngIf="!isNew" type="button" class="btn btn-danger" (click)="disableUser()">
+                    {{ t('company.employee.disable') }}
+                  </button>
+                  <button *ngIf="!isNew" type="button" class="btn btn-primary" (click)="activateUser()">
+                    {{ t('company.employee.activate') }}
+                  </button>
+                  <button *ngIf="!isNew" type="button" class="btn btn-secondary-outline" (click)="resetPassword()">
+                    {{ t('company.employee.resetPassword') }}
+                  </button>
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="clr-row" *ngIf="!isNew">
+    <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+        <div class="card">
+            <div class="card-header">
+                {{ t('company.employee.specialization') }}
+            </div>
+            <div class="card-block" [formGroup]="specializationsForm">
+                <div class="clr-row" >
+                    <div class="clr-col-md-4 clr-col-sm-12">
+                      <div class="custom-form-input-container">
+                        <label class="clr-control-label" htmlFor="department"
+                        [ngClass]="{'required': specializationsForm.get('department').errors?.required}">{{ t('company.employee.department') }}</label>
+                        <ng-select [items]="departments"
+                            bindLabel="label"
+                            dropdownPosition="auto"
+                            bindValue="value"
+                            [virtualScroll]="true"
+                            (change)="onDepartmentChange($event)"
+                            [closeOnSelect]="true"
+                            [hideSelected]="false"
+                            formControlName="department"
+                            labelForId="department"
+                            >             
+                          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                            <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="clr-col-md-4 clr-col-sm-12">
+                      <div class="custom-form-input-container">
+                        <label class="clr-control-label" for="position"
+                        [ngClass]="{'required': specializationsForm.get('position').errors?.required}">{{ t('company.employee.position') }}</label>
+                        <ng-select [readonly]="positions.length === 0"
+                            [items]="positions"
+                            bindLabel="label"
+                            dropdownPosition="auto"
+                            bindValue="value"
+                            [virtualScroll]="true"
+                            [closeOnSelect]="true"
+                            [hideSelected]="false"
+                            formControlName="position"
+                            labelForId="position"
+                            >             
+                          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                            <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="clr-col-md-4 clr-col-sm-12">
+                      <div class="custom-form-input-container">
+                        <label class="clr-control-label" for="serviceFeature"
+                        [ngClass]="{'required': specializationsForm.get('serviceFeature').errors?.required}">{{ t('company.employee.serviceFeature') }}</label>
+                        <ng-select [items]="serviceFeatures"
+                            bindLabel="label"
+                            dropdownPosition="auto"
+                            bindValue="value"
+                            [virtualScroll]="true"
+                            [closeOnSelect]="true"
+                            [hideSelected]="false"
+                            (change)="onServiceFeatureChange($event)"
+                            formControlName="serviceFeature"
+                            labelForId="serviceFeature">             
+                          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                            <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="clr-col-md-4 clr-col-sm-12">
+                      <div class="custom-form-input-container">
+                        <label class="clr-control-label" for="jarmuOsszTomegEnums"
+                        [ngClass]="{'required': specializationsForm.get('jarmuOsszTomegEnums').errors?.required}">{{ t('company.employee.transportType') }}</label>
+                        <ng-select [items]="fullWeightTypes"
+                            bindLabel="label"
+                            dropdownPosition="auto"
+                            bindValue="value"
+                            [virtualScroll]="true"
+                            [multiple]="true"
+                            [closeOnSelect]="false"
+                            [hideSelected]="true"
+                            formControlName="jarmuOsszTomegEnums"
+                            labelForId="jarmuOsszTomegEnums">
+                          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                            <div><span [ngOptionHighlight]="search">{{item.label}}</span></div>
+                          </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="clr-col-md-4 clr-col-sm-12">
+                      <div class="custom-form-input-container">
+                        <label class="clr-control-label">{{ t('company.employee.specInfo') }}</label>
+                        <ng-select [items]="specialInformation"
+                                  (change)="onSpecialInfoChange($event)"
+                                  bindLabel="label"
+                                  bindValue="value"
+                                  groupBy="options"
+                                  [multiple]="true"
+                                  [closeOnSelect]="false"
+                                  [(ngModel)]="specInfoValue"
+                                  [ngModelOptions]="{standalone: true}">
+                            <ng-template ng-optgroup-tmp let-item="item">
+                                {{item.label}}
+                            </ng-template>
+                            <ng-template ng-option-tmp let-item="item">
+                                {{item.label}}
+                            </ng-template>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="clr-col-md-4 clr-col-sm-12 clr-row countryPairs">          
+                      <ng-container *ngFor="let control of specializationsForm.controls.countryPairs['controls']; let i=index">
+                        <div class="clr-col-6" [formGroup]="$any(control)">
+                          <clr-select-container>
+                            <label class="clr-control-label">{{ t('company.employee.route') }}</label>
+                            <select clrSelect formControlName="from">
+                              <option></option>
+                              <optgroup *ngFor="let continentGroup of countries"
+                                        [label]="continentGroup[0]">
+                                <option *ngFor="let country of continentGroup[1]"
+                                        [value]="country" >{{country}}</option>
+                              </optgroup>
+                            </select>
+                          </clr-select-container>
+                        </div>
+                        <div class="clr-col-6" [formGroup]="$any(control)">
+                          <clr-select-container>
+                            <label class="clr-control-label">{{ t('company.employee.route') }}</label>
+                            <select clrSelect formControlName="to">
+                              <option></option>
+                              <optgroup *ngFor="let continentGroup of countries"
+                                        [label]="continentGroup[0]">
+                                <option *ngFor="let country of continentGroup[1]"
+                                        [value]="country">{{country}}</option>
+                              </optgroup>
+                            </select>
+                          </clr-select-container>
+                        </div>
+                      </ng-container>
+          
+                      <div class="clr-col-12 clr-row clr-justify-content-center">
+                        <button type="button" class="btn btn-icon  btn-sm" (click)="addNewCountryPair()">
+                          <fa-icon [icon]="faPlus"></fa-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+          
+                  <div class="clr-row clr-justify-content-center">
+                    <button type="button" class="btn btn-primary" (click)="addSpecialization()" [disabled]="!specializationsForm.valid">{{ t('general.addNew') }}</button>
+                    <button type="button" class="btn btn-outline" (click)="resetSpecialization()"
+                            [disabled]="specializationsForm.pristine">{{ t('general.cancel') }}</button>
+                  </div>
+
+                  <!-- pristine: {{specializationsForm.pristine}}, valid: {{specializationsForm.valid}} -->
+          
+                  <div class="clr-row">
+                    <table class="table">
+                      <thead>
+                      <tr>
+                        <th>{{ t('company.employee.department') }}</th>
+                        <th>{{ t('company.employee.position') }}</th>
+                        <th>{{ t('company.employee.serviceFeature') }}</th>
+                        <th>{{ t('company.employee.transportType') }}</th>
+                        <th>{{ t('company.employee.specInfo') }}</th>
+                        <th>{{ t('company.employee.route') }}</th>
+                        <th></th>
+                      </tr>
+                      </thead>
+                      <tbody *ngIf="employeeToEdit.employeeSpecializations && employeeToEdit.employeeSpecializations.length; else noData">
+                        <tr *ngFor="let specialization of employeeToEdit.employeeSpecializations">
+                          
+                          <td>
+                            <span>{{ t('company.employee.department') }}</span>
+                            <span>{{ t('company.employee.departments.' + specialization.department) }}</span>
+                          </td>
+                          <td>
+                            <span>{{ t('company.employee.position') }}</span>
+                            <span>{{ t('company.employee.positions.' + specialization.position) }}</span>
+                          </td>
+                          <td>
+                            <span>{{ t('company.employee.serviceFeature') }}</span>
+                            <span>{{ t('company.employee.serviceFeatures.' + specialization.serviceFeature) }}</span>
+                          </td>
+                          <td>
+                            <span>{{ t('company.employee.transportType') }}</span>
+                            <span>
+                              <div *ngFor="let type of specialization.jarmuOsszTomegEnums">
+                                {{ t('company.vehicle.fullWeightTypes.' + type) }}
+                              </div>
+                            </span>
+                          </td>
+                          <td>
+                            <span>{{ t('company.employee.specInfo') }}</span>
+                            <span>
+                              <div *ngFor="let type of specialization.rakomanyRogzitesEnums">
+                                {{ t('company.vehicle.rakomanyRogzites.' + type) }}
+                              </div>
+                              <div *ngFor="let type of specialization.felepitmenyKialakitasEnums">
+                                {{ t('company.vehicle.felepitmenyKialakitas.' + type) }}
+                              </div>
+                              <div *ngFor="let type of specialization.felszereltsegEnums">
+                                {{ t('company.vehicle.felszereltseg.' + type) }}
+                              </div>
+                              <div *ngFor="let type of specialization.csereFelepitmenyEnums">
+                                {{ t('company.vehicle.csereFelepitmeny.' + type) }}
+                              </div>
+                              <div *ngFor="let type of specialization.emelesEsMozgatasEnums">
+                                {{ t('company.vehicle.emelesEsMozgatas.' + type) }}
+                              </div>
+                            </span>
+                          </td>
+                          <td>
+                            <span>{{ t('company.employee.route') }}</span>
+                            <span>
+                              <div *ngFor="let pair of specialization.countryPairs">
+                                {{ pair.from }} - {{ pair.to }}
+                              </div>
+                            </span>
+                          </td>
+                    
+                          <td>
+                              <button type="button" class="btn btn-icon btn-warning-outline" (click)="deleteSpecialization(specialization.id)">
+                                <fa-icon [icon]="faTrashAlt"></fa-icon>
+                              </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <ng-template #noData>
+                        <tbody>
+                        <tr>
+                          <td colspan="9">{{ t('general.noData') }}</td>
+                        </tr>
+                        </tbody>
+                      </ng-template>
+                    </table>
+                    
+                  </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="clr-row" *ngIf="!isNew">
+    <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+      <app-documents [type]="AssetTypes.EMPLOYEE" [id]="employeeId"></app-documents>
+    </div>
+  </div>
+
+  <div class="clr-row" *ngIf="!isNew">
+    <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+      <div class="card">
+          <div class="card-header">
+            {{ t('general.comment') }}
+          </div>
+          <div class="card-block">
+            <app-comments [chosenApi]="CommentApis.EMPLOYEE_ENDPOINT" [chosenId]="employeeId"></app-comments>
+          </div>
+      </div>
+    </div>
+  </div>
+  </ng-container>
+</ng-container>

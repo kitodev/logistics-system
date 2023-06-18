@@ -1,0 +1,128 @@
+<ng-container *transloco="let t">
+  <clr-dropdown>
+    <div class="status-dropdown-text {{status.overallStatus}}" clrDropdownTrigger>
+      <div class="status">
+        <ng-container [ngSwitch]="status.overallStatus">
+          <ng-container *ngSwitchCase="StatusTypes.WAITING_FOR_UPDATE">
+            <fa-icon [icon]="faHourglass"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.IN_PROGRESS">
+            <fa-icon [icon]="faCogs"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.FINISHED">
+            <fa-icon [icon]="faCheck"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.PROBLEM_APPEARED">
+            <fa-icon [icon]="faExclamation"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <fa-icon [icon]="faTimes"></fa-icon>
+          </ng-container>
+        </ng-container>
+        {{ t('status.consignment.' + status.overallStatus) }}
+      </div>
+      <div class="timestamp">{{ status.timestamp | date: 'short': '': t('locale') }}</div>
+    </div>
+
+    <clr-dropdown-menu *clrIfOpen="menuIsOpen">
+    
+      <div *ngIf="!newStatus"> <!---History-->
+        <div class="dropdown" [ngClass]="{'open': historyIsOpen, 'left-top': isLeft, 'right-top': !isLeft}">
+          <button class="dropdown-item expandable" [ngClass]="{'active': historyIsOpen}" (click)="loadStatusHistory()">{{ t('status.history') }}</button>
+          <div class="dropdown-menu">
+            <ng-container *ngFor="let history of statusHistory">
+              <div class="history">
+                <p class="{{history.overallStatus}}"><b>{{ t('status.consignment.' + history.overallStatus) }}</b></p>
+                <p *ngIf="history['errorStatusType']">{{ t('status.consignmentError.' + history['errorStatusType']) }}</p>
+                <p *ngIf="history.errorDescription">{{ history.errorDescription }}</p>
+                <p>{{ history.timestamp | date:'short' }}</p>
+                <p>{{ history | employeeName }}</p>
+              </div>
+              <div class="dropdown-divider" role="separator"></div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown-divider" role="separator" *ngIf="!newStatus"></div>
+
+      <div class="status-list" *ngIf="!newStatus"> <!---Status List-->
+        <div>
+          <button class="btn btn-link btn-icon-link IN_PROGRESS" (click)="selectStatus(StatusTypes.IN_PROGRESS)">
+            <fa-icon [icon]="faCogs"></fa-icon>
+            {{ t('status.consignment.' + StatusTypes.IN_PROGRESS) }}
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-link btn-icon-link FINISHED" (click)="selectStatus(StatusTypes.FINISHED)">
+            <fa-icon [icon]="faCheck"></fa-icon>
+            {{ t('status.consignment.' + StatusTypes.FINISHED) }}
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-link btn-icon-link WAITING_FOR_UPDATE" (click)="selectStatus(StatusTypes.WAITING_FOR_UPDATE)">
+            <fa-icon [icon]="faHourglass"></fa-icon>
+            {{ t('status.consignment.' + StatusTypes.WAITING_FOR_UPDATE) }}
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-link btn-icon-link PROBLEM_APPEARED" (click)="selectStatus(StatusTypes.PROBLEM_APPEARED)">
+            <fa-icon [icon]="faExclamation"></fa-icon>
+            {{ t('status.consignment.' + StatusTypes.PROBLEM_APPEARED) }}
+          </button>
+        </div>
+      </div>
+
+      <div class="action-detail" [ngClass]="{'opened': newStatus}">
+        <div *ngIf="newStatus" class="new-status">
+          <div class="new-label">{{ t('status.newLabel') }}</div>
+          <div class="status-label  {{newStatus}}">
+            {{ t('status.consignment.' + newStatus) }}
+          </div>
+
+          <!-- <div class="error-types" *ngIf="newStatus === StatusTypes.PROBLEM_APPEARED && consignmentId">
+            <clr-select-container>
+              <label>{{ t('status.errorTypes') }}</label>
+              <select clrSelect name="options" [(ngModel)]="errorStatus">
+                <option [value]="ErrorTypes.MISSING_GOODS">
+                  {{ t('status.consignmentError.' + ErrorTypes.MISSING_GOODS) }}
+                </option>
+                <option [value]="ErrorTypes.INCORRECT_GOODS_SIGNING">
+                  {{ t('status.consignmentError.' + ErrorTypes.INCORRECT_GOODS_SIGNING) }}
+                </option>
+                <option [value]="ErrorTypes.INCORRECT_PACKAGING">
+                  {{ t('status.consignmentError.' + ErrorTypes.INCORRECT_PACKAGING) }}
+                </option>
+                <option [value]="ErrorTypes.INCORRECT_QUANTITY">
+                  {{ t('status.consignmentError.' + ErrorTypes.INCORRECT_QUANTITY) }}
+                </option>
+                <option [value]="ErrorTypes.INCORRECT_WEIGHT">
+                  {{ t('status.consignmentError.' + ErrorTypes.INCORRECT_WEIGHT) }}
+                </option>
+                <option [value]="ErrorTypes.DAMAGED">
+                  {{ t('status.consignmentError.' + ErrorTypes.DAMAGED) }}
+                </option>
+                <option [value]="ErrorTypes.VEHICLE_NOT_APPROPRIATE">
+                  {{ t('status.consignmentError.' + ErrorTypes.VEHICLE_NOT_APPROPRIATE) }}
+                </option>
+              </select></clr-select-container>
+          </div> -->
+
+          <clr-textarea-container>
+            <label>{{ t('status.description') }}</label>
+            <textarea (keydown.Space)="spacePress($event)" clrTextarea [(ngModel)]="description" name="description" required></textarea>
+          </clr-textarea-container>
+
+          <div class="dropdown-divider" role="separator"></div>
+
+          <div class="control">
+            <button type="button" class="dropdown-item" (click)="save()"><fa-icon [icon]="faCheck"></fa-icon> {{ t('status.modify') }}</button>
+            <button type="button" class="dropdown-item"
+                    (click)="cancel()"><fa-icon [icon]="faTimes"></fa-icon> {{ t('general.cancel') }}</button>
+          </div>
+
+        </div>
+      </div>
+    </clr-dropdown-menu>
+  </clr-dropdown>
+</ng-container>

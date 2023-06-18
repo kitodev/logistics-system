@@ -1,0 +1,78 @@
+<ng-container *transloco="let t">
+  <div class="container">
+    <div class="content">
+
+      <div class="logo">
+
+      </div>
+
+      <div class="login-form">
+        <h1>Login</h1>
+        <clr-input-container>
+          <label>{{ t('auth.email') }}:</label>
+          <input
+            autocomplete="email"
+            type="email"
+            clrInput
+            required
+            minlength="4"
+            id="email"
+            name="email"
+            [(ngModel)]="credentials.username"
+            #email="ngModel" />
+
+          <clr-control-error *ngIf="email.invalid && (email.dirty || email.touched)">
+            <div *ngIf="email.errors.required">
+              {{ t('messages.error.required') }}
+            </div>
+            <div *ngIf="email.errors.minlength">
+              {{ t('messages.error.minlength', { field: t('auth.email'), length: EMAIL_MIN_LENGTH }) }}
+            </div>
+          </clr-control-error>
+        </clr-input-container>
+
+        <clr-input-container>
+          <label>{{ t('auth.password') }}:</label>
+          <input type="password"
+                 clrInput
+                 required
+                 minlength="{{PASS_MIN_LENGTH}}"
+                 id="password"
+                 name="password"
+                 (keydown.enter)="!password.invalid && !email.invalid ? login(): {}"
+                 [(ngModel)]="credentials.password"
+                 #password="ngModel" />
+
+          <clr-control-error *ngIf="password.invalid && (password.dirty || password.touched)">
+            <div *ngIf="password.errors.required">
+              {{ t('messages.error.required') }}
+            </div>
+            <div *ngIf="password.errors.minlength">
+              {{ t('messages.error.minlength', { field: t('auth.password'), length: PASS_MIN_LENGTH }) }}
+            </div>
+          </clr-control-error>
+        </clr-input-container>
+
+        <div class="control">
+          <button type="button" [disabled]="password.invalid || email.invalid"
+                  (click)="login()" class="btn btn-primary">{{ t('auth.login') }}</button>
+
+          <div *ngIf="errorMessage" class="clr-error">
+            <clr-control-error>{{errorMessage}}</clr-control-error>
+            <fa-icon [icon]="faExclamation"></fa-icon>
+          </div>
+
+          <a routerLink="/account/reset-password">{{ t('auth.forgotpass') }}</a>
+        </div>
+
+      </div>
+
+      <div class="copyright">
+        <p>{{ t('auth.copyright') }}</p>
+        <p>{{ t('auth.legaldocuments') }}</p>
+      </div>
+
+    </div>
+  </div>
+</ng-container>
+

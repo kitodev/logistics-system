@@ -1,0 +1,33 @@
+a.employee {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/*clr-datagrid {
+  max-height: calc(100vh - 7.2rem);
+  height: 100% !important;
+  min-height: 500px;
+}*/
+
+.legs a {
+  font-weight: bold;
+}
+
+.truckIcon {
+  color: hsl(93, 100%, 26%);
+  margin-left: 0.25rem;
+}
+.table.basic-data {
+  width: auto;
+
+  td {
+    text-align: right;
+  }
+}
+
+clr-dg-cell.operations {
+  text-align: center;
+  .btn {
+    margin: 0.1rem 0;
+  }
+}

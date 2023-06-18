@@ -1,0 +1,79 @@
+<ng-container *transloco="let t">
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th>{{ t('offer.company') }}</th>
+      <th>{{ t('offer.consignments') }}</th>
+      <th>{{ t('offer.price') }}</th>
+      <th>{{ t('offer.expiration') }}</th>
+      <th>{{ t('general.operations') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <ng-container *ngFor="let employeeBid of bids">
+      <tr *ngFor="let bid of employeeBid.bids; first as isFirst" class="bid-row"
+          [ngClass]="{'accepted': bid.latestBid?.status === BidStatus.ACCEPTED, 'declined': bid.latestBid?.status === BidStatus.DECLINED || bid.latestBid?.status === BidStatus.REJECTED}">
+
+        <td [attr.rowspan]="employeeBid.bids.length" *ngIf="isFirst" class="bidder">
+          <span></span>
+          <a [routerLink]="['/company/'+employeeBid.bidder.companyId]" class="company">
+            {{ employeeBid.bidder.companyName }}
+          </a>
+          <br />
+          <a
+            [routerLink]="['/company/'+employeeBid.bidder.companyId + '/employees/'+employeeBid.bidder.bidderEmployee.id]"
+            class="contact">
+            {{ employeeBid.bidder.bidderEmployee.firstName }} {{ employeeBid.bidder.bidderEmployee.lastName }}
+          </a>
+        </td>
+        <td>
+          <div class="consignment-data">
+            <div class="from">{{ bid.consignmentBasicData.loadingInLocation?.premiseAddress | address}}</div>
+            <div class="to">{{ bid.consignmentBasicData.loadingOutLocation?.premiseAddress | address}}</div>
+            <div class="data">
+              <app-consignment-info [basicData]="bid.consignmentBasicData"></app-consignment-info>
+            </div>
+          </div>
+        </td>
+        <td class="price">
+          <ng-container *ngIf="bid.latestBid">
+            <fa-icon [icon]="faCheck" *ngIf="bid.latestBid?.status === BidStatus.ACCEPTED"></fa-icon>
+            <fa-icon [icon]="faTimes"
+                     *ngIf="bid.latestBid?.status === BidStatus.DECLINED || bid.latestBid?.status === BidStatus.REJECTED"></fa-icon>
+            {{ bid.latestBid?.offeredPrice }}
+            <ng-container *ngIf="bid.latestBid?.status === BidStatus.REJECTED">
+              {{ t('offer.givenOfferStatus.OFFER_REJECTED') }}
+            </ng-container>
+            <clr-signpost *ngIf="bid.bids.length > 1">
+              <fa-icon [icon]="faHistory" clrSignpostTrigger></fa-icon>
+              <clr-signpost-content>
+                <table>
+                  <tbody>
+                  <tr *ngFor="let item of bid.bids">
+                    <td class="status text-left">{{ t('offer.givenOfferStatus.' + item.status) }}</td>
+                    <td class="text-right">{{ item.offeredPrice }}</td>
+                    <td>{{ item.offerExpiration| date : 'mediumDate' }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </clr-signpost-content>
+            </clr-signpost>
+          </ng-container>
+        </td>
+        <td class="expiration">{{ bid.latestBid?.offerExpiration | date:'medium'}}</td>
+        <td class="control">
+          <button type="button" class="btn btn-primary btn-sm"
+                  [disabled]="!bid.latestBid || bid.latestBid?.status !== BidStatus.GIVEN"
+                  (click)="accept(bid.latestBid.givenOfferId)">{{ t('offer.acceptOffer') }}</button>
+          <button type="button" class="btn btn-danger btn-sm"
+                  [disabled]="!bid.latestBid || bid.latestBid?.status !== BidStatus.GIVEN"
+                  (click)="decline(bid.latestBid.givenOfferId)">{{ t('offer.declineOffer') }}</button>
+        </td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+
+</ng-container>

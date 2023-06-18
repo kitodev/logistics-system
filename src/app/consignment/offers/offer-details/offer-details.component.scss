@@ -1,0 +1,52 @@
+.offered {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  & > div {
+    padding: 0 0.6rem;
+  }
+
+  .offered-price {
+    font-size: 1.4rem;
+  }
+}
+
+.send-offer {
+  align-items: flex-end;
+  justify-content: flex-end;
+  display: flex;
+}
+
+.delete {
+  align-items: flex-end;
+  justify-content: flex-end;
+  display: flex;
+}
+
+.addressee {
+  .addressee-title {
+    font-size: 0.8em;
+    padding-left: 2em;
+    color: #8c8c8c;
+  }
+
+  .addressee-company {
+    float: right;
+  }
+
+  .addressee-content {
+    display: flex;
+    flex-direction: row;
+
+    .offer-details {
+      flex-grow: 1;
+    }
+
+    .offer-control {
+      align-self: flex-end;
+    }
+
+  }
+}
+

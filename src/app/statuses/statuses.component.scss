@@ -1,0 +1,13 @@
+.error-count {
+  display: inline-block;
+  height: 1rem;
+  line-height: 1rem;
+  background-color: #68c71a;
+  border-radius: 50%;
+  padding: 0 0.4rem;
+  color: #ffffff;
+
+  &.bad {
+    background-color: hsl(9, 100%, 43%);
+  }
+}

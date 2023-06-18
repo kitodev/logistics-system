@@ -1,0 +1,160 @@
+<ng-container *transloco="let t">
+  <ng-container *ngIf="!isLoading">
+
+    <div class="clr-row">
+      <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+        <div class="card">
+          <div class="card-header">
+            {{ !isNew ? t('general.modify') : t('general.addNew') }}
+          </div>
+          <div class="card-block" [formGroup]="premiseForm">
+            <div class="clr-row">
+              <div class="clr-col-md-4 clr-col-sm-12">
+                <form-input [formGroup]="premiseForm"
+                            type="text" name="name"
+                            [label]="t('company.premise.name')"
+                            [required]="premiseForm.get('name').errors?.required"></form-input>
+                <form-select
+                  *ngIf="premiseForm.get('premiseType').value !== PremiseType.SEAT"
+                  [formGroup]="premiseForm"
+                  name="premiseType"
+                  [label]="t('company.premise.type')"
+                  [required]="premiseForm.get('premiseType').errors?.required"
+                  [optionsArray]="premiseTypes"></form-select>
+                <div class="seat"
+                     *ngIf="premiseForm.get('premiseType').value === PremiseType.SEAT">
+                  {{ t('company.premise.types.SEAT') }}
+                </div>
+              </div>
+              <div class="clr-col-md-4 clr-col-sm-12">
+                <form-address [formGroup]="$any(premiseForm.controls.address)"></form-address>
+              </div>
+              <div class="clr-col-md-4 clr-col-sm-12">
+                <div class="clr-row clr-justify-content-center">
+                  <label class="clr-control-label">{{ t('company.premise.openingHours')}}</label>
+                </div>
+                <div class="clr-row align-bottom" *ngFor="let day of days">
+                  <div class="clr-col-3 form-days-label"><label
+                    class="clr-control-label">{{ t('daysofweek.' + day)}}</label></div>
+                  <div class="clr-col-4">
+                    <form-date-time-picker
+                      [required]="$any(premiseForm.controls.openingDays['controls'][day])?.get('openFrom').errors?.required"
+                      [parentForm]="$any(premiseForm.controls.openingDays['controls'][day])"
+                      [datetime]="premiseToEdit.openingDays[day]?.openFrom"
+                      type="timer"
+                      name="openFrom"
+                      mode="single"></form-date-time-picker>
+                  </div>
+                  <div class="clr-col-4">
+                    <form-date-time-picker
+                      [required]="$any(premiseForm.controls.openingDays['controls'][day])?.get('openTo').errors?.required"
+                      [parentForm]="$any(premiseForm.controls.openingDays['controls'][day])"
+                      [datetime]="premiseToEdit.openingDays[day]?.openTo"
+                      type="timer"
+                      name="openTo"
+                      mode="single"></form-date-time-picker>
+                  </div>
+                  <div class="clr-col-1 status">
+                    <fa-icon [icon]="faExclamation"
+                             *ngIf="$any(premiseForm.controls.openingDays['controls'][day]?.errors)"></fa-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="clr-row clr-justify-content-center">
+              <button type="button" class="btn btn-primary" (click)="createPremise()"
+                      *ngIf="isNew">{{ t('general.addNew') }}</button>
+              <button type="button" class="btn btn-primary" (click)="updatePremise()"
+                      [disabled]="premiseForm.pristine"
+                      *ngIf="!isNew">{{ t('general.save') }}</button>
+              <button type="button" class="btn btn-outline" (click)="reset()" *ngIf="!isNew"
+                      [disabled]="(premiseForm.pristine)">{{ t('general.cancel') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row" *ngIf="!isNew">
+      <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+        <div class="card">
+          <div class="card-header">
+            {{t('company.premise.contact')}}
+          </div>
+          <div class="card-block">
+            <div class="clr-row contact-control">
+              <div class="clr-col-md-6">
+                <form-employee-selector
+                  [parentForm]="contactForm"
+                  controlName="employee"
+                  [employees]="companyEmployees"
+                  [label]="t('company.premise.contact')"></form-employee-selector>
+              </div>
+              <div class="clr-col-md-6">
+                <button type="button" class="btn btn-icon btn-outline" [disabled]="!contactForm.valid"
+                        (click)="addContact()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
+                  {{ t('general.add') }}
+                </button>
+              </div>
+            </div>
+
+            <table class="table">
+              <thead>
+              <tr>
+                <th>{{ t('company.employee.name') }}</th>
+                <th>{{ t('company.phone') }}</th>
+                <th>{{ t('company.email') }}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody *ngIf="connectedEmployees.length; else noData2">
+              <tr *ngFor="let employee of connectedEmployees">
+                <td>
+                  <span>{{ t('company.employee.name') }}</span>
+                  <span>{{ employee | employeeName: true }}</span>
+                </td>
+                <td>
+                  <span>{{ t('company.phone') }}</span>
+                  <span>{{ employee.phone }}</span>
+                </td>
+                <td>
+                  <span>{{ t('company.email') }}</span>
+                  <span>{{ employee.email }}</span>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-icon btn-warning-outline" (click)="deleteContact(employee.id)">
+                    <fa-icon [icon]="faTrashAlt"></fa-icon>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+              <ng-template #noData2>
+                <tbody>
+                <tr>
+                  <td colspan="5">{{ t('general.noData') }}</td>
+                </tr>
+                </tbody>
+              </ng-template>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clr-row" *ngIf="!isNew">
+      <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+        <div class="card">
+          <div class="card-header">
+            {{ t('general.comment') }}
+          </div>
+          <div class="card-block">
+            <app-comments [chosenApi]="commentApi" [chosenId]="premiseToEdit.id"></app-comments>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</ng-container>

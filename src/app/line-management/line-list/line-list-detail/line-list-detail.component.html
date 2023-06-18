@@ -1,0 +1,175 @@
+<ng-container *transloco="let t">
+
+  <h4>{{ t('lines.menu.details') }}</h4>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>{{ t('lines.conveyorCompany') }}</th>
+      <th>{{ t('lines.transportMode') }}</th>
+      <th>{{ t('lines.contactOfConveyor') }}</th>
+      <th>{{ t('lines.countryPair') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ lineDetail.countryPair.from }} - {{ lineDetail.countryPair.to }}</td>
+      <td>{{ t('consignment.type.' + lineDetail.transportMode) }}</td>
+      <td>
+        {{ lineDetail.conveyor.companyName }}
+        <span class="address">{{ lineDetail.conveyor.seatAddress | address }}</span>
+      </td>
+      <td>{{ lineDetail.contact | employeeName: true }}, {{ lineDetail.contact.phone }}, {{ lineDetail.contact.mobile }}
+        , {{ lineDetail.contact.email }}</td>
+    </tr>
+    </tbody>
+
+  </table>
+
+  <h4>{{ t('lines.vehicles') }}</h4>
+
+  <h5>{{ t('lines.activeVehicle') }}</h5>
+  <table class="table table-vertical">
+    <tr>
+      <th>
+        <strong>{{ lineDetail.activeVehicle.licensePlate }}</strong>
+      </th>
+      <td>
+        {{ t('company.vehicle.fullWeightTypes.' + lineDetail.activeVehicle.fullWeightType) }}
+        {{ t('company.vehicle.structureTypes.' + lineDetail.activeVehicle.superStructureType) }}
+        {{ lineDetail.activeVehicle.netWeight.quantity }} {{ t('company.vehicle.weightUnits.' + lineDetail.activeVehicle.netWeight.unit) }}</td>
+    </tr>
+    <tr>
+      <th>
+        {{ t('company.vehicle.cargoSpace') }}
+      </th>
+      <td class="space">
+        <span></span>
+        <span>
+          {{ lineDetail.activeVehicle.cargoSpaceWidth + t('consignment.lot.dimension.width') }}
+          x {{ lineDetail.activeVehicle.cargoSpaceLength + t('consignment.lot.dimension.length') }}
+          x {{ lineDetail.activeVehicle.cargoSpaceHeight + t('consignment.lot.dimension.height') }}
+        </span>
+        <span>
+          {{ lineDetail.activeVehicle.cargoSpaceVolume }} m<sup>3</sup>
+        </span>
+        <span>
+          {{ lineDetail.activeVehicle.cargoSpaceWidth * lineDetail.activeVehicle.cargoSpaceLength / 10000 | number:'1.0-1' }}
+          m<sup>2</sup>
+        </span>
+      </td>
+    </tr>
+  </table>
+
+  <ng-container *ngIf="lineDetail.vehicles.length > 1"><h5>{{ t('lines.otherVehicles') }}</h5>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>{{ t('company.vehicle.licensePlate') }}</th>
+        <th>{{ t('company.vehicle.vehicleType') }}</th>
+        <th>{{ t('company.vehicle.superStructure') }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngFor="let vehicle of lineDetail.vehicles">
+        <tr *ngIf="vehicle.id !== lineDetail.activeVehicle.id">
+          <td>
+            <a href="/company/{{vehicle.companyId}}/vehicles/{{vehicle.id}}">
+              {{ vehicle.licensePlate }}
+            </a>
+          </td>
+          <td>{{ t('company.vehicle.vehicleTypes.' + vehicle.vehicleType) }}</td>
+          <td>  {{ t('company.vehicle.structureTypes.' + vehicle.superStructureType) }}</td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <h4>{{ t('lines.drivers') }}</h4>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>{{ t('lines.conveyorCompany') }}</th>
+      <th>{{ t('lines.transportMode') }}</th>
+      <th>{{ t('lines.contactOfConveyor') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let driver of lineDetail.drivers">
+      <td>{{ driver | employeeName }}</td>
+      <td>{{ driver.email }}</td>
+      <td>{{ driver.phone }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h4>{{ t('lines.menu.stations') }}</h4>
+  <table class="table" *ngIf="lineLegs?.length">
+    <thead>
+    <tr>
+      <th>{{ t('address.address') }}</th>
+      <th>{{ t('consignment.loadingOut.label') }}</th>
+      <th>{{ t('consignment.loadingIn.label') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let leg of lineLegs">
+      <td class="text-left">
+        <strong>{{ leg.address.countryCode }}</strong>
+        {{ leg.address.city }}
+        - {{ leg.companyName }}</td>
+      <td>
+        <ng-container [ngSwitch]="leg.overrideStatusDownload?.overallStatus">
+          <ng-container *ngSwitchCase="StatusTypes.WAITING_FOR_UPDATE">
+            <fa-icon [icon]="faHourglass"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.IN_PROGRESS">
+            <fa-icon [icon]="faCogs"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.FINISHED">
+            <fa-icon [icon]="faCheck"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.PROBLEM_APPEARED">
+            <fa-icon [icon]="faExclamation"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <fa-icon [icon]="faTimes"></fa-icon>
+          </ng-container>
+        </ng-container>
+        {{ leg.overrideStatusDownload ? t('status.consignment.' + leg.overrideStatusDownload?.overallStatus) : '' }}
+      </td>
+      <td>
+        <ng-container [ngSwitch]="leg.overrideStatusUpload?.overallStatus">
+          <ng-container *ngSwitchCase="StatusTypes.WAITING_FOR_UPDATE">
+            <fa-icon [icon]="faHourglass"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.IN_PROGRESS">
+            <fa-icon [icon]="faCogs"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.FINISHED">
+            <fa-icon [icon]="faCheck"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="StatusTypes.PROBLEM_APPEARED">
+            <fa-icon [icon]="faExclamation"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <fa-icon [icon]="faTimes"></fa-icon>
+          </ng-container>
+        </ng-container>
+        {{ leg.overrideStatusUpload ? t('status.consignment.' + leg.overrideStatusUpload?.overallStatus) : '' }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <h4>{{ t('lines.menu.consignments') }}</h4>
+  <div class="no-data" *ngIf="!lineDetail.legs || !lineDetail.legs.length">
+    {{ t('lines.noConsignments') }}
+    <br>
+    <a class="btn btn-link" routerLink="/line-organization/lines">{{ t('header.organize') }}</a>
+  </div>
+  <div class="consignments" *ngFor="let leg of lineDetail.legs">
+    <app-line-consignments-info [leg]="leg"></app-line-consignments-info>
+  </div>
+
+</ng-container>

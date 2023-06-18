@@ -1,0 +1,23 @@
+.truckIcon {
+    color: hsl(198, 0%, 55%);
+}
+
+.waiting .truckIcon {
+    color: hsl(46, 100%, 45%);
+}
+
+.onLine .truckIcon {
+    color: hsl(93, 100%, 26%);
+}
+
+clr-datagrid .btn-icon {
+    background-color: white;
+}
+
+.dg-fixed-height {
+    height: 500px;
+
+    clr-datagrid {
+        height: 100%;
+    }
+}

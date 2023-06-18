@@ -1,0 +1,69 @@
+button.status-trigger {
+  color: #ffffff;
+}
+.status-dropdown-text {
+  font-size: 0.6rem;
+  .status {
+    line-height: 1;
+    fa-icon {
+      font-size: 0.8rem;
+    }
+  }
+  .timestamp {
+    line-height: 2;
+    text-align: right;
+  }
+}
+
+.status-dropdown-text.IN_PROGRESS, .IN_PROGRESS {
+  color: hsl(43, 100%, 42%);
+}
+.status-dropdown-text.FINISHED, .FINISHED {
+  color: hsl(93, 100%, 26%);
+}
+.status-dropdown-text.WAITING_FOR_UPDATE, .WAITING_FOR_UPDATE {
+  color: hsl(198, 0%, 40%);
+}
+.status-dropdown-text.PROBLEM_APPEARED, .PROBLEM_APPEARED {
+  color: hsl(9, 100%, 43%);
+}
+
+.action-detail {
+  height: 0;
+  display: inline-block;
+
+  &.opened {
+    height: auto;
+  }
+
+  .status-list {
+    display: flex;
+    flex-direction: column;
+
+    & > div {
+      padding: 0.2rem 0.5rem;
+    }
+  }
+
+  .new-status {
+    padding: 0.25rem 0.5rem;
+
+    .status-label {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .control{
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.history {
+  padding: 5px 10px;
+  p {
+    margin: 0;
+  }
+}
+

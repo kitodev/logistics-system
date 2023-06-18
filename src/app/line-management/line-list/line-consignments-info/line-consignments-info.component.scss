@@ -1,0 +1,101 @@
+.info {
+  border-radius: var(--clr-table-border-radius, 0.15rem);
+  border: 1px solid var(--clr-table-border-color, #cccccc);
+  margin-top: 0.5rem;
+
+  display: block; // grid
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto auto;
+  gap: 0 0;
+  grid-template-areas:
+    "id  main-route"
+    "sub-route lots";
+}
+
+.id {
+  font-size: 0.8rem;
+  grid-area: id;
+  background-color: var(--clr-thead-bgcolor, #fafafa);
+  padding: 0.25rem 0 0.25rem 0.5rem;
+}
+
+
+.main-route {
+  font-size: 0.8rem;
+  font-weight: bold;
+  grid-area: main-route;
+  background-color: var(--clr-thead-bgcolor, #fafafa);
+  padding: 0.25rem 0.5rem 0.25rem 0;
+  text-align: center;
+}
+
+.sub-route {
+  grid-area: sub-route;
+  padding: 0.25rem 0.5rem;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0 0;
+  grid-template-areas:
+    "from-country to-country"
+    "from-zip to-zip";
+
+  .to-zip {
+    grid-area: to-zip;
+  }
+
+  .to-country {
+    grid-area: to-country;
+    align-self: end;
+
+    strong {
+      font-weight: bold;
+    }
+  }
+
+  .from-zip {
+    grid-area: from-zip;
+  }
+
+  .from-country {
+    grid-area: from-country;
+    align-self: end;
+
+    strong {
+      font-weight: bold;
+    }
+  }
+}
+
+.lots {
+  grid-area: lots;
+  padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+
+  .lot {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto auto auto;
+    gap: 0 0;
+    grid-template-areas:
+    "qty weight volume adr"
+    "dimensions dimensions name name";
+  }
+
+  .qty {
+    grid-area: qty;
+  }
+
+  .volume {
+    grid-area: volume;
+  }
+
+  .weight {
+    grid-area: weight;
+  }
+
+  .dimensions {
+    padding-bottom: 0.25rem;
+    grid-area: dimensions;
+  }
+}

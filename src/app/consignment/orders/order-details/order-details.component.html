@@ -1,0 +1,21 @@
+<ng-container *transloco="let t">
+    <nav class="subnav" [clr-nav-level]="2">
+      <ul class="nav">
+  
+        <li class="nav-item"><a [routerLink]="['/order']" class="nav-link">
+          <fa-icon [icon]="faArrowLeft"></fa-icon>
+          {{ t('orders.menu.orders') }}</a>
+        </li>
+  
+        <li class="nav-item"><a [routerLink]="['./details']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faTable"></fa-icon>
+          {{ t('orders.menu.details') }}</a>
+        </li>
+  
+      </ul>
+    </nav>
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+</ng-container>
+  

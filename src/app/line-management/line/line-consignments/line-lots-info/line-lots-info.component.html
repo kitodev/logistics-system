@@ -1,0 +1,64 @@
+<ng-container *transloco="let t">
+  <div class="container"
+       [ngClass]="{'load-in':direction ===ConsignmentDirection.LoadIn, 'load-out':direction=== ConsignmentDirection.LoadOut }">
+    <div class="head">
+      <div>
+        <a [routerLink]="'/consignment/parcel/'+consignment.consignmentId+'/details'">
+          <!-- {{ consignment.consignmentBasicData.orderId }} {{ t('consignment.type.' + consignment.consignmentBasicData.transportMode) }} -->
+        </a>
+        <br>
+        {{ t('consignment.sender') }}
+        : <strong>{{ companies?.get(consignment.consignmentBasicData.loadingInLocation.sender)?.companyName }}</strong>
+        {{ t('consignment.consignee') }}
+        : <strong>{{ companies?.get(consignment.consignmentBasicData.loadingOutLocation.sender)?.companyName }}</strong>
+      </div>
+      <div>
+        <a [routerLink]="'/consignment/parcel/'+consignment.consignmentId+'/details'">
+          <fa-icon [icon]="faEdit" size="lg"></fa-icon>
+        </a>
+      </div>
+    </div>
+    <div>
+      <table>
+        <tr *ngFor="let lot of consignment.consignmentBasicData.lots">
+          <td class="text-left">
+            {{ lot.lotIdentifier }}
+            <wbr>
+            {{ lot.name }}
+          </td>
+          <td>
+            <strong>{{ lot.quantity }}</strong>
+          </td>
+          <td>
+            {{ t('consignment.lot.qtyTypes.' + lot.quantityType) }}
+          </td>
+          <td class="text-right">
+            <strong>{{ lot.weight }}</strong> kg
+          </td>
+          <td>
+            <strong>{{ lot.length }}</strong> {{ t('consignment.lot.dimension.length') }} X
+            <wbr>
+            <strong>{{ lot.width }}</strong> {{ t('consignment.lot.dimension.width') }} X
+            <wbr>
+            <strong>{{ lot.height }}</strong> {{ t('consignment.lot.dimension.height') }}
+          </td>
+          <td class="text-right">
+            {{ lot.lmeter }}
+          </td>
+          <td class="nowrap text-right">
+            <strong>{{ lot.cbm }}</strong> m<sup>3</sup>
+          </td>
+          <td class="text-right">
+            {{ lot.stackable ? t('consignment.lot.stackable') : '' }}
+          </td>
+          <td>
+            {{ lot.customs ? t('consignment.lot.customsShort') : '' }}
+          </td>
+          <td>
+            {{ lot.adr ? t('consignment.lot.adr') : '' }}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</ng-container>

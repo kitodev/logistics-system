@@ -1,0 +1,83 @@
+<ng-container *transloco="let t">
+
+  <div class="card">
+    <div class="card-block">
+      <!--<div class="tt-side-panel__header" style="background-color: #ffffff;
+      padding: 24px 24px 24px 16px;">
+          <div class="tt-search-box" style="margin-top: 12px;
+          background: #fff;
+          font-size: 14px;
+          position: relative;">
+          <input type="text" class="tt-search-box-input">
+          <div class="tt-search-box-close-icon"></div>
+          </div>
+      </div>-->
+
+      <app-map #map></app-map>
+
+      <div class="info">
+        <div class="stations">
+          <div *ngFor="let location of locations; let i = index">
+            <div class="index" (click)="locate(location.coordinate)">{{ i + 1 }}</div>
+            <div class="company"
+                 (click)="locate(location.coordinate)">{{ partners?.get(location.companyId)?.companyName }}</div>
+            <div class="address" (click)="locate(location.coordinate)">{{ location.premiseAddress | address }}
+              <div class="error" *ngIf="!location.coordinate">
+                <fa-icon [icon]="faExclamation" size="lg"></fa-icon>
+                {{ t('map.error.geocoding') }}
+              </div>
+            </div>
+            <div class="leg" *ngIf="legs[i]">
+              <table>
+                <tbody>
+                <tr>
+                  <td><label>{{ t('map.partTime') }}:</label></td>
+                  <td class="text-right">{{ legs[i]?.summary.travelTimeInSeconds * 1000 | date:'h:mm:ss' }}</td>
+                </tr>
+                <tr>
+                  <td><label>{{ t('map.partDistance') }}:</label></td>
+                  <td class="text-right">{{ legs[i]?.summary.lengthInMeters / 1000 | number : '1.0-1' }} km</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="line" *ngIf="lineLegs | legOfLocation: location.id">
+              <a class="btn btn-link"
+                 [routerLink]="'/line-management/line/'+(lineLegs | legOfLocation: location.id)?.lineId+'/stations'">
+                <fa-icon [icon]="faExternalLinkAlt"></fa-icon>
+                {{ t('consignment.connectedLine') }}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="stat">
+          <h3>{{ t('map.consignment.plannedRoute') }}</h3>
+          <ng-container *ngIf="stats['PLAN']">
+            <div>
+              <label>{{ t('map.totalTime') }}:</label>
+              {{ stats['PLAN']?.time * 1000 | date:'h:mm:ss' }}
+            </div>
+            <div>
+              <label>{{ t('map.totalDistance') }}:</label>
+              {{ stats['PLAN']?.distance / 1000 | number : '1.0-1'}} km
+            </div>
+          </ng-container>
+          <div class="error" *ngIf="planError">
+            <fa-icon [icon]="faExclamation" size="lg"></fa-icon>
+            {{ t('map.error.routing') }}
+          </div>
+          <div class="current" *ngIf="currentPosition">
+            <h3 (click)="locate(currentPosition)">
+              <div class="current-marker"></div>
+              {{ t('consignment.currentPosition') }}
+            </h3>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</ng-container>

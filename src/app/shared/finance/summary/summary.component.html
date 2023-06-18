@@ -1,0 +1,15 @@
+<ng-container *transloco="let t">
+    <div class="clr-row labels">
+        <div class="clr-col-md income">Teljes bevétel
+            {{ financialEntries.incomeInfHuf.amount | currency: financialEntries.incomeInfHuf.currency }}
+        </div>
+        <div class="clr-col-md spendings">Költségek összesen
+            {{ financialEntries.expenditureInHuf.amount | currency: financialEntries.expenditureInHuf.currency }}
+        </div>
+        <div class="clr-col-md profit">Profit
+            {{ financialEntries.profitInHuf.amount | currency: financialEntries.profitInHuf.currency }}
+        </div>
+    </div>
+    <!--<div class="clr-row numbers">
+    </div>-->
+</ng-container>

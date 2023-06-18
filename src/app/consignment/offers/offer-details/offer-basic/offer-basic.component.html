@@ -1,0 +1,176 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row offer-control">
+    <div class="clr-col-9">
+      <app-offer-lifecycle [status]="offer?.offerStatus"></app-offer-lifecycle>
+    </div>
+    <div class="clr-col-3 offer-save" *ngIf="offer?.offerStatus === OfferStatus.DRAFT">
+      <button class="btn btn-primary" type="button" (click)="saveOffer()" [disabled]="!offerRequestFormGroup?.dirty">
+        <fa-icon [icon]="faSave"></fa-icon>
+        {{ t('offer.save') }}
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-block" *ngIf="offer?.offerStatus !== OfferStatus.REQUESTED">
+
+      <div class="clr-row">
+
+        <ng-container [ngSwitch]="offer?.offerStatus">
+
+          <ng-container *ngSwitchCase="OfferStatus.DRAFT">
+
+            <div class="draft">
+              <div class="deadline-container clr-flex-grow-1">
+                <div class="deadline">
+                  <form-date-time-picker
+                    [required]="offerRequestFormGroup.get('requestDeadline').errors?.required"
+                    [parentForm]="offerRequestFormGroup"
+                    [datetime]="offer?.requestDeadline"
+                    mode="single"
+                    type="both"
+                    [min]="deadlineMinDate"
+                    name="requestDeadline"
+                    [label]="t('offer.requestDeadline')"></form-date-time-picker>
+                  <div class="clr-error">
+                    <clr-control-error
+                      *ngIf="offerRequestFormGroup?.controls['requestDeadline'].errors?.invalidDate">
+                      {{ t('messages.error.invalidDate') }}
+                    </clr-control-error>
+                    <clr-control-error
+                      *ngIf="offerRequestFormGroup?.controls['requestDeadline'].touched && offerRequestFormGroup?.controls['requestDeadline'].errors?.pastDate">
+                      {{ t('messages.error.pastDate') }}
+                    </clr-control-error>
+                  </div>
+                </div>
+              </div>
+              <div class="send-offer">
+                <button class="btn btn-primary" (click)="sendOffer()"
+                        [disabled]="(offer | offerNotSendable) || offerRequestFormGroup.invalid">
+                  <fa-icon [icon]="faSend"></fa-icon>
+                  {{ t('offer.sendOffer') }}</button>
+              </div>
+
+              <div
+                class="text-right clr-flex-grow-1"
+                *appEmployeeRole="[Roles.AGENCY_MANAGER, Roles.AGENCY_ADMIN]">
+                <ng-container *ngIf="offer?.parentOfferRequestId">
+                  <a class="btn btn-sm btn-primary-outline"
+                     [routerLink]="'/offer/offer-incoming/'+offer.parentOfferRequestId">{{ t('offer.origin') }}</a>
+                </ng-container>
+              </div>
+            </div>
+
+          </ng-container>
+
+          <ng-container *ngSwitchCase="OfferStatus.ACCEPTED">
+            <div class="convert">
+              <button class="btn btn-primary"
+                      (click)="convert()"
+                      [disabled]="offer | offerNotConvertible">
+                <fa-icon [icon]="faBox"></fa-icon>
+                {{ t('offer.convertToConsignment') }}</button>
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="OfferStatus.CONVERTED">
+            <div class="converted">
+              <h2>{{ t('offer.status.CONVERTED') }}</h2>
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+      </div>
+    </div>
+
+    <div class="card-block" *ngIf="offer && offer?.offerStatus !== OfferStatus.DRAFT">
+      <app-offer-results
+        [consignments]="offer.consignments"
+        [receiverEmployees]="offer.receiverEmployees"
+        (offerAccept)="acceptOffer($event)"
+        (offerDecline)="declineOffer($event)"></app-offer-results>
+    </div>
+
+    <div class="card-block" *ngIf="offer?.offerStatus === OfferStatus.DRAFT">
+
+      <clr-stack-view>
+        <clr-stack-block [clrStackViewLevel]="1" [clrStackViewSetsize]="3" [clrStackViewPosinset]="2"
+                         [clrSbExpanded]="isAddresseeExpanded" class="addressee">
+          <clr-stack-label>{{t('offer.addressee')}} <span
+            *ngIf="offer && offer.receiverEmployees?.length>0">({{offer.receiverEmployees.length}}
+            )</span></clr-stack-label>
+          <clr-stack-content></clr-stack-content>
+
+          <clr-stack-block [clrStackViewLevel]="2" [clrStackViewSetsize]="3" [clrStackViewPosinset]="1"
+                           *ngFor="let addressee of offer?.receiverEmployees">
+            <clr-stack-label>
+              <div class="addressee-item">
+                <a [routerLink]="['/company/'+addressee.companyId+'/employees/'+addressee.employeeId]">
+                  {{addressee | employeeName}}
+                </a>
+                <app-contact-info [email]="addressee.email" [phone]="addressee.phone"
+                                  [mobile]="addressee.mobile"></app-contact-info>
+              </div>
+            </clr-stack-label>
+            <clr-stack-content>
+              <div class="addressee-content">
+                <a [routerLink]="['/company/'+addressee.companyId]"
+                   class="addressee-company">{{addressee.companyName}}</a>
+              </div>
+            </clr-stack-content>
+          </clr-stack-block>
+
+          <clr-stack-block *ngIf="offer && offer?.offerStatus === OfferStatus.DRAFT"
+                           [clrStackViewLevel]="2"
+                           [clrStackViewSetsize]="3"
+                           [clrStackViewPosinset]="3">
+            <clr-stack-label></clr-stack-label>
+            <clr-stack-content>
+              <button type="button" class="btn" (click)="navigateToAddressee()"
+                      [ngClass]="{'btn-primary':offer?.receiverEmployees?.length === 0, 'btn-primary-outline':offer?.receiverEmployees?.length>0}">
+                {{ t('offer.addAddressee') }}
+              </button>
+            </clr-stack-content>
+          </clr-stack-block>
+        </clr-stack-block>
+
+        <clr-stack-block
+          [clrStackViewLevel]="1"
+          [clrStackViewSetsize]="3"
+          [clrStackViewPosinset]="3"
+          [clrSbExpanded]="isConsignmentsExpanded" class="consignments">
+          <clr-stack-label>{{t('offer.consignments')}}</clr-stack-label>
+          <clr-stack-content></clr-stack-content>
+
+          <clr-stack-block [clrStackViewLevel]="2" [clrStackViewSetsize]="3" [clrStackViewPosinset]="1"
+                           *ngFor="let consignment of offer?.consignments">
+            <clr-stack-label>
+              <app-consignment-info [basicData]="consignment?.consignmentBasicData"></app-consignment-info>
+            </clr-stack-label>
+            <clr-stack-content>
+              <div class="route">
+                <div
+                  class="from">{{consignment?.consignmentBasicData?.loadingInLocation?.premiseAddress | address}}</div>
+                <div
+                  class="to">{{consignment?.consignmentBasicData?.loadingOutLocation?.premiseAddress | address}}</div>
+              </div>
+
+            </clr-stack-content>
+          </clr-stack-block>
+
+          <clr-stack-block *ngIf="offer && offer?.offerStatus === OfferStatus.DRAFT">
+            <clr-stack-label></clr-stack-label>
+            <clr-stack-content>
+              <button type="button" class="btn" (click)="navigateToConsignments()"
+                      [ngClass]="{'btn-primary':offer?.consignments?.length === 0, 'btn-primary-outline':offer?.consignments?.length>0}">
+                {{t('offer.addConsignment')}}
+              </button>
+            </clr-stack-content>
+          </clr-stack-block>
+        </clr-stack-block>
+      </clr-stack-view>
+    </div>
+  </div>
+</ng-container>

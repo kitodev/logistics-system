@@ -1,0 +1,89 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row offer-control">
+    <div class="clr-col-9">
+      <app-offer-lifecycle [status]="offer?.offerStatus"></app-offer-lifecycle>
+    </div>
+    <div class="clr-col-3 offer-save">
+      <button class="btn btn-primary" type="button" (click)="saveOffer()" [disabled]="!isDirty">
+        <fa-icon [icon]="faSave"></fa-icon>
+        {{ t('offer.save') }}
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-block" *ngIf="offer?.consignments">
+
+      <clr-accordion [clrAccordionMultiPanel]="true">
+
+        <clr-accordion-panel *ngFor="let basicDataItem of basicDataItems; let i = index;">
+          <clr-accordion-title>
+            <div class="consignment-head">
+              <app-consignment-info [basicData]="basicDataItem.basicData"></app-consignment-info>
+              <div class="route">
+                <span class="leg">
+                  {{basicDataItem.basicData.loadingInLocation?.premiseAddress?.country}}
+                  -
+                  {{basicDataItem.basicData.loadingInLocation?.premiseAddress?.postCode}}
+                </span>
+                <fa-icon [icon]="faRightArrow"></fa-icon>
+                <span class="leg">
+                  {{basicDataItem.basicData.loadingOutLocation?.premiseAddress?.country}}
+                  -
+                  {{basicDataItem.basicData.loadingOutLocation?.premiseAddress?.postCode}}
+                </span>
+              </div>
+            </div>
+          </clr-accordion-title>
+          <clr-accordion-content>
+            <button
+              *ngIf="offer?.offerStatus === OfferStatus.DRAFT || offer?.offerStatus === OfferStatus.REQUESTED || offer?.offerStatus === OfferStatus.ACCEPTED"
+              type="button"
+              class="btn btn-primary"
+              (click)="saveConsignment(basicDataItem, i)"
+              [disabled]="basicDataItem.form.pristine || basicDataItem.form.invalid">
+              {{ t('general.save') }}
+            </button>
+            <app-consignment-basic-data
+              [isNew]="false"
+              [partners]="partners"
+              [locationEditable]="offer?.offerStatus == OfferStatus.DRAFT"
+              [lotsEditable]="offer?.offerStatus == OfferStatus.DRAFT"
+              [consignmentBasicData]="basicDataItem.basicData"
+              [parentForm]="$any(basicDataItem.form)">
+            </app-consignment-basic-data>
+          </clr-accordion-content>
+        </clr-accordion-panel>
+
+
+        <!--     ^^^^^^^^    NEW CONSIGNMENT   ^^^^^^^^         -->
+
+        <clr-accordion-panel
+          *ngIf="offer?.offerStatus == OfferStatus.DRAFT"
+          [(clrAccordionPanelOpen)]="newOpen"
+          [clrAccordionPanelDisabled]="!offer?.consignments" #newPanel>
+          <clr-accordion-title>{{ t('offer.addConsignment') }}</clr-accordion-title>
+          <clr-accordion-content>
+
+            <div *ngIf="newOpen">
+              <app-consignment-basic-data
+                [consignmentBasicData]="newConsignmentBasicData"
+                [partners]="partners"
+                [isNew]="true"
+                [parentForm]="newOfferBasicDataForm"></app-consignment-basic-data>
+            </div>
+            <button type="button" class="btn btn-primary" (click)="addNewConsignment()"
+                    [disabled]="newOfferBasicDataForm.invalid">
+              {{ t('offer.add') }}
+            </button>
+          </clr-accordion-content>
+        </clr-accordion-panel>
+
+
+      </clr-accordion>
+
+
+    </div>
+  </div>
+</ng-container>

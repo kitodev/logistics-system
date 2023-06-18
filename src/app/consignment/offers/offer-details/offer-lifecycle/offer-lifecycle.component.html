@@ -1,0 +1,35 @@
+<ng-container *transloco="let t">
+  <div class="offer-lifecycle">
+    <div [ngClass]="{'active': status == OfferStatus.DRAFT}">
+      {{ t('offer.status.DRAFT') }}
+    </div>
+    <div>
+      <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+    </div>
+
+    <div [ngClass]="{'active': status == OfferStatus.REQUESTED}">
+      {{ t('offer.status.REQUESTED') }}
+    </div>
+    <div>
+      <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+    </div>
+
+    <div [ngClass]="{'active': status == OfferStatus.ACCEPTED}">
+      {{ t('offer.status.ACCEPTED') }}
+    </div>
+    <div>
+      <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+    </div>
+
+    <div [ngClass]="{'active': status == OfferStatus.CONVERTED}">
+      {{ t('offer.status.CONVERTED') }}
+    </div>
+
+    <div [ngClass]="{'active': status == OfferStatus.EXPIRED}" class="not-important">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </div>
+    <div [ngClass]="{'active': status == OfferStatus.EXPIRED}" class="not-important">
+      {{ t('offer.status.EXPIRED') }}
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,9 @@
+<ng-container *transloco="let t">
+  <form clrForm>
+    <clr-input-container>
+      <label>{{ t('offer.requestDeadline') }}</label>
+      <input clrInput placeholder="" name="name" type="text" [ngModel]="deadline"
+             (ngModelChange)="deadlineChanged($event)" [disabled]="disabled" />
+    </clr-input-container>
+  </form>
+</ng-container>

@@ -1,0 +1,12 @@
+<ng-container *transloco="let t">
+  <div class="info-container">
+    <div>
+      <!-- {{ t('consignment.type.' + basicData?.transportMode) }} -->
+    </div>
+    <div *ngFor="let lot of basicData.lots" class="lot-item">
+      <span>{{ lot.name }}</span> |
+      {{ lot.quantity }} {{ t('consignment.lot.qtyTypes.' + lot.quantityType) }}
+        | {{ lot.weight }} kg
+    </div>
+  </div>
+</ng-container>

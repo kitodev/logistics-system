@@ -1,0 +1,8 @@
+<ng-container *transloco="let t">
+  <div class="container" *ngFor="let consignment of consignments">
+    <!-- <div class="mode">{{ t('consignment.type.' + consignment.transportMode) }}</div> -->
+    <!-- <div class="parity">{{ consignment.parity }}</div> -->
+    <div class="weight">{{ consignment.sumWeight }} kg</div>
+    <div class="volume">{{ consignment.sumCbm }} m<sup>3</sup></div>
+  </div>
+</ng-container>

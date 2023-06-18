@@ -1,0 +1,12 @@
+.datetime-picker-container {
+    margin-top: 17px;
+    
+    label {
+        color: var(--clr-forms-label-color);
+        font-size: .65rem;
+        font-weight: 600;
+    }
+    input {
+        text-align: center;
+    }
+}

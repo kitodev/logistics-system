@@ -1,0 +1,36 @@
+.container {
+  display: grid;
+  grid-template-columns: auto auto auto 30px;
+  grid-template-rows: auto auto;
+  min-width: 10rem;
+  gap: 0 0;
+  grid-template-areas:
+    "mode volume weight adr"
+    "parity customs customs adr";
+
+  .adr {
+    grid-area: adr;
+    margin-left: 0.5rem;
+  }
+
+  .customs {
+    grid-area: customs;
+  }
+
+  .mode {
+    font-weight: bold;
+    grid-area: mode;
+  }
+
+  .volume {
+    grid-area: volume;
+  }
+
+  .weight {
+    grid-area: weight;
+  }
+
+  .parity {
+    grid-area: parity;
+  }
+}

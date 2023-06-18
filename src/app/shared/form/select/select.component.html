@@ -1,0 +1,14 @@
+<ng-container *transloco="let t">
+    <clr-select-container [formGroup]="formGroup">
+        <label [ngClass]="{'required': required}">{{ label }}</label>
+        <select clrSelect [formControlName]="name">
+            <option *ngFor="let opt of optionsArray" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+    </clr-select-container>
+</ng-container>
+
+
+
+
+
+

@@ -1,0 +1,124 @@
+.card {
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.card-block {
+  overflow: auto;
+  max-height: 100%;
+}
+
+.no-stations {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.8rem;
+
+  a {
+    margin-top: 1rem;
+  }
+}
+
+.leg-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+
+  .accordion-title {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  .country-code {
+    font-size: 18px;
+    padding: 5px;
+    background-color: hsl(198deg 100% 15%);
+    color: white;
+    margin-right: 5px;
+    width: 35px;
+    text-align: center;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+
+  .truck-icon {
+    padding: 0 10px;
+    color: #00364d;
+  }
+
+  .status {
+    width: 190px;
+    display: flex;
+    align-items: center;
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+
+    button {
+      margin: 0 .6rem;
+    }
+  }
+}
+
+.consignment-container {
+  display: flex;
+  flex-direction: row;
+  
+  .icon {
+    min-height: 50px;
+    min-width: 25px;
+    font-size: 18px;
+    text-align: center;
+    margin-right: 5px;
+    padding: 5px;
+    color: white;
+
+    fa-icon {
+      margin: 0;
+    }
+
+    & + div {
+      width: 100%;
+    }
+  }
+
+  &.up .icon {
+    background-color: hsl(198, 100%, 28%);
+  }
+
+  &.down .icon {
+    background-color: hsl(93, 100%, 26%);
+  }
+
+  .consignment {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+
+    &.over {
+      background-color: hsl(198, 81%, 88%);
+    }
+
+    div:first-child {
+      cursor: default;
+    }
+
+    .consignment-info {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+button.btn-icon.btn-sm.btn-link {
+  font-size: 15px;
+}

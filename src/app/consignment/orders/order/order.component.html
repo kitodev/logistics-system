@@ -1,0 +1,14 @@
+<ng-container *transloco="let t">
+    <nav class="subnav" [clr-nav-level]="2">
+        <ul class="nav">
+            <li class="nav-item"><a [routerLink]="['./']" class="nav-link" routerLinkActive="active"> {{ t('orders.menu.orders') }}</a></li>
+        </ul>
+
+        <!-- <ul class="nav right">
+            <li class="nav-item"><a [routerLink]="['./order/new']" class="nav-link"> {{ t('general.addItem', { item: t('orders.label') }) }}</a></li>
+        </ul> -->
+    </nav>
+    <div class="content-area">
+        <router-outlet></router-outlet>
+    </div>
+</ng-container>

@@ -1,0 +1,568 @@
+@import "~@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
+
+/* You can add global styles to this file, and also import other style files */
+* {
+  outline: 0 !important;
+}
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+router-outlet + * {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+@media screen and (max-width: 1380px) {
+  .branding {
+    max-width: 156px;
+
+    a {
+      max-width: 109px;
+    }
+  }
+}
+
+@media screen and (min-width: 1381px) {
+  .branding {
+    max-width: 440px;
+  }
+}
+
+.subnav {
+  position: sticky;
+  top: 60px;
+  z-index: 30;
+
+  .nav.right {
+    justify-content: flex-end;
+  }
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:visited {
+  color: var(--clr-link-color, #0072a3);
+}
+
+.align-bottom {
+  display: flex;
+  align-items: flex-end;
+}
+
+.clr-control-container,
+.clr-control-label {
+  max-width: 100%;
+}
+
+.clr-control-container,
+input,
+.clr-input-group,
+.clr-select-wrapper,
+select,
+.clr-control-container textarea {
+  width: 100%;
+}
+
+.clr-checkbox-wrapper input[type=checkbox] + label::before {
+  background-color: #ffffff;
+}
+
+.clr-error .clr-select-wrapper::after {
+  right: .3rem !important;
+}
+
+.content-area {
+  height: calc(100% - 36px);
+  background: #c6d6e3; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #eef2f3, #c6d6e3); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #eef2f3, #c6d6e3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+  button {
+    transition: all 0.4s ease;
+
+    &.btn-primary,
+    &.btn-outline-primary,
+    &.btn-secondary,
+    &.btn-secondary-outline,
+    &.btn-outline,
+    &.btn-danger,
+    &.btn-danger-outline {
+      margin: 0.5rem 0.25rem;
+    }
+  }
+
+  .datagrid-cell {
+    button {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.card {
+  margin: 0 0 15px;
+
+  .card-header {
+    border-bottom: 4px solid var(--clr-color-action-600);
+  }
+}
+
+table {
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: auto;
+
+  tr {
+    padding: .35em;
+  }
+
+  th, td {
+    padding: .625em;
+    text-align: center;
+
+    & > span {
+      display: block;
+
+      &:first-child {
+        display: none;
+      }
+    }
+  }
+
+  th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 768px) {
+    border: 0;
+
+    thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: .625em;
+    }
+
+    td {
+      border-bottom: 1px solid #ddd;
+      font-size: .8em;
+      display: block;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      span {
+        text-align: right;
+
+        &:first-child {
+          text-align: left;
+          margin-bottom: 5px;
+          display: block;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
+
+.clr-accordion-content {
+  overflow: visible;
+}
+
+.clr-accordion-header-button {
+  align-items: center;
+}
+
+clr-datagrid {
+  z-index: 20;
+
+  
+  .datagrid-column-title,
+  .datagrid-cell {
+    word-break: break-word;
+  }
+
+  .datagrid-column-title,
+  clr-dg-cell.datagrid-cell,
+  clr-dg-cell.datagrid-cell div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:not(.no-detailed-row) clr-dg-column-toggle {
+    position: absolute !important;
+    top: 19px;
+    left: 49px;
+    z-index: 999;
+  }
+
+  &.no-bulk-selection clr-dg-column-toggle {
+    left: 12px;
+  }
+
+  .datagrid-detail-caret, .column-switch-wrapper {
+    button {
+      margin: 0 !important;
+    }
+  }
+}
+
+.title {
+  font-size: 1rem;
+  margin-top: 1.5rem;
+}
+
+.no-mt .clr-form-control {
+  margin-top: 0;
+}
+
+body .table-details-pane {
+  p {
+    margin: 0;
+    min-height: 25px;
+
+    &:nth-child(odd) {
+      background-color: #eeeeee;
+    }
+  }
+
+  .no-margin {
+    margin: 0;
+
+    div {
+      padding-left: 0;
+    }
+
+    &:nth-of-type(odd) {
+      background-color: #eeeeee;
+    }
+  }
+
+  .no-pr {
+    padding-right: 0;
+  }
+
+  .no-pl {
+    padding-left: 0;
+  }
+}
+
+.pagination {
+  .clr-select-wrapper, select {
+    width: auto;
+  }
+}
+
+.main-container ngx-file-drop {
+  .ngx-file-drop__drop-zone {
+    border-radius: 0.5rem;
+    border: 2px dashed var(--clr-forms-border-color);
+    padding: 0 .3rem;
+    height: auto;
+    margin: 0.5rem;
+  }
+
+  .ngx-file-drop__content {
+    height: auto;
+    flex-direction: column;
+    color: inherit;
+
+    .btn {
+      min-height: 30px;
+      margin: 0.2rem 0 0.5rem 0;
+    }
+  }
+}
+
+.ng-dirty {
+  &.clr-select, &.clr-input {
+    border-bottom-color: var(--clr-color-action-600);
+  }
+}
+
+.ng-touched.ng-invalid {
+  &.clr-select, &.clr-input {
+    border-bottom-color: var(--clr-forms-invalid-color, #c21d00);
+  }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.label.checked {
+  background-color: var(--clr-label-blue-bg-color);
+  color: white;
+
+  &:hover {
+    background-color: var(--clr-btn-primary-bg-color) !important;
+  }
+}
+
+.datetime-picker-container {
+  .clr-form-control {
+    margin-top: 0;
+  }
+}
+
+.header .header-actions > .dropdown > .dropdown-toggle {
+  line-height: 0;
+}
+
+.ng-select {
+  .ng-select-container {
+    min-height: 26px;
+    height: 26px !important;
+    padding-top: 8px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom-color: var(--clr-forms-border-color, #b3b3b3);
+    border-radius: 0;
+
+    &:hover {
+      cursor: pointer;
+      background-color: var(--clr-forms-select-hover-background, rgba(222, 222, 222, 0.5));
+    }
+  }
+
+  &.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    border-bottom-width: 2px;
+    border-bottom-color: var(--clr-color-action-600);
+    box-shadow: none;
+  }
+
+  &.ng-select-single .ng-select-container .ng-value-container,
+  &.ng-select-single .ng-select-container .ng-value-container .ng-value {
+    font-size: 0.65rem;
+    font-weight: 400;
+  }
+
+  .ng-select-container .ng-value-container .ng-placeholder {
+    font-weight: normal;
+  }
+
+
+  &.ng-invalid.ng-touched {
+    .ng-select-container {
+      border-bottom-color: var(--clr-forms-invalid-color, #c21d00);
+    }
+  }
+
+  &.ng-select-multiple {
+    .ng-select-container.ng-has-value {
+      height: auto !important;
+    }
+  }
+}
+
+fa-icon {
+  margin-right: 0.25rem;
+}
+
+button fa-icon {
+  margin-right: 0;
+}
+
+.comment-block .clr-input-wrapper {
+  max-width: 100%;
+}
+
+clr-dg-row.expanded {
+  .datagrid-scrolling-cells {
+    background-color: hsl(282, 43%, 54%);
+    color: white;
+  }
+
+  clr-dg-row-detail.leg-details {
+    background-color: hsl(282, 100%, 95%);
+    min-height: 100px;
+    flex-direction: column;
+  }
+
+  .leg {
+    background-color: hsl(282, 59%, 87%);
+    color: black;
+    padding: 5px;
+    cursor: grab;
+    margin-top: 4px;
+
+    &.onLine, &.waiting {
+      cursor: unset;
+      color: #8c8c8c;
+    }
+  }
+}
+
+.a-s-end {
+  align-self: flex-end;
+}
+
+.a-s-center {
+  align-self: center;
+}
+
+clr-datagrid {
+  height: auto!important;
+
+  &.small-table {
+    min-height: 500px;
+
+    .datagrid-footer-description {
+      text-align: left;
+    }
+  }
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.custom-form-input-container {
+  margin-top: 25px;
+
+  label {
+    line-height: 15px;
+  }
+
+  &.disabled {
+    label {
+      color: var(--clr-forms-label-disabled-color, #8c8c8c);
+    }
+
+    .ng-select {
+      .ng-select-container,
+      .ng-select-container .ng-value-container,
+      .ng-select-container .ng-value-container .ng-input > input,
+      .ng-select-container .ng-arrow-wrapper {
+        cursor: not-allowed;
+      }
+    }
+
+    .ng-select .ng-select-container .ng-value-container .ng-value {
+      color: var(--clr-forms-text-disabled-color, #b3b3b3);
+    }
+  }
+}
+
+.no-mt-control .clr-form-control {
+  margin-top: 0;
+}
+
+label.required:after {
+  color: #d00;
+  content: "*";
+  margin-left: 5px;
+}
+
+.modal-body {
+  min-height: 50px;
+}
+
+.file-error {
+  color: red;
+  font-size: 0.6rem;
+}
+
+.validation-error {
+  color: #c21d00;
+  font-size: .55rem;
+  line-height: .6rem;
+}
+
+.max-card {
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+
+.cdk-drag-preview.datagrid-column {
+  background-color: #fafafa;
+  border: 1px solid #cccccc;
+
+  clr-dg-filter, clr-dg-column-separator {
+    display: none;
+  }
+
+  button.datagrid-column-title {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: 0 0;
+    text-align: left;
+    align-items: center;
+    display: flex;
+  }
+}
+
+.cdk-drag-handle {
+  cursor: move;
+  width: 100%;
+}
+
+.owl-dt-calendar {
+  height: 15.25em !important;
+}
+
+.owl-dt-timer {
+  height: 5.5em;
+  padding: 0;
+}
+
+td.owl-dt-calendar-cell {
+  padding-top: 5% !important;
+  padding-bottom: 5% !important;
+}
+
+.csv-export {
+  margin-right: 2rem;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.ng-select-gray {
+  .ng-select-container {
+    background-color: #f0f0f0 ;
+  }
+}

@@ -1,0 +1,30 @@
+<ng-container *transloco="let t">
+  <app-company-basic-data [companyId]="companyId"></app-company-basic-data>
+
+  <ng-container *ngIf="!isNew">
+
+    <div class="clr-row"
+         *appEmployeeRole="[Role.AGENCY_ADMIN, Role.AGENCY_FINANCIAL, Role.AGENCY_MANAGER,Role.PARTNER_MANAGER, Role.PARTNER_FREIGHT_ORGANISER];resourceCompanyId:companyId;resourceRule:ResourceRule.OWN_AND_PARTNER">
+      <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12">
+        <app-bank-account [companyId]="companyId"></app-bank-account>
+      </div>
+    </div>
+
+
+    <div class="clr-row"
+         *appEmployeeRole="[Role.AGENCY_ADMIN, Role.AGENCY_FINANCIAL, Role.AGENCY_MANAGER, Role.AGENCY_FREIGHT_ORGANISER];resourceCompanyId:companyId;resourceRule:ResourceRule.OWN_AND_PARTNER">
+      <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            {{t('general.comment')}}
+          </div>
+          <div class="card-block">
+            <app-comments [chosenApi]="commentApi" [chosenId]="companyId"></app-comments>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </ng-container>
+
+</ng-container>

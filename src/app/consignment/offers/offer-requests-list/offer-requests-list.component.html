@@ -1,0 +1,192 @@
+<ng-container *transloco="let t">
+
+  <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading"
+   [(clrDgSelected)]="selectedOffers"
+   cdkDropList (cdkDropListDropped)="onTableHeaderColumnDrop($event)" cdkDropListOrientation="horizontal"
+    [cdkDropListData]="userColOrder">
+
+    <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+    <!--<clr-dg-column>{{ t('general.operations') }}</clr-dg-column>-->
+    <ng-container *ngFor="let col of userColOrder; let index=index">
+      <clr-dg-column cdkDrag [cdkDragData]="index" *ngIf="col.filterType === DataGridFilterType.NOFILTER" [clrDgSortBy]="col.field">
+        <div cdkDragHandle>
+          <ng-template [clrDgHideableColumn]="{hidden: col.hidden}" (clrDgHiddenChange)="addPendingColumnSetting($event, col.field)">
+            {{ t(col.label) }}
+          </ng-template>
+        </div>
+      </clr-dg-column>
+
+      <clr-dg-column cdkDrag [cdkDragData]="index" [clrDgField]="col.field" *ngIf="col.filterType !== DataGridFilterType.NOFILTER">
+        <div cdkDragHandle>
+          <ng-template [clrDgHideableColumn]="{hidden: col.hidden}"
+                       (clrDgHiddenChange)="addPendingColumnSetting($event, col.field)">
+            {{ t(col.label) }}
+          </ng-template>
+        </div>
+          
+          <clr-dg-numeric-filter *ngIf="col.filterType === DataGridFilterType.NUMERIC"
+          [clrDgNumericFilter]="col.filter"></clr-dg-numeric-filter>
+          
+          <clr-dg-filter *ngIf="col.filterType === DataGridFilterType.DATE">
+            <table-date-range-filter [property]="col.field"></table-date-range-filter>
+          </clr-dg-filter>
+          
+          <clr-dg-filter *ngIf="col.filterType === DataGridFilterType.PICKER">
+            <table-select-one-filter [options]="col.filterOptions" [property]="col.field"></table-select-one-filter>
+          </clr-dg-filter>
+      </clr-dg-column>
+    </ng-container>
+
+
+    <clr-dg-row *ngFor="let offer of offers" [clrDgItem]="offer">
+      <clr-dg-action-overflow>
+        <button type="button" class="btn btn-outline-primary btn-icon btn-sm" title="{{ t('general.modify') }}"
+                (click)="toOfferRequest(offer.offerRequestId)">
+          <fa-icon [icon]="faEdit"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-icon btn-outline-success btn-sm" title="{{ t('general.duplicate') }}" (click)="duplicate(offer)">
+          <fa-icon [icon]="faClone"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-icon btn-outline-warning btn-sm" title="{{ t('general.delete') }}" 
+                (click)="delete(offer.offerRequestId)">
+          <fa-icon [icon]="faTrashAlt"></fa-icon>
+        </button>
+      </clr-dg-action-overflow>
+
+      <ng-container *ngFor="let col of userColOrder">
+        <ng-container [ngSwitch]="col.field">
+          <clr-dg-cell *ngSwitchCase="OffersRequestsTableHeaderFields.OFFER_STATUS">{{ t('offer.status.' + offer.offerStatus) }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="OffersRequestsTableHeaderFields.ROUTE">
+            <div class="route" *ngFor="let route of offer | offerRoute">
+              <div class="country">{{route.inCountry}}</div>
+              <div class="country">{{route.outCountry}}</div>
+              <div>{{route.inCity}}</div>
+              <div>{{route.outCity}}</div>
+            </div>
+          </clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="OffersRequestsTableHeaderFields.REQUESTER">{{ offer| offerBidCount }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="OffersRequestsTableHeaderFields.RECEIVER_EMPLOYEEIDS" class="receivers">
+            <clr-signpost>
+              <button class="btn btn-link" clrSignpostTrigger>
+                {{ offer.receiverEmployees.length }}
+              </button>
+              <clr-signpost-content>
+                <div *ngFor="let receiver of offer.receiverEmployees">
+                  {{ { firstName: receiver.firstName, lastName: receiver.lastName, title: receiver.title }| employeeName }}
+                  <span class="company">{{ receiver.companyName }}</span>
+                </div>
+              </clr-signpost-content>
+            </clr-signpost>
+          </clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="OffersRequestsTableHeaderFields.REQUESTER_DEADLINE">{{ offer.requestDeadline | date:'medium' }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="OffersRequestsTableHeaderFields.CONSIGNMENT" class="consignments">
+            <app-offer-consignment-info [consignments]="offer.consignments"></app-offer-consignment-info>
+          </clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="OffersRequestsTableHeaderFields.LAST_UPDATED">{{ offer.lastUpdated | date : 'medium'}}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="OffersRequestsTableHeaderFields.CREATED_AT">{{ offer.createdAt | date: 'medium'}}</clr-dg-cell>
+        </ng-container>
+      </ng-container>
+    </clr-dg-row>
+
+    <ng-template clrIfDetail let-detail (clrIfDetailChange)="onDetailOpen($event)">
+      <clr-dg-detail>
+        <clr-dg-detail-body class="table-details-pane">
+          <h4>{{t('offer.status.' + detail.offerStatus) }}</h4>
+          {{ t('offer.requestDeadline') }}: {{ detail.requestDeadline | date : 'medium' }}
+
+          <h4>{{t('offer.consignments') }}</h4>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>{{ t('consignment.transportMode') }}</th>
+              <th>{{ t('consignment.parity') }}</th>
+              <th>{{ t('consignment.sumNetWeight') }}</th>
+              <th>{{ t('consignment.sumNetCbm') }}</th>
+              <th>ADR</th>
+              <th>{{ t('consignment.lot.customs') }}</th>
+              <th>{{ t('consignment.loadingIn.label') }}</th>
+              <th>{{ t('consignment.loadingOut.label') }}</th>
+              <th>{{ t('offer.offers') }}</th>
+              <th>{{ t('consignment.ekaer') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let consignment of detail.consignments">
+              <tr [ngClass]="{'separate':!consignment.givenOffers?.length}" class="consignment">
+                <td>{{ t('consignment.type.' + consignment.transportMode) }}</td>
+                <td>{{ consignment.parity }}</td>
+                <td>{{ consignment.sumWeight }} kg</td>
+                <td>{{ consignment.sumCbm }} m<sup>3</sup></td>
+                <td>
+                  <app-adr-sign *ngIf="consignment.sumAdr">ADR</app-adr-sign>
+                </td>
+                <td>
+                  <fa-icon [icon]="faCheck" *ngIf="consignment.sumCustoms"></fa-icon>
+                </td>
+                <td>{{ consignment.loadingInLocation.premiseAddress | address }}</td>
+                <td>{{ consignment.loadingOutLocation.premiseAddress | address }}</td>
+                <td>{{ consignment.givenOffers.length }}</td>
+                <td>{{ consignment.ekaer }}</td>
+              </tr>
+              <tr *ngFor="let bidder of consignment.givenOffers; last as isLast; first as isFirst" class="offers"
+                  [ngClass]="{'separate':isLast}">
+                <td class="separate" *ngIf="isFirst"
+                    [rowSpan]="(consignment.givenOffers?.length ? consignment.givenOffers?.length : 0)">
+                  {{ t('offer.offers') }}
+                </td>
+                <td colspan="5">
+                  {{ receiversLookup[bidder.bidderEmployeeId] | employeeName }}
+                  <br>
+                  {{ receiversLookup[bidder.bidderEmployeeId].companyName }}
+                </td>
+                <td>{{ bidder.price }}</td>
+                <td>{{ t('offer.givenOfferStatus.' + bidder.status) }}</td>
+                <td colspan="2">{{ bidder.expirationDate | date: 'medium' }}</td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </table>
+
+          <h4>{{t('offer.addressee') }}</h4>
+          <table class="table table-vertical">
+            <tbody>
+            <tr *ngFor="let receiver of detail.receiverEmployees">
+              <th>
+                <a [routerLink]="['/company/'+receiver.companyId]" class="company">{{ receiver.companyName }}</a>
+              </th>
+              <td>
+                <a class="employee"
+                   [routerLink]="['/company/'+receiver.companyId+'/employees/'+receiver.employeeId]">
+                  {{ {
+                  firstName: receiver.firstName,
+                  lastName: receiver.lastName,
+                  title: receiver.title
+                } | employeeName }}
+                </a>
+              </td>
+              <td>{{ receiver.phone }}</td>
+              <td>{{ receiver.mobile }}</td>
+              <td>{{ receiver.email }}</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <button type="button" class="btn btn-outline"
+                  (click)="toOfferRequest(detail.offerRequestId)">{{ t('general.details') }}</button>
+
+        </clr-dg-detail-body>
+      </clr-dg-detail>
+    </ng-template>
+
+    <clr-dg-footer>
+      <button class="btn btn-icon btn-warning-outline btn-sm"  (click)="clearFilters()"><fa-icon [icon]="faFilter"></fa-icon> {{ t('general.deleteFilter') }}</button>  
+      <button type="button" class="btn btn-icon btn-warning-outline btn-sm" *ngIf="selectedOffers.length >= 1"><fa-icon [icon]="faTrashAlt"></fa-icon> {{ t('general.deleteSelectedItems') }}</button>
+      <a class="csv-export" (click)="export()">{{ t('file.downloadCsv') }} <fa-icon [icon]="faDownload"></fa-icon></a>
+      <clr-dg-pagination #pagination [clrDgPageSize]="PAGE_SIZE" [clrDgTotalItems]="totalItems">
+        <clr-dg-page-size [clrPageSizeOptions]="SIZE_OPTIONS">{{ t('table.perPage') }}</clr-dg-page-size>
+        {{ pagination.firstItem + 1 }}
+        - {{ pagination.lastItem + 1 }} {{ t('table.of') }} {{ totalItems }} {{ t('table.from') }}
+      </clr-dg-pagination>
+    </clr-dg-footer>
+  </clr-datagrid>
+</ng-container>

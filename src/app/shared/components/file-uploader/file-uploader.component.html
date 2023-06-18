@@ -1,0 +1,37 @@
+<ng-container *transloco="let t">
+  <div class="name">
+    <clr-input-container>
+      <label [ngClass]="{'required': !documentName}">{{ t('file.name') }}</label>
+      <input clrInput [placeholder]="t('file.document')" type="text" [(ngModel)]="documentName"
+             [ngModelOptions]="{standalone: true}" />
+    </clr-input-container>
+  </div>
+  <div class="drop">
+    <ngx-file-drop
+      [dropZoneLabel]="t('company.dropLogo')"
+      (onFileDrop)="dropped($event)"
+      [multiple]="false"
+      [directory]="false">
+      <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+
+        <ng-container *ngIf="file; else noLogo">
+          {{file.name}}
+        </ng-container>
+        <ng-template #noLogo>
+          {{ t('file.drop') }}
+        </ng-template>
+
+        <button type="button" class="btn select-file btn-primary-outline"
+                (click)="openFileSelector()">{{ t('file.browse') }}</button>
+        <div class="file-error" *ngIf="fileError">
+          <fa-icon [icon]="faExclamationCircle"></fa-icon>
+          {{ t('general.fileError.' + fileError) }}
+        </div>
+      </ng-template>
+    </ngx-file-drop>
+  </div>
+  <div class="text-right">
+    <button type="button" class="btn btn-primary" (click)="saveDocument()"
+            [disabled]="fileError || !file || !documentName">{{ t('file.upload') }}</button>
+  </div>
+</ng-container>

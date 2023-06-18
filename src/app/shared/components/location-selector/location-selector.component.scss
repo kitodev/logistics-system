@@ -1,0 +1,319 @@
+.location-edit {
+  display: grid;
+  grid-template-columns: 50px auto auto 1fr 1fr 1fr 50px;
+  grid-template-rows: 50px auto auto auto auto;
+  gap: 0 0;
+  grid-template-areas:
+    "type headline headline headline headline headline headline"
+    "control control address company-info opening comment position-control"
+    "control control premise premise-info opening comment position-control"
+    "control control contact contact-info opening comment position-control"
+    "control control sender-receiver sender-receiver opening comment position-control";
+  padding: 0;
+  background-color: #f2f2f2;
+
+  .address, .premise, .contact, .sender-receiver {
+    padding: 0.2rem 0.5rem 0 0.2rem;
+    display: flex;
+    align-items: flex-start;
+
+    .ng-select {
+      min-width: 14rem;
+    }
+
+
+  }
+
+  &.with-status {
+    grid-template-columns: 50px auto auto 1fr 1fr 1fr 50px;
+    grid-template-areas:
+    "type headline headline headline headline status status"
+    "control control address company-info opening opening position-control"
+    "control control premise premise-info opening opening position-control"
+    "control control contact contact-info opening opening position-control"
+    "customs customs sender-receiver reference reference reference position-control";
+
+    .reference {
+      flex-direction: row;
+
+      .ref-item {
+        padding-right: 0.5rem;
+      }
+    }
+  }
+
+  &.simple {
+    grid-template-columns: 50px auto auto 1fr 1fr 1fr 50px;
+    grid-template-areas:
+      "type headline headline headline headline headline headline"
+      "control control address company-info opening comment position-control"
+      "control control premise premise-info opening comment position-control"
+      "control control contact contact-info opening comment position-control"
+      "customs customs sender-receiver sender-receiver reference comment position-control";
+
+    .customs {
+      padding-right: 0.25rem;
+    }
+
+  }
+}
+
+app-location-info{
+  width: 100%;
+}
+
+.location-info {
+  display: grid;
+  grid-template-columns: 50px auto auto auto 50px;
+  grid-template-rows: 50px auto auto auto;
+  gap: 0 0;
+  grid-template-areas:
+    "type headline headline headline headline"
+    "control control address comment position-control"
+    "control control address comment position-control";
+  padding: 0;
+  background-color: hsl(93, 32%, 94%);
+
+  &.with-status, &.with-status.new {
+    grid-template-columns: 50px auto 1fr 1fr auto 50px;
+    grid-template-areas:
+    "type headline headline headline status status"
+    "control control address address comment position-control"
+    "customs customs address address comment position-control"
+    "reference reference sender-receiver sender-receiver comment position-control";
+
+    .customs {
+      padding-left: 0.5rem;
+    }
+
+    .sender-receiver {
+      padding-left: 1rem;
+      align-self: center;
+    }
+  }
+
+  &.simple {
+    grid-template-columns: 50px auto auto auto 1fr;
+    grid-template-rows: 50px auto auto auto;
+    grid-template-areas:
+    "type headline headline headline headline"
+    "control control address sender-receiver comment"
+    "control control address reference comment"
+    "control control address customs comment";
+
+    .comment {
+      max-width: 30rem;
+    }
+
+    .sender-receiver {
+      align-items: center;
+    }
+
+    &.new {
+      grid-template-columns: 50px auto auto auto;
+      grid-template-rows: auto auto auto auto;
+      grid-template-areas:
+      "type address company-info opening opening"
+      "type  premise premise-info opening opening"
+      "type  contact contact-info opening opening"
+      "type customs  sender-receiver reference control";
+
+      .type {
+        padding: 0;
+      }
+
+      .address, .premise, .contact {
+        padding: 0.2rem 0.5rem 0 0.2rem;
+        display: flex;
+        align-items: flex-start;
+
+        .ng-select {
+          width: 14rem;
+        }
+      }
+
+      .sender-receiver .ng-select {
+        min-width: 14rem;
+      }
+
+      .customs {
+        align-self: center;
+      }
+    }
+  }
+}
+
+.control {
+  grid-area: control;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: flex-start;
+}
+
+.position-control {
+  grid-area: position-control;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.company {
+  grid-area: company;
+}
+
+.premise {
+  grid-area: premise;
+}
+
+.type {
+  grid-area: type;
+  padding: 0.25rem;
+  background-color: hsl(93, 85%, 32%);
+
+  .icon {
+    background-color: #ffffff;
+    color: hsl(93, 100%, 21%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.headline {
+  grid-area: headline;
+  background-color: hsl(93, 85%, 32%);
+  color: #ffffff;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: row;
+
+  .country-code {
+    background-color: hsl(93, 100%, 21%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    width: calc(50px - 0.5rem);
+    height: calc(50px - 0.5rem);
+  }
+
+  .city {
+    padding-left: 0.5rem;
+    font-size: 1rem;
+    align-self: center;
+  }
+}
+
+.simple {
+
+  &.location-info {
+    background-color: hsl(93, 0%, 94%);
+  }
+
+  .headline {
+    background-color: hsl(94, 0%, 62%);
+
+    .country-code {
+      background-color: hsl(93, 0%, 41%);
+    }
+  }
+
+  .type {
+    background-color: hsl(94, 0%, 62%);
+
+
+    .icon {
+      color: hsl(93, 0%, 41%);
+    }
+  }
+}
+
+.address {
+  grid-area: address;
+  display: flex;
+  flex-direction: row;
+}
+
+
+.status {
+  grid-area: status;
+  background-color: white;
+  border: 0.25rem solid #4b970c;
+  display: flex;
+  flex-direction: row;
+  min-width: 280px;
+  
+  .down-status, .up-status {
+    align-self: center;
+    display: flex;
+    align-items: center;
+    min-width: 140px;
+    cursor: default;
+
+    fa-icon {
+      margin-left: 5px;
+    }
+  }
+}
+
+
+.contact {
+  grid-area: contact;
+}
+
+.company-info {
+  grid-area: company-info;
+}
+
+.premise-info {
+  grid-area: premise-info;
+  display: flex;
+}
+
+.contact-info {
+  grid-area: contact-info;
+}
+
+.sender-receiver {
+  grid-area: sender-receiver;
+  display: flex;
+  padding-left: 0.25rem;
+
+  .clr-control-label {
+    padding: 0 0.5rem 0 0.25rem;
+    align-self: center;
+  }
+}
+
+.opening {
+  grid-area: opening;
+}
+
+.comment {
+  grid-area: comment;
+  background-color: #ffffff;
+  padding: 0.25rem 0.5rem;
+  margin: 0 0 0.25rem 0.25rem;
+}
+
+.customs {
+  padding-left: 0.25rem;
+  grid-area: customs;
+}
+
+.reference {
+  grid-area: reference;
+  padding: 0 0 0.25rem 0.25rem;
+  display: flex;
+  align-items: baseline;
+  flex-direction: column;
+
+  > .clr-control-label {
+    padding: 0 0.5rem 0.25rem 0.25rem;
+  }
+}

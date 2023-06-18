@@ -1,0 +1,16 @@
+<ng-container *transloco="let t">
+
+  <div class="card">
+    <div class="card-block text-center">
+      <div class="icon">
+        <fa-icon [icon]="faExclamation" size="8x"></fa-icon>
+      </div>
+      <div class="message">{{ t('notFound.message', { item: t('notFound.items.'+type) }) }}</div>
+      <a class="btn btn-link" [routerLink]="redirectUrl" *ngIf="redirectUrl">
+        {{ t('notFound.back') }}
+      </a>
+
+    </div>
+  </div>
+
+</ng-container>

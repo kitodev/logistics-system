@@ -1,0 +1,68 @@
+.time-gate {
+  display: grid;
+  align-items: flex-end;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto auto;
+  gap: 0 0;
+  grid-template-areas:
+    "from-label from-date"
+    "to-label to-date"
+    "type-option type-option"
+    "interval interval";
+
+  .from-label, .to-label, .type-option, .interval {
+    padding-left: 0.4rem;
+  }
+
+  .from-date, .to-date, .type-option, .interval {
+    padding-right: 0.4rem;
+  }
+
+  .from-date {
+    grid-area: from-date;
+  }
+
+  .from-label {
+    grid-area: from-label;
+  }
+
+  .to-label {
+    grid-area: to-label;
+  }
+
+  .to-date {
+    grid-area: to-date;
+  }
+
+  .type-option {
+    grid-area: type-option;
+  }
+
+  .interval {
+    grid-area: interval;
+    display: flex;
+    align-items: flex-end;
+
+    .interval-label {
+      padding-right: 0.25rem;
+    }
+
+    .time {
+      width: 5rem;
+    }
+  }
+
+  .custom {
+    display: flex;
+    flex-direction: column;
+
+    .day {
+      display: flex;
+      justify-content: space-between;
+
+      .day-interval {
+        font-weight: bold;
+      }
+    }
+  }
+}

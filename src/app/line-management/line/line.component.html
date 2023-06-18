@@ -1,0 +1,48 @@
+<ng-container *transloco="let t">
+  <nav class="subnav" [clr-nav-level]="2">
+    <ul class="nav">
+      <li class="nav-item"><a [routerLink]="['/line-management/line-list']" class="nav-link">
+        <fa-icon [icon]="faArrowLeft"></fa-icon>
+        {{ t('header.lines') }}</a>
+      </li>
+      <li class="nav-item"><a [routerLink]="['./details']" class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faTable"></fa-icon>
+        {{ t('lines.menu.details') }}</a>
+      </li>
+      <li class="nav-item" *ngIf="line">
+        <a [routerLink]="['./consignments']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faBoxes"></fa-icon>
+          {{ t('lines.menu.consignments') }}
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="line"><a [routerLink]="['./stations']" class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faRoute"></fa-icon>
+        {{ t('lines.menu.stations') }}</a>
+      </li>
+      <li class="nav-item" *ngIf="line">
+        <a [routerLink]="['./map']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faMap"></fa-icon>
+          {{ t('lines.menu.map') }}
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="line"><a [routerLink]="['./financial-matrix']"
+          class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faCoins"></fa-icon>
+        {{ t('general.financialMatrix') }}</a>
+        </li>
+      <li class="nav-item" *ngIf="line">
+        <a [routerLink]="['./documents']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faFile"></fa-icon> {{ t('header.documents') }}</a>
+      </li>
+    </ul>
+
+    <ul class="nav right">
+      <li class="nav-item">{{ t('header.lines') }}
+        > {{ line ? line.countryPair.from + ' - ' + line.countryPair.to : t('general.new') }}</li>
+    </ul>
+  </nav>
+
+  <div class="content-area">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>

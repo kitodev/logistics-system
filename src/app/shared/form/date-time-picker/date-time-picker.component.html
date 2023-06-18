@@ -1,0 +1,15 @@
+<ng-container *transloco="let t">
+  <div class="datetime-picker-container">
+    <label [ngClass]="{'required': required}">{{ label }}</label>
+    <input clrInput
+           autocomplete="off"
+           (dateTimeChange)="onChange($event)"
+           [owlDateTimeTrigger]="picker"
+           [owlDateTime]="picker"
+           [selectMode]="mode"
+           [min]="min"
+           [max]="max"
+           [(ngModel)]="value">
+    <owl-date-time [pickerType]="type" [startAt]="startAt" #picker></owl-date-time>
+  </div>
+</ng-container>

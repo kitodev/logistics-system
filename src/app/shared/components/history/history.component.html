@@ -1,0 +1,20 @@
+<ng-container *transloco="let t">
+    <clr-datagrid>
+        <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+
+        <clr-dg-column>{{ t('history.property') }}</clr-dg-column>
+        <clr-dg-column>{{ t('history.left') }}</clr-dg-column>
+        <clr-dg-column>{{ t('history.right') }}</clr-dg-column>
+        <clr-dg-column>{{ t('history.who') }}</clr-dg-column>
+        <clr-dg-column>{{ t('history.lastUpdated') }}</clr-dg-column>
+
+        <clr-dg-row *clrDgItems="let change of list; let i=index" [clrDgItem]="change" >
+            <clr-dg-cell>{{ t( component + '.' + change.property ) }}</clr-dg-cell>
+            <clr-dg-cell>{{ change.left }}</clr-dg-cell>
+            <clr-dg-cell>{{ change.right }}</clr-dg-cell>
+            <clr-dg-cell>{{ change.commitMetadata.author }}</clr-dg-cell>
+            <clr-dg-cell>{{ change.commitMetadata.commitDateInstant | date: 'medium': '': t('locale') }}</clr-dg-cell>
+        </clr-dg-row>
+
+    </clr-datagrid>
+</ng-container>

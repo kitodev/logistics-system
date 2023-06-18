@@ -1,0 +1,73 @@
+<ng-container *transloco="let t">
+    <div class="clr-row">
+        <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+            <div class="card">
+                <div class="card-header">
+                    {{ t('file.companyDocuments') }}
+                </div>
+                <div class="card-block">
+                    <div class="clr-row">
+                        <div class="clr-col-md-4">
+                            <clr-tree *ngIf="tree.length" [clrLazy]="true">
+                                <clr-tree-node *clrRecursiveFor="let directory of tree; getChildren: getChildren"
+                                    [clrLoading]="isLoading[directory.directoryId]">
+                                    
+                                    <button (click)="fetchContent(directory.directoryId)" class="clr-treenode-link">
+                                        <fa-icon [icon]="faFolder"></fa-icon> {{directory.name}}
+                                    </button>
+                                    
+                                </clr-tree-node>
+                            </clr-tree>
+                        </div>
+                        <div class="clr-col-md-8">
+
+                            <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="tableIsLoading" [(clrDgSelected)]="selectedFiles" class="small-table">
+                                <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+                                
+                                <ng-container *ngFor="let col of tableCols">
+                                    <clr-dg-column [clrDgField]="col.filterType !== DataGridFilterType.NOFILTER ? col.field : undefined">
+                                        {{ t(col.label) }}
+                                    </clr-dg-column>
+                                </ng-container>
+                                
+                                <!--<clr-dg-column>{{ t('general.operations') }}</clr-dg-column>-->
+                        
+                                <clr-dg-row *clrDgItems="let file of files" [clrDgItem]="file">
+                                    <clr-dg-action-overflow>
+                                        <button type="button" class="btn btn-icon btn-sm" title="{{ t('general.download') }}" (click)="downloadFile(file)">
+                                            <fa-icon [icon]="faDownload"></fa-icon>
+                                        </button>
+                                        <button type="button" class="btn btn-icon btn-sm"title="{{ t('general.send') }}" (click)="sendFileToPartner(file.assetId)">
+                                            <fa-icon [icon]="faShare"></fa-icon>
+                                        </button>
+                                    </clr-dg-action-overflow>
+                                    <clr-dg-cell>{{ file.name }}</clr-dg-cell>
+                                    <!-- <clr-dg-cell class="type">
+                                        <fa-icon [icon]="faImage" *ngIf="file.mediaType == 'image/png'"></fa-icon>
+                                        <fa-icon [icon]="faFile" *ngIf="file.mediaType != 'image/png'"></fa-icon>
+                                    </clr-dg-cell> -->
+                        
+                                    <clr-dg-cell>{{ file.created | date: 'shortDate': '': t('locale') }}</clr-dg-cell>
+                                    <clr-dg-cell>
+                                        {{ file.uploadedBy | employeeName: true }}
+                                    </clr-dg-cell>
+                                    <clr-dg-cell>{{ file.fileSize | filesize }}</clr-dg-cell>
+                    
+                                </clr-dg-row>
+                        
+                                <clr-dg-footer>
+                                    <button type="button" class="btn btn-icon btn-warning-outline btn-sm" *ngIf="selectedFiles.length >= 1"><fa-icon [icon]="faTrashAlt"></fa-icon> {{ t('general.deleteSelectedItems') }}</button>
+                                    <clr-dg-pagination #pagination [clrDgPageSize]="PAGE_SIZE" [clrDgTotalItems]="totalItems">
+                                        <clr-dg-page-size [clrPageSizeOptions]="SIZE_OPTIONS">{{ t('table.perPage') }}</clr-dg-page-size>
+                                        {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} {{ t('table.of') }} {{ totalItems }} {{ t('table.from') }}
+                                    </clr-dg-pagination>
+                                </clr-dg-footer>
+                        
+                              </clr-datagrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

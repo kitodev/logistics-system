@@ -1,0 +1,25 @@
+<ng-container *transloco="let t">
+
+  <clr-input-container class="comment-block">
+    <label>{{ t('general.addNew') }}</label>
+    <input clrInput [(ngModel)]="comment">
+  </clr-input-container>
+
+  <div class="button-container">
+    <button (click)="saveComment()" type="button"
+            class="btn btn-outline-primary btn-sm">{{t('general.save')}}</button>
+  </div>
+
+  <div class="clr-row">
+    <div class="clr-col-6"></div>
+    <div class="clr-col-6">
+      <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+    </div>
+  </div>
+
+  <app-comment-list [commentList]="commentList"></app-comment-list>
+
+</ng-container>
+
+
+

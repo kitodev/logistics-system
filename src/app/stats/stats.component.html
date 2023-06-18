@@ -1,0 +1,113 @@
+<ng-container *transloco="let t">
+    <!--<nav class="subnav" [clr-nav-level]="2">
+        <ul class="nav">
+            <li class="nav-item"><a href="#" class="nav-link">Sublink 1</a></li>
+            <li class="nav-item"><a href="#" class="nav-link active">Sublink 2</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Sublink 3</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Sublink 4</a></li>
+        </ul>
+    </nav>-->
+    <div class="content-area">
+        <div class="clr-row">
+            <div class="clr-col-lg-4 clr-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('header.consignments') }}
+                    </div>
+                    <div class="clr-row">
+                        <div>
+                            <ngx-charts-bar-vertical
+                                [view]=[400,250]
+                                [results]="single"
+                                [scheme]="colorScheme"
+                                [gradient]="gradient"
+                                [xAxis]="showXAxis"
+                                [yAxis]="showYAxis"
+                                [showXAxisLabel]="showXAxisLabel"
+                                [showYAxisLabel]="showYAxisLabel"
+                                >
+                            </ngx-charts-bar-vertical>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clr-col-lg-4 clr-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('header.lines') }}
+                    </div>
+                    <div class="clr-row">
+                        <div style="display: block;">
+                            <ngx-charts-pie-chart
+                                [view]=[400,250]
+                                [scheme]="colorScheme"
+                                [results]="single"
+                                [legend]="showLegend"
+                                [doughnut]="doughnut"
+                                [gradient]="gradient">
+                            </ngx-charts-pie-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clr-col-lg-4 clr-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('lines.menu.stations') }}
+                    </div>
+                    <div class="clr-row">
+                        <div style="display: block;">
+                            <ngx-charts-bar-vertical
+                                [view]=[400,250]
+                                [results]="single"
+                                [scheme]="colorScheme"
+                                [gradient]="gradient"
+                                [xAxis]="showXAxis"
+                                [yAxis]="showYAxis"
+                                [showXAxisLabel]="showXAxisLabel"
+                                [showYAxisLabel]="showYAxisLabel"
+                                >
+                            </ngx-charts-bar-vertical>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="clr-col-lg-4 clr-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('header.consignments') }}
+                    </div>
+                    <div class="clr-row">
+                        <div style="display: block;">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clr-col-lg-4 clr-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('header.lines') }}
+                    </div>
+                    <div class="clr-row">
+                        <div style="display: block;">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clr-col-lg-4 clr-col-12">
+                <div class="card">
+                    <div class="card-header">
+                        {{ t('lines.menu.stations') }}
+                    </div>
+                    <div class="clr-row">
+                        <div style="display: block;">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+    </div>
+    </div>
+</ng-container>

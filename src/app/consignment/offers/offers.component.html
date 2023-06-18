@@ -1,0 +1,16 @@
+<ng-container *transloco="let t">
+    <nav class="subnav" [clr-nav-level]="2">
+        <ul class="nav">
+            <li class="nav-item"><a [routerLink]="['./offer-outgoing']" class="nav-link" routerLinkActive="active"><fa-icon [icon]="faSignOutAlt"></fa-icon> {{ t('consignment.menu.offersOutgoing') }}</a></li>
+            <li class="nav-item"><a [routerLink]="['./offer-incoming']" class="nav-link" routerLinkActive="active"><fa-icon [icon]="faSignInAlt"></fa-icon> {{ t('consignment.menu.offersIncoming') }}</a></li>
+            <!--<li class="nav-item"><a [routerLink]="['./contract-parcels']" class="nav-link" routerLinkActive="active"><fa-icon [icon]="faBoxes"></fa-icon> {{ t('consignment.menu.contractParcels') }}</a></li>-->
+        </ul>
+
+        <ul class="nav right">
+            <li class="nav-item"><a [routerLink]="['./offer-outgoing/new']" class="nav-link"><fa-icon [icon]="faPlus"></fa-icon> {{ t('general.addItem', { item: t('offer.label') }) }}</a></li>
+        </ul>
+    </nav>
+    <div class="content-area">
+        <router-outlet></router-outlet>
+    </div>
+</ng-container>

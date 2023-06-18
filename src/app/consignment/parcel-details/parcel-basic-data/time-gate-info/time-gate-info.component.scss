@@ -1,0 +1,52 @@
+.time-gate {
+  padding-top: 0.5rem;
+  max-width: 24rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto 1fr;
+  gap: 0px 0.5rem;
+  grid-template-areas:
+    "from-label from-date"
+    "to-label to-date"
+    "opening opening";
+
+  .type {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .from-date {
+    grid-area: from-date;
+    white-space: nowrap;
+  }
+
+  .from-label {
+    grid-area: from-label;
+  }
+
+  .to-label {
+    grid-area: to-label;
+  }
+
+  .to-date {
+    grid-area: to-date;
+    white-space: nowrap;
+  }
+
+  .interval {
+    grid-area: interval;
+  }
+
+  .opening {
+    grid-area: opening;
+  }
+}
+
+.day {
+  display: flex;
+  justify-content: space-between;
+
+  .interval {
+    font-weight: bold;
+  }
+}

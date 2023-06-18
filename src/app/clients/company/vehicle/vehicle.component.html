@@ -1,0 +1,288 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row">
+    <div class="clr-col-6"></div>
+    <div class="clr-col-6">
+      <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <div class="clr-row">
+      <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card" [formGroup]="vehicleDataForm">
+        <div class="card">
+          <div class="card-header">
+            {{ !isNew ? t('general.modify') : t('general.addNew') }}
+          </div>
+          <div class="card-block">
+            <div class="clr-row">
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <form-input type="text" [formGroup]="vehicleDataForm" name="licensePlate"
+                            [label]="t('company.vehicle.licensePlate')"
+                            [required]="vehicleDataForm.get('licensePlate').errors?.required"></form-input>
+              </div>
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <form-select [formGroup]="vehicleDataForm" name="vehicleType" [label]="t('company.vehicle.vehicleType')"
+                             [optionsArray]="vehicleTypes"
+                             [required]="vehicleDataForm.get('vehicleType').errors?.required"></form-select>
+              </div>
+              <div class="clr-col-md clr-col-sm-12">
+                <form-select [formGroup]="vehicleDataForm" name="fullWeightType"
+                             [label]="t('company.vehicle.fullWeight')"
+                             [optionsArray]="fullWeightTypes"
+                             [required]="vehicleDataForm.get('fullWeightType').errors?.required"></form-select>
+              </div>
+              <div class="clr-col-md clr-col-sm-12">
+                <form-select [formGroup]="vehicleDataForm" name="superStructureType"
+                             [label]="t('company.vehicle.superStructure')"
+                             [optionsArray]="structureTypes"
+                             [required]="vehicleDataForm.get('superStructureType').errors?.required"></form-select>
+              </div>
+
+              <div class="clr-col-md-2 clr-col-sm-12">
+                <form-input type="number" [formGroup]="$any(vehicleDataForm.controls.netWeight)" name="quantity"
+                            [label]="t('company.vehicle.netWeight')"
+                            [required]="$any(vehicleDataForm.controls.netWeight).get('quantity').errors?.required"></form-input>
+              </div>
+              <div class="clr-col-md-1 clr-col-sm-12 clr-align-self-end" [formGroup]="$any(vehicleDataForm.controls.netWeight)">
+                <clr-radio-container clrInline>
+                  <clr-radio-wrapper>
+                    <input type="radio"
+                           clrRadio
+                           formControlName="unit"
+                           value="{{WeightUnit.KG}}" />
+                    <label>{{ t('company.vehicle.weightUnits.KG') }}</label>
+                  </clr-radio-wrapper>
+                  <clr-radio-wrapper>
+                    <input type="radio"
+                           clrRadio
+                           formControlName="unit"
+                           value="{{WeightUnit.T}}" />
+                    <label>{{ t('company.vehicle.weightUnits.T') }}</label>
+                  </clr-radio-wrapper>
+                </clr-radio-container>
+              </div>
+            </div>
+            <div class="clr-row">
+              <div class="clr-col-md clr-col-sm-12">
+                <form-input type="number" [formGroup]="vehicleDataForm" name="cargoSpaceWidth"
+                            [label]="t('company.vehicle.cargoSpaceWidth')"
+                            [required]="vehicleDataForm.get('cargoSpaceWidth').errors?.required"></form-input>
+              </div>
+              <div class="clr-col-md clr-col-sm-12">
+                <form-input type="number" [formGroup]="vehicleDataForm" name="cargoSpaceLength"
+                            [label]="t('company.vehicle.cargoSpaceLength')"
+                            [required]="vehicleDataForm.get('cargoSpaceLength').errors?.required"></form-input>
+              </div>
+              <div class="clr-col-md clr-col-sm-12">
+                <form-input type="number" [formGroup]="vehicleDataForm" name="cargoSpaceHeight"
+                            [label]="t('company.vehicle.cargoSpaceHeight')"
+                            [required]="vehicleDataForm.get('cargoSpaceHeight').errors?.required"></form-input>
+              </div>
+              <div class="clr-col-md clr-col-sm-12">
+                <form-input type="number" [formGroup]="vehicleDataForm" name="cargoSpaceVolume"
+                            [label]="t('company.vehicle.cargoSpaceVolume')"
+                            [required]="vehicleDataForm.get('cargoSpaceVolume').errors?.required"></form-input>
+              </div>
+              <div class="clr-col-md clr-col-sm-12">
+                <form-input type="number" [formGroup]="vehicleDataForm" name="palletCount"
+                            [label]="t('company.vehicle.palletCount')"
+                            [required]="vehicleDataForm.get('palletCount').errors?.required"></form-input>
+              </div>
+
+            </div>
+            <div class="clr-row" [formGroup]="$any(vehicleDataForm.controls.vehicleProperties)">
+              <div class="clr-col-md-4">
+                <p>{{t('company.vehicle.felepitmenyKialakitas.felepitmenyKialakitas')}}</p>
+                <span formArrayName="felepitmenyKialakitasProperties"
+                      *ngFor="let control of felepitmenyKialakitasPropertiesFormArray.controls; let i=index">
+                                    <label [for]="felepitmenyKialakitasProperties[i]" class="label clickable label-blue"
+                                           [ngClass]="{'checked': felepitmenyKialakitasPropertiesFormArray.value[i]}">
+                                        {{  t('company.vehicle.felepitmenyKialakitas.' + felepitmenyKialakitasProperties[i]) }}</label>
+                                    <input [id]="felepitmenyKialakitasProperties[i]"
+                                           [value]="felepitmenyKialakitasProperties[i]" type="checkbox"
+                                           [formControlName]="i">
+                                </span>
+              </div>
+              <div class="clr-col-md-4">
+                <p>{{t('company.vehicle.csereFelepitmeny.csereFelepitmeny')}}</p>
+                <span formArrayName="csereFelepitmenyProperties"
+                      *ngFor="let control of csereFelepitmenyPropertiesFormArray.controls; let i=index">
+                                    <label [for]="csereFelepitmenyProperties[i]" class="label clickable label-blue"
+                                           [ngClass]="{'checked': csereFelepitmenyPropertiesFormArray.value[i]}">
+                                        {{  t('company.vehicle.csereFelepitmeny.' + csereFelepitmenyProperties[i]) }}</label>
+                                    <input [id]="csereFelepitmenyProperties[i]" [value]="csereFelepitmenyProperties[i]"
+                                           type="checkbox" [formControlName]="i">
+                                </span>
+              </div>
+              <div class="clr-col-md-4">
+                <p>{{ t('company.vehicle.emelesEsMozgatas.emelesEsMozgatas') }}</p>
+                <span formArrayName="emelesEsMozgatasProperties"
+                      *ngFor="let control of emelesEsMozgatasPropertiesFormArray.controls; let i=index">
+                                    <label [for]="emelesEsMozgatasProperties[i]" class="label clickable label-blue"
+                                           [ngClass]="{'checked': emelesEsMozgatasPropertiesFormArray.value[i]}">
+                                        {{  t('company.vehicle.emelesEsMozgatas.' + emelesEsMozgatasProperties[i]) }}</label>
+                                    <input [id]="emelesEsMozgatasProperties[i]" [value]="emelesEsMozgatasProperties[i]"
+                                           type="checkbox" [formControlName]="i">
+                                    </span>
+              </div>
+              <div class="clr-col-md-4">
+                <p>{{ t('company.vehicle.felszereltseg.felszereltseg') }}</p>
+                <span formArrayName="felszereltsegProperties"
+                      *ngFor="let control of felszereltsegPropertiesFormArray.controls; let i=index">
+                                    <label [for]="felszereltsegProperties[i]" class="label clickable label-blue"
+                                           [ngClass]="{'checked': felszereltsegPropertiesFormArray.value[i]}">
+                                        {{  t('company.vehicle.felszereltseg.' + felszereltsegProperties[i]) }}</label>
+                                    <input [id]="felszereltsegProperties[i]" [value]="felszereltsegProperties[i]"
+                                           type="checkbox" [formControlName]="i">
+                                </span>
+              </div>
+              <div class="clr-col-md-4">
+                <p>{{ t('company.vehicle.rakomanyRogzites.rakomanyRogzites') }}</p>
+                <span formArrayName="rakomanyRogzitesProperties"
+                      *ngFor="let control of rakomanyRogzitesPropertiesFormArray.controls; let i=index">
+                                    <label [for]="rakomanyRogzitesProperties[i]" class="label clickable label-blue"
+                                           [ngClass]="{'checked': rakomanyRogzitesPropertiesFormArray.value[i]}">
+                                        {{  t('company.vehicle.rakomanyRogzites.' + rakomanyRogzitesProperties[i]) }}</label>
+                                    <input [id]="rakomanyRogzitesProperties[i]" [value]="rakomanyRogzitesProperties[i]"
+                                           type="checkbox" [formControlName]="i">
+                                </span>
+              </div>
+            </div>
+
+            <div class="clr-row clr-justify-content-center">
+              <button type="button" class="btn btn-primary" (click)="createVehicle()"
+                      *ngIf="isNew">{{ t('general.addNew') }}</button>
+              <button type="button" class="btn btn-primary" (click)="updateVehicle()"
+                      [disabled]="vehicleDataForm.pristine"
+                      *ngIf="!isNew">{{ t('general.save') }}</button>
+              <button type="button" class="btn btn-outline" (click)="reset()"
+                      [disabled]="vehicleDataForm.pristine">{{ t('general.cancel') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isNew && authService.isAgency()"
+           [formGroup]="serviceHistoryDataForm"
+           class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card">
+        <div class="card">
+          <div class="card-header">
+            {{ t('company.vehicle.vehicleServiceHistory') }}
+          </div>
+          <div class="card-block">
+
+            <table class="table">
+              <thead>
+              <tr>
+                <th>{{ t('company.vehicle.serviceHistory.serviceDate') }}</th>
+                <th>{{ t('company.vehicle.serviceHistory.description') }}</th>
+                <th>{{ t('company.vehicle.serviceHistory.location') }}</th>
+                <th>{{ t('company.vehicle.serviceHistory.parts') }}</th>
+                <th>{{ t('company.vehicle.serviceHistory.price') }}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody *ngIf="vehicleToEdit.vehicleServiceHistory.length; else noData">
+              <tr *ngFor="let historyItem of vehicleToEdit.vehicleServiceHistory">
+                <td>
+                  <span>{{ t('company.vehicle.serviceHistory.serviceDate') }}</span>
+                  <span>{{ historyItem.serviceDate }}</span>
+                </td>
+                <td>
+                  <span>{{ t('company.vehicle.serviceHistory.description') }}</span>
+                  <span>{{ historyItem.description }}</span>
+                </td>
+                <td>
+                  <span>{{ t('company.vehicle.serviceHistory.location') }}</span>
+                  <span>{{ historyItem.location }}</span>
+                </td>
+                <td>
+                  <span>{{ t('company.vehicle.serviceHistory.parts') }}</span>
+                  <span>{{ historyItem.parts }}</span>
+                </td>
+                <td>
+                  <span>{{ t('company.vehicle.serviceHistory.price') }}</span>
+                  <span>{{ historyItem.price }}</span>
+                </td>
+
+                <td>
+                  <button type="button" class="btn btn-icon btn-warning-outline" (click)="deleteHistory(historyItem)">
+                    <fa-icon [icon]="faTrashAlt"></fa-icon>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+              <ng-template #noData>
+                <tbody>
+                <tr>
+                  <td colspan="6">{{ t('general.noData') }}</td>
+                </tr>
+                </tbody>
+              </ng-template>
+            </table>
+
+            <clr-accordion
+              *appEmployeeRole="[Role.AGENCY_ADMIN, Role.AGENCY_MANAGER, Role.AGENCY_FINANCIAL, Role.AGENCY_FREIGHT_ORGANISER]">
+              <clr-accordion-panel [(clrAccordionPanelOpen)]="isAddingOpen">
+                <clr-accordion-title>{{ t('general.addNew') }}</clr-accordion-title>
+                <clr-accordion-content>
+                  <div class="clr-row">
+                    <div class="clr-col-md-2 clr-col-sm-6">
+                      <form-date-time-picker [parentForm]="serviceHistoryDataForm" type="calendar" name="serviceDate"
+                                             mode="single"
+                                             [label]="t('company.vehicle.serviceHistory.serviceDate')"
+                                             [required]="serviceHistoryDataForm.get('serviceDate').errors?.required"></form-date-time-picker>
+                    </div>
+                    <div class="clr-col-md-2 clr-col-sm-6">
+                      <form-input type="text" [formGroup]="serviceHistoryDataForm" name="parts"
+                                  [label]="t('company.vehicle.serviceHistory.parts')"
+                                  [required]="serviceHistoryDataForm.get('parts').errors?.required"></form-input>
+                    </div>
+                    <div class="clr-col-md-2 clr-col-sm-6">
+                      <form-input type="text" [formGroup]="serviceHistoryDataForm" name="location"
+                                  [label]="t('company.vehicle.serviceHistory.location')"
+                                  [required]="serviceHistoryDataForm.get('location').errors?.required"></form-input>
+                    </div>
+                    <div class="clr-col-md-2 clr-col-sm-6">
+                      <form-input type="text" [formGroup]="serviceHistoryDataForm" name="price"
+                                  [label]="t('company.vehicle.serviceHistory.price')"
+                                  [required]="serviceHistoryDataForm.get('price').errors?.required"></form-input>
+                    </div>
+                    <div class="clr-col-md-4 clr-col-sm-6">
+                      <form-input type="text" [formGroup]="serviceHistoryDataForm" name="description"
+                                  [label]="t('company.vehicle.serviceHistory.description')"
+                                  [required]="serviceHistoryDataForm.get('description').errors?.required"></form-input>
+                    </div>
+                  </div>
+                  <div class="clr-row clr-justify-content-center">
+                    <button type="button" class="btn btn-primary"
+                            (click)="addServiceHistory()">{{ t('general.addNew') }}</button>
+                    <button type="button" class="btn btn-outline" (click)="resetServiceHistory()"
+                            [disabled]="serviceHistoryDataForm.pristine">{{ t('general.cancel') }}</button>
+                  </div>
+                </clr-accordion-content>
+              </clr-accordion-panel>
+            </clr-accordion>
+          </div>
+        </div>
+      </div>
+
+      <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card" *ngIf="!isNew">
+        <app-documents [type]="AssetTypes.VEHICLE" [id]="vehicleId"></app-documents>
+      </div>
+
+      <div class="clr-offset-xl-1 clr-col-xl-10 clr-col-lg-12 max-card" *ngIf="vehicleToEdit.id">
+        <div class="card">
+          <div class="card-header">
+            {{t('general.comment')}}
+          </div>
+          <div class="card-block">
+            <app-comments [chosenApi]="commentApi" [chosenId]="vehicleToEdit.id"></app-comments>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </ng-container>
+</ng-container>

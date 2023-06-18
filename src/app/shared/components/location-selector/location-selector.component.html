@@ -1,0 +1,315 @@
+<ng-container *transloco="let t">
+  <div
+    *ngIf="parentForm"
+    [ngClass]="{'location-edit': editMode === true, 'location-info': editMode === false,'new': isNew, 'with-status':showStatus, 'simple':simpleMode }">
+
+    <div class="headline" *ngIf="!(isNew && simpleMode)">
+      <div class="country-code">{{ location?.premiseAddress?.country }}</div>
+      <div class="city">{{ location?.premiseAddress?.city }}</div>
+    </div>
+
+    <div class="type">
+      <div class="icon">
+        <ng-container [ngSwitch]="locationType">
+          <ng-container *ngSwitchCase="LocationType.LOADING_IN">
+            <fa-icon [icon]="faTruckLoading" size="lg"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="LocationType.LOADING_OUT">
+            <fa-icon [icon]="faTruckLoading" flip="horizontal" size="lg"></fa-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="LocationType.TRANSSHIPMENT">
+            <fa-icon [icon]="faExchange" *ngIf="!location.customs" size="lg"></fa-icon>
+            <fa-icon [icon]="faMoneyBillWave" *ngIf="location.customs"></fa-icon>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
+      <div class="control">
+
+        <button *ngIf="!editMode && (!isNew || locationType === LocationType.TRANSSHIPMENT)"
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="editAddress()">{{ t('consignment.changeAddress') }}</button>
+
+        <button *ngIf="editMode && !isNew"
+                type="button"
+                class="btn btn-danger-outline btn-sm"
+                (click)="cancelEdit()">{{ t('general.discard') }}</button>
+
+        <button *ngIf="editMode && !isNew || editMode && locationType === LocationType.TRANSSHIPMENT"
+                [disabled]="editMode ? !locationEditFormGroup.valid : !locationFormGroup.valid"
+                type="button"
+                class="btn btn-primary btn-sm"
+                (click)="saveLocation()">{{ t('consignment.saveAddress') }}</button>
+
+
+        <button type="button" class="btn btn-outline-primary btn-sm btn-icon"
+                (click)="toPartners()">
+          {{ t('consignment.toPartners') }}
+          <fa-icon [icon]="faExternalLinkAlt"></fa-icon>
+        </button>
+      </div>
+
+
+      <div class="customs no-mt-control">
+
+        <form-checkbox *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)"
+                      [formGroup]="editMode ? locationEditFormGroup : locationFormGroup"
+                      name="customs"
+                      label="{{ t('consignment.customsOnAddress') }}">
+        </form-checkbox>
+
+        <ng-container
+          *ngIf="location.customs && (!isNew || (locationType === LocationType.TRANSSHIPMENT && isNew)) && !editMode">
+          <fa-icon [icon]="faMoneyBillWave"></fa-icon>
+          {{ t('consignment.customsOnAddress') }}
+        </ng-container>
+
+      </div>
+      
+      <div class="reference no-mt-control">
+
+        <div class="ref-item">
+          <form-input
+            *ngIf="editMode && locationType !== LocationType.LOADING_OUT  || isNew && (locationType === LocationType.LOADING_IN)"
+            label="{{ t('consignment.pickupReference') }}"
+            [formGroup]="editMode ? locationEditFormGroup : locationFormGroup"
+            name="loadingInReferenceNumber"
+            type="text"></form-input>
+
+          <ng-container
+            *ngIf="(!isNew || (locationType === LocationType.TRANSSHIPMENT && isNew)) && !editMode && locationType !== LocationType.LOADING_OUT">
+            <div class="clr-control-label">
+              {{ t('consignment.pickupReference') }}
+              :
+            </div>
+            <wbr>
+            {{location.loadingInReferenceNumber}}
+          </ng-container>
+        </div>
+
+        <div class="ref-item">
+          <form-input
+            *ngIf="editMode && locationType !==LocationType.LOADING_IN || isNew && (locationType === LocationType.LOADING_OUT)"
+            label="{{ t('consignment.dropdownReference') }}"
+            [formGroup]="editMode ? locationEditFormGroup : locationFormGroup"
+            name="loadingOutReferenceNumber"
+            type="text"></form-input>
+
+          <ng-container
+            *ngIf="(!isNew || (locationType === LocationType.TRANSSHIPMENT && isNew)) && !editMode && locationType !== LocationType.LOADING_IN">
+            <div class="clr-control-label">
+              {{ t('consignment.dropdownReference') }}
+              :
+            </div>
+            <wbr>
+            {{location.loadingOutReferenceNumber}}
+          </ng-container>
+        </div>
+
+      </div>
+
+    <div class="address" [formGroup]="editMode ? locationEditFormGroup : locationFormGroup">
+      <ng-select *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)"
+                 [items]="companies"
+                 bindLabel="companyName"
+                 dropdownPosition="auto"
+                 bindValue="id"
+                 [placeholder]="t('consignment.partner')"
+                 [virtualScroll]="true"
+                 (change)="onCompanyChange($event)"
+                 formControlName="companyId">
+        <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+          <div><span [ngOptionHighlight]="search">{{item.companyName}}</span></div>
+          <small>
+            {{$any(item.premises | selectSeat:'address') |  address }}
+          </small><br>
+          <small>{{$any(item.registrationNumber)}}</small>
+        </ng-template>
+      </ng-select>
+
+      <app-location-info
+        *ngIf="(!isNew || (locationType === LocationType.TRANSSHIPMENT && !editMode)) && !editMode && companies"
+        [companies]="companies"
+        [location]="location"></app-location-info>
+
+    </div>
+
+    <div class="premise" *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)"
+         [formGroup]="editMode ? locationEditFormGroup : locationFormGroup">
+      <ng-select [items]="premises"
+                 bindLabel="name"
+                 dropdownPosition="auto"
+                 bindValue="id"
+                 [placeholder]="t('consignment.premise')"
+                 [virtualScroll]="true"
+                 (change)="onPremiseChange($event)"
+                 formControlName="premiseId">
+        <ng-template ng-label-tmp let-item="item">
+          <ng-container *ngIf="item">
+            {{ item.name }} | <small>{{t('company.premise.types.' + item.premiseType)}} |
+            {{ item.address?.country }} {{ item.address?.city }}</small>
+          </ng-container>
+          <ng-container *ngIf="!item">
+            Válasszon partnert!
+          </ng-container>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+          <div><span [ngOptionHighlight]="search">{{item.name}}</span></div>
+          <small>
+            {{t('company.premise.types.' + item.premiseType)}}
+          </small>
+          {{ item.address?.country }} {{ item.address?.city }}, {{ item.address?.streetName }}
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <div class="contact" *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)"
+         [formGroup]="editMode ? locationEditFormGroup : locationFormGroup">
+      <ng-select [items]="employees"
+                 bindLabel="name"
+                 dropdownPosition="auto"
+                 bindValue="id"
+                 [searchFn]="employeeSearchFn"
+                 [placeholder]="t('consignment.contact')"
+                 [virtualScroll]="true"
+                 (change)="onContactChange($event)"
+                 formControlName="contactPersonId">
+        <ng-template ng-label-tmp let-item="item">
+          {{ item | employeeName: true }}
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+          <div><span [ngOptionHighlight]="search">{{ item | employeeName: true }}</span></div>
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <div class="company-info" *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)">
+      <app-contact-info [phone]="selectedCompany?.phone" [email]="selectedCompany?.email"
+                        [fax]="selectedCompany?.fax"></app-contact-info>
+    </div>
+
+    <div class="premise-info" *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)">
+      <div *ngIf="selectedPremise?.address?.city">
+        <fa-icon [icon]="faBuilding"></fa-icon>
+        {{selectedPremise?.address | address}}
+      </div>
+    </div>
+
+    <div class="contact-info" *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)">
+      <app-contact-info [phone]="selectedContact?.phone" [email]="selectedContact?.email"
+                        [fax]="selectedContact?.fax" [mobile]="selectedContact?.mobile"></app-contact-info>
+    </div>
+
+    <div class="opening" *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)">
+      <app-timegate
+        [timeGate]="location.timeGate"
+        [parentForm]="editMode ? locationEditFormGroup : locationFormGroup"
+        controlName="timeGate">
+      </app-timegate>
+    </div>
+
+    <div class="sender-receiver">
+      <ng-container>
+        <div class="clr-control-label">
+          {{
+          locationType === LocationType.LOADING_IN ? t('consignment.sender') : t('consignment.consignee')
+          }}:
+        </div>
+        <div *ngIf="editMode || isNew && (locationType !== LocationType.TRANSSHIPMENT)"
+             [formGroup]="editMode ? locationEditFormGroup : locationFormGroup">
+          <ng-select [items]="companies"
+                     bindLabel="companyName"
+                     dropdownPosition="auto"
+                     bindValue="id"
+                     [placeholder]="locationType === LocationType.LOADING_IN ? t('consignment.sender')  : t('consignment.consignee') "
+                     [virtualScroll]="true"
+                     (change)="onSenderChange($event)"
+                     formControlName="sender">
+            <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+              <div><span [ngOptionHighlight]="search">{{item.companyName}}</span></div>
+              <small>
+                {{ $any(item.premises | selectSeat:'address') |  address }}
+              </small><br>
+              <small>{{$any(item.registrationNumber)}}</small>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div *ngIf="!editMode && (!isNew || locationType === LocationType.TRANSSHIPMENT )">
+          {{ senderCompany?.companyName ? senderCompany.companyName : '' }}
+        </div>
+      </ng-container>
+
+    </div>
+
+
+    <div class="comment"
+         *ngIf="location.id && (!isNew ||isNew && locationType === LocationType.TRANSSHIPMENT) && !editMode">
+
+      <div class="important">{{t('general.comments')}}</div>
+      <app-comments [chosenApi]="CommentApis.LOCATION_ENDPOINT" [chosenId]="location.id"></app-comments>
+
+    </div>
+ 
+    <!--    Status information and setting -->
+    <div class="status" *ngIf="showStatus && !simpleMode">
+      <div class="down-status">
+        <fa-icon [icon]="faDown" size="lg"></fa-icon>
+        <ng-container *ngIf="downStatus?.status; else notOnLine">
+          <app-consignment-location-status
+            [status]="downStatus.status"
+            [consignmentId]="consignmentId"
+            [lineId]="downStatus.lineId"
+            [premiseId]="location.premiseId"
+            (statusChanged)="statusChangedEvent($event)"
+            ></app-consignment-location-status>
+        </ng-container>
+      </div>
+      <div class="up-status">
+        <fa-icon [icon]="faUp" size="lg"></fa-icon>
+        <ng-container *ngIf="upStatus?.status; else notOnLine">
+          <app-consignment-location-status
+            [status]="upStatus.status"
+            (statusChanged)="statusChangedEvent($event)"
+            [lineId]="upStatus.lineId"
+            [premiseId]="location.premiseId"
+            [consignmentId]="consignmentId"
+            ></app-consignment-location-status>
+        </ng-container>
+      </div>
+
+      <ng-template #notOnLine>
+        {{t('status.consignment.undefined')}}
+      </ng-template>
+
+    </div>
+
+
+    <div class="position-control" *ngIf="editMode == false || (isNew && !simpleMode)">
+      <ng-container *ngIf="locationType === LocationType.TRANSSHIPMENT">
+        <button *ngIf="transshipmentLocationPosition > 0"
+                type="button"
+                class="btn btn-outline-primary btn-icon"
+                (click)="moveUp(transshipmentLocationPosition)">
+          <fa-icon [icon]="faUp" size="lg"></fa-icon>
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger-outline btn-icon"
+          (click)="remove(transshipmentLocationPosition)">
+          <fa-icon [icon]="faTrashAlt" size="lg"></fa-icon>
+        </button>
+        <button *ngIf="transshipmentLocationPosition !== transshipmentLocationCount-1"
+                type="button"
+                class="btn btn-outline-primary btn-icon"
+                (click)="moveDown(transshipmentLocationPosition)">
+          <fa-icon [icon]="faDown" size="lg"></fa-icon>
+        </button>
+      </ng-container>
+    </div>
+
+  </div>
+
+
+</ng-container>

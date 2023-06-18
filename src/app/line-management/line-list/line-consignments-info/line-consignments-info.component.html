@@ -1,0 +1,41 @@
+<ng-container *transloco="let t">
+  <div class="info" *ngIf="leg">
+
+    <!--    Consignor,-->
+    <!--    Loading in address, Loading out address,-->
+    <!--    Lot data (weight, quantity, volume, dimensions)-->
+    <div class="id">
+      <a [routerLink]="'/consignment/parcel/'+leg.consignment.id+'/details'">
+        {{ leg.consignment.consignmentBasicData.orderId }}
+      </a>
+    </div>
+    <div class="main-route">
+      {{ leg.consignment.consignmentBasicData.loadingInLocation.premiseAddress.country }}
+      -
+      {{ leg.consignment.consignmentBasicData.loadingOutLocation.premiseAddress.country }}
+    </div>
+    <div class="sub-route">
+      <div class="from-country"><strong>{{leg.fromLocation.premiseAddress.country}}</strong> {{ leg.fromLocation.premiseAddress.city }}</div>
+      <div class="to-country"><strong>{{leg.toLocation.premiseAddress.country}}</strong> {{ leg.toLocation.premiseAddress.city }}</div>
+      <div class="from-zip">{{leg.fromLocation.premiseAddress.postCode}}</div>
+      <div class="to-zip">{{leg.toLocation.premiseAddress.postCode}}</div>
+    </div>
+    <div class="lots">
+      <div class="lot" *ngFor="let lot of leg.consignment.consignmentBasicData.lots">
+        <div class="qty">{{ lot.quantity }} {{ t('consignment.lot.qtyTypes.' + lot.quantityType) }}</div>
+        <div class="volume">{{ lot.cbm }} m<sup>3</sup></div>
+        <div class="weight">{{ lot.weight }} kg</div>
+        <div class="adr text-right">
+          <app-adr-sign *ngIf="lot.adr"></app-adr-sign>
+        </div>
+        <div class="dimensions">
+          {{ lot.width + t('consignment.lot.dimension.width') }}
+          x {{ lot.length + t('consignment.lot.dimension.length') }}
+          x {{ lot.height + t('consignment.lot.dimension.height') }}
+        </div>
+        <div class="name">{{ lot.name }}</div>
+      </div>
+    </div>
+
+  </div>
+</ng-container>

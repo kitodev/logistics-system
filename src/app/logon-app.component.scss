@@ -1,0 +1,51 @@
+.header-hamburger-trigger a {
+  max-width: 109px;
+}
+
+.open-hamburger-menu .branding {
+  background-color: #0072a3;
+
+  a {
+    margin: 0 auto;
+    max-width: 109px;
+  }
+}
+
+.branding {
+  flex-grow: 1;
+  min-width: 110px;
+
+  a {
+    display: inline-block;
+    width: 390px;
+    background-image: url('../assets/images/logo.png');
+    background-repeat: no-repeat;
+    background-position: left;
+  }
+}
+
+.error-count {
+  width: 1.4rem;
+  display: inline-block;
+  font-size: 0.6rem;
+  line-height: 1.2rem;
+  height: 1.4rem;
+  padding: 0.1rem 0.2rem;
+  background-color: #db2100;
+  border-radius: 50%;
+  text-align: center;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+
+  .profile-picture {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    position: relative;
+    background-color: white;
+    border-radius: 100%;
+  }
+}

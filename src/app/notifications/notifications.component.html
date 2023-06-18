@@ -1,0 +1,57 @@
+<ng-container *transloco="let t">
+    <nav class="subnav" [clr-nav-level]="2">
+      <ul class="nav">
+        <li class="nav-item">
+          <a [routerLink]="['./offers']" class="nav-link" routerLinkActive="active">
+            <fa-icon [icon]="faSignOutAlt"></fa-icon>
+            {{ t('notifications.menu.notificationOffer') }}
+            <!--<ng-container *ngIf="(notificationOffer | async) as notificationOffer">
+              <div class="badge"
+                   [ngClass]="{'badge-success':notificationOffer.length > 0}">
+                {{ notificationOffer.length }}
+              </div>
+            </ng-container>-->
+          </a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['./lines']" class="nav-link" routerLinkActive="active">
+            <fa-icon [icon]="faRoad"></fa-icon>
+            {{ t('notifications.menu.notificationLines') }}
+            <!--<ng-container *ngIf="faultyStations | async as faultyStations">
+              <div class="badge"
+                   [ngClass]="{'badge-success':faultyStations.length > 0}">
+                {{ faultyStations.length }}
+              </div>
+            </ng-container>-->
+          </a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['./consignments']" class="nav-link" routerLinkActive="active">
+            <fa-icon [icon]="faBox"></fa-icon>
+            {{ t('notifications.menu.notificationConsignments') }}
+            <!--<ng-container *ngIf="(faultyConsignments | async) as faultyConsignments">
+              <div class="badge"
+                   [ngClass]="{'badge-success':faultyConsignments.length > 0}">
+                {{ faultyConsignments.length }}
+              </div>
+            </ng-container>-->
+          </a>
+        </li>
+        <!--<li class="nav-item">
+          <a [routerLink]="['./personal']" class="nav-link" routerLinkActive="active">
+            <fa-icon [icon]="faUser"></fa-icon>
+            {{ t('notifications.menu.notificationPersonal') }}
+            <ng-container *ngIf="(faultyConsignments | async) as faultyConsignments">
+              <div class="badge"
+                   [ngClass]="{'badge-success':faultyConsignments.length > 0}">
+                {{ faultyConsignments.length }}
+              </div>
+            </ng-container>
+          </a>
+        </li>-->
+      </ul>
+    </nav>
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </ng-container>

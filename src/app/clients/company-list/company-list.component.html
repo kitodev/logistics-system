@@ -1,0 +1,182 @@
+<ng-container *transloco="let t">
+
+  <div class="clr-row">
+    <div class="clr-col-6"></div>
+    <div class="clr-col-6">
+      <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+    </div>
+  </div>
+  <clr-datagrid (clrDgRefresh)="refresh($event)"
+    [clrDgLoading]="isLoading" [(clrDgSelected)]="selectedCompanies"
+    cdkDropList (cdkDropListDropped)="onTableHeaderColumnDrop($event)"
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="userColOrder">
+    <clr-dg-placeholder>{{ t('general.noData') }}</clr-dg-placeholder>
+    <!--<clr-dg-column><input clrCheckbox type="checkbox" (change)="checkAllCheckBox($event)"></clr-dg-column>-->
+
+    <ng-container *ngFor="let col of userColOrder; let index=index">
+      <clr-dg-column cdkDrag [cdkDragData]="index" *ngIf="col.filterType === DataGridFilterType.NOFILTER" [clrDgSortBy]="col.field">
+        <div cdkDragHandle>
+          <ng-template [clrDgHideableColumn]="{hidden: col.hidden}"
+                       (clrDgHiddenChange)="addPendingColumnSetting($event, col.field)">
+            {{ t(col.label) }}
+          </ng-template>
+        </div>
+      </clr-dg-column>
+      <clr-dg-column cdkDrag [cdkDragData]="index" [clrDgField]="col.field" *ngIf="col.filterType !== DataGridFilterType.NOFILTER">
+        <div cdkDragHandle>
+          <ng-template [clrDgHideableColumn]="{hidden: col.hidden}"
+                       (clrDgHiddenChange)="addPendingColumnSetting($event, col.field)">
+            {{ t(col.label) }}
+          </ng-template>
+        </div>
+        <clr-dg-filter *ngIf="col.filterType === DataGridFilterType.PICKER">
+          <table-select-one-filter [options]="col.filterOptions" [property]="col.field"></table-select-one-filter>
+        </clr-dg-filter>
+        
+      </clr-dg-column>
+    </ng-container>
+
+    <clr-dg-row *ngFor="let comp of companies; let i=index;" [clrDgItem]="comp">
+        <clr-dg-action-overflow>
+          <button type="button" class="btn btn-icon" title="{{ t('general.modify') }}" (click)="edit(comp.id)">
+            <fa-icon [icon]="faEdit"></fa-icon>
+          </button>
+          <button type="button" class="btn btn-icon btn-warning-outline" title="{{ t('general.delete') }}" (click)="del(comp.id)">
+            <fa-icon [icon]="faTrashAlt"></fa-icon>
+          </button>
+        </clr-dg-action-overflow>
+      <ng-container *ngFor="let col of userColOrder">
+        <ng-container [ngSwitch]="col.field">
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.COMPANY_NAME">{{ comp.companyName }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.SEAT_CITY">{{ comp.seatAddress.city }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.SEAT_STREET_NAME">{{ comp.seatAddress.streetName }} {{ comp.seatAddress.streetType }} {{ comp.seatAddress.streetNumber }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.SEAT_POST">{{ comp.seatAddress.postCode }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.SEAT_COUNTRY">{{ comp.seatAddress.country }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.MAILING">{{ comp.mailingAddress | address }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.PROFILES">
+            <div *ngFor="let cp of comp.companyProfiles">{{ t('company.profiles.' + cp) }}</div>
+          </clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.TAX_NUM">{{ comp.taxNumber }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.EU_TAX_NUM">{{ comp.euTaxNumber }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.REGISTRATION_NUM">{{ comp.registrationNumber }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.PHONE">{{ comp.phone }}</clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.EMAIL">{{ comp.email }}</clr-dg-cell>
+         <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.FIN_CONTACT_FIRST_NAME">
+              {{ comp.financialContactFirstName }}
+          </clr-dg-cell>
+           <!--<clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.FIN_CONTACT_LAST_NAME">
+              {{ comp.financialContactLastName }}
+          </clr-dg-cell>-->
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.FINANCIAL_CONTACT">
+            <a *ngIf="comp.financialContactId"
+               [routerLink]="['/company/'+comp.id+'/employees/'+comp.financialContactId]">{{ {
+              title: comp.financialContactTitle,
+              firstName: comp.financialContactFirstName,
+              lastName: comp.financialContactLastName
+            } | employeeName }}</a>
+          </clr-dg-cell>
+          <clr-dg-cell *ngSwitchCase="CompanyTableHeaderFields.ACTIVE" class="text-center">
+            <ng-container *ngIf="comp.active; else nope">
+              <fa-icon [icon]="faCheck"></fa-icon>
+            </ng-container>
+          </clr-dg-cell>
+        </ng-container>
+      </ng-container>
+
+      
+
+    </clr-dg-row>
+
+    <ng-template clrIfDetail let-detail (clrIfDetailChange)="onDetailOpen($event)">
+      <clr-dg-detail>
+        <clr-dg-detail-body class="table-details-pane">
+          <h4>{{ t('company.menu.details') }}</h4>
+          <div class="clr-row">
+            <div class="clr-col-6 no-pr">
+              <p>{{ t('company.companyName') }}</p>
+              <p>{{ t('address.country') }}</p>
+              <p>{{ t('address.city') }}</p>
+              <p>{{ t('address.address') }}</p>
+              <p>{{ t('address.postCode') }}</p>
+              <p>{{ t('company.taxNumber') }}</p>
+              <p>{{ t('company.registrationNumber') }}</p>
+            </div>
+            <div class="clr-col-6 no-pl">
+              <p>{{ detail.companyName }}</p>
+              <p>{{ detail.seatAddress.country }}</p>
+              <p>{{ detail.seatAddress.city }}</p>
+              <p>{{ detail.seatAddress.streetName }} {{ detail.seatAddress.streetType }} {{ detail.seatAddress.streetNumber }}</p>
+              <p>{{ detail.seatAddress.postCode }}</p>
+              <p>{{ detail.taxNumber }}</p>
+              <p>{{ detail.registrationNumber }}</p>
+            </div>
+          </div>
+
+          <div class="clr-row">
+            <div class="clr-col-6">
+              <ng-container *ngIf="detail.companyProfiles.length">
+                <h4>{{ t('company.companyProfiles') }}</h4>
+                <p *ngFor="let profile of detail.companyProfiles">{{ t('company.profiles.' + profile) }}</p>
+              </ng-container>
+            </div>
+            <div class="clr-col-6 no-pl">
+              <ng-container *ngIf="detail.financialContactId">
+                <h4>{{ t('company.financialContact') }}</h4>
+                <p>{{details.financialContact | employeeName: true }}</p>
+                <p>{{details.financialContact.phone}}</p>
+                <p *ngIf="details.financialContact.mobile">{{details.financialContact.mobile}}</p>
+                <p>{{details.financialContact.email}}</p>
+              </ng-container>
+            </div>
+          </div>
+
+          <ng-container *ngIf="detail.premises.length">
+            <h4>{{ t('company.menu.premise') }}</h4>
+            <div class="clr-row openingDays" *ngFor="let prem of detail.premises">
+              <div class="clr-col-6 no-pr">
+                {{ prem.address.country }} - {{ prem.address.city }} - {{ prem.address.postCode }}<br>
+                {{ prem.address.streetName }} {{ prem.address.streetType }} {{ prem.address.streetNumber }}
+              </div>
+              <div class="clr-col-6 no-pl">
+                <div *ngFor="let day of prem.openingDays | defaultOrderKeyValue">
+                  <span>{{ t('daysofweek.' + $any(day.key))}}: </span> <span>{{ $any(day.value)["openFrom"]}}
+                  - {{ $any(day.value)["openTo"]}}</span>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="details?.comments.length">
+            <h4>{{ t('general.comments') }}</h4>
+            <div class="clr-row no-margin">
+              <div class="clr-col-12">
+                <app-comment-list [commentList]="details.comments"></app-comment-list>
+              </div>
+            </div>
+          </ng-container>
+
+          <div class="clr-row clr-justify-content-center">
+            <button type="button" class="btn btn-icon" (click)="edit(detail.id)">{{ t('general.modify') }}</button>
+          </div>
+        </clr-dg-detail-body>
+      </clr-dg-detail>
+    </ng-template>
+
+    <clr-dg-footer>
+      <button class="btn btn-icon btn-warning-outline btn-sm"  (click)="clearFilters()"><fa-icon [icon]="faFilter"></fa-icon> {{ t('general.deleteFilter') }}</button>  
+      <button type="button" class="btn btn-icon btn-warning-outline btn-sm" *ngIf="selectedCompanies.length >= 1"><fa-icon [icon]="faTrashAlt"></fa-icon> {{ t('general.deleteSelectedItems') }}</button>
+      <a class="csv-export" (click)="export()">{{ t('file.downloadCsv') }} <fa-icon [icon]="faDownload"></fa-icon></a>
+      <clr-dg-pagination #pagination [clrDgPageSize]="PAGE_SIZE" [clrDgTotalItems]="totalItems">
+        <clr-dg-page-size [clrPageSizeOptions]="SIZE_OPTIONS">{{ t('table.perPage') }}</clr-dg-page-size>
+        {{ pagination.firstItem + 1 }}
+        - {{ pagination.lastItem + 1 }} {{ t('table.of') }} {{ totalItems }} {{ t('table.from') }}
+      </clr-dg-pagination>
+    </clr-dg-footer>
+  </clr-datagrid>
+
+</ng-container>
+
+<ng-template #nope>
+  <fa-icon [icon]="faTimes"></fa-icon>
+</ng-template>

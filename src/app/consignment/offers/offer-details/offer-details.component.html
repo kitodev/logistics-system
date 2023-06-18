@@ -1,0 +1,29 @@
+<ng-container *transloco="let t">
+  <nav class="subnav" [clr-nav-level]="2">
+    <ul class="nav">
+      <li class="nav-item"><a [routerLink]="['../']" class="nav-link">
+        <fa-icon [icon]="faArrowLeft"></fa-icon> {{ t('consignment.menu.offersOutgoing') }}
+      </a></li>
+      <li class="nav-item"><a [routerLink]="['./basic']" class="nav-link" routerLinkActive="active">
+        <fa-icon [icon]="faTable"></fa-icon>
+        {{ t('offer.menu.basic') }}
+      </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['./consignment']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faBox"></fa-icon>
+          {{ t('offer.menu.consignment') }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['./addressee']" class="nav-link" routerLinkActive="active">
+          <fa-icon [icon]="faPeople"></fa-icon>
+          {{ t('offer.menu.addressee') }}
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="content-area">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>

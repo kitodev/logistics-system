@@ -1,0 +1,79 @@
+h3 {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.requester {
+  & > div {
+    a {
+      &.company {
+        font-size: 0.8rem;
+      }
+
+      &.employee {
+        display: inline-block;
+        font-size: 1rem;
+        padding: 1rem 2rem 0.5rem 1rem;
+      }
+    }
+  }
+}
+
+.country-code {
+  font-size: 1rem;
+}
+
+.status-cell {
+  justify-content: space-between;
+  flex-direction: column;
+  display: flex;
+}
+
+.no-control {
+  padding: 0;
+}
+
+.accepted {
+
+  td.status {
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #306b00;
+  }
+}
+
+.declined {
+  td.status {
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #c21d00;
+  }
+}
+
+.bid-control {
+  .control-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+    .inputs {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+    }
+
+    .price {
+      max-width: 6rem;
+    }
+
+    ng-select {
+      min-width: 5rem;
+      margin: 0 1rem 0 0.5rem;
+    }
+    .control {
+      display: flex;
+    }
+  }
+}

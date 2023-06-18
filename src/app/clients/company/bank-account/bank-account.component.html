@@ -1,0 +1,96 @@
+<ng-container *transloco="let t">
+    <div class="card">
+        <div class="card-header">
+            {{ t('company.bankAccount') }}
+        </div>
+        <div class="card-block">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{{ t('company.bank') }}</th>
+                        <th>{{ t('company.iban') }}</th>
+                        <th>{{ t('company.accountNumber') }}</th>
+                        <th>{{ t('company.swift') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="bankAccounts.length; else noData">
+                    <tr *ngFor="let acc of bankAccounts">
+                        <td>
+                            <span>{{ t('company.bank') }}</span>
+                            <span>{{ acc.bankName }}</span>
+                        </td>
+                        <td>
+                            <span>{{ t('company.iban') }}</span>
+                            <span>{{ acc.iban }}</span>
+                        </td>
+                        <td>
+                            <span>{{ t('company.accountNumber') }}</span>
+                            <span>{{ acc.accountNumber }}</span>
+                        </td>
+                        <td>
+                            <span>{{ t('company.swift') }}</span>
+                            <span>{{ acc.swiftCode }}</span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-icon" (click)="editAccount(acc)">
+                                <fa-icon [icon]="faEdit"></fa-icon>
+                            </button>
+                            <button type="button" class="btn btn-icon btn-warning-outline" (click)="delAccount(acc.id)">
+                                <fa-icon [icon]="faTrashAlt"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <ng-template #noData>
+                    <tbody>
+                        <tr>
+                            <td colspan="5">{{ t('general.noData') }}</td>
+                        </tr>
+                    </tbody>
+                </ng-template>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="clr-row" [formGroup]="bankAccountForm">
+                <div class="clr-col-xl-2 clr-col-md-6 clr-col-sm-12">
+                    <form-input type="text" [formGroup]="bankAccountForm" name="bankName" [label]="t('company.bank')"
+                    [required]="bankAccountForm.get('bankName').errors?.required"></form-input>
+                </div>
+                <div class="clr-col-xl-2 clr-col-md-6 clr-col-sm-12">
+                    <form-input type="text" [formGroup]="bankAccountForm" name="iban" [label]="t('company.iban')"
+                    [required]="bankAccountForm.get('iban').errors?.required"></form-input>
+                </div>
+                <div class="clr-col-xl-2 clr-col-md-6 clr-col-sm-12">
+                    <form-input type="text" [formGroup]="bankAccountForm" name="accountNumber" [label]="t('company.accountNumber')"
+                    [required]="bankAccountForm.get('accountNumber').errors?.required"></form-input>
+                </div>
+                <div class="clr-col-xl-2 clr-col-md-6 clr-col-sm-12">
+                    <form-input type="text" [formGroup]="bankAccountForm" name="swiftCode" [label]="t('company.swift')"
+                    [required]="bankAccountForm.get('swiftCode').errors?.required"></form-input>
+                </div>
+                <div class="clr-col-xl-2 clr-col-md-6 clr-col-sm-12">
+                    <!--suppress XmlInvalidId -->
+                    <div class="custom-form-input-container">
+                        <label class="clr-control-label" for="currency"
+                        [ngClass]="{'required': bankAccountForm.get('currencyIdentifier').errors?.required}">{{  t('company.currency') }}</label>
+                        <ng-select [items]="Currencies"
+                                   [formGroup]="bankAccountForm"
+                                   [searchable]="false"
+                                   bindLabel="name"
+                                   [multiple]="false"
+                                   formControlName="currencyIdentifier" labelForId="currency"></ng-select>
+                    </div>
+                  </div>
+            </div>
+
+            <div class="clr-row clr-justify-content-center" *appEmployeeRole="[Role.AGENCY_ADMIN, Role.AGENCY_FINANCIAL, Role.AGENCY_MANAGER,Role.PARTNER_MANAGER, Role.PARTNER_FREIGHT_ORGANISER];resourceCompanyId:companyId;resourceRule:ResourceRule.OWN_AND_PARTNER">
+                <button type="button" class="btn btn-primary" (click)="createAccount()" *ngIf="!isEdit">{{ t('general.addNew') }}</button>
+                <button type="button" class="btn btn-primary" (click)="updateAccount()" *ngIf="isEdit">{{ t('general.save') }}</button>
+                <button type="button" class="btn btn-outline" (click)="reset()" [disabled]="(bankAccountForm.pristine && !isEdit)">{{ t('general.cancel') }}</button>
+            </div>
+
+            <app-alert [errors]="errors" *ngIf="errors"></app-alert>
+        </div>
+    </div>
+</ng-container>

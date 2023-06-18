@@ -1,0 +1,26 @@
+.clr-row {
+    padding: 5px 0;
+}
+
+.properties {
+    display: flex;
+    justify-content: space-between;
+
+    p {
+        margin: 0;
+    }
+}
+
+.tractor {
+    margin-top: 2rem;
+}
+
+.vehicles {
+    margin-top: 0;
+}
+
+.driver {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.25rem;
+}

@@ -1,0 +1,48 @@
+.company {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.route {
+  padding-bottom: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0px 8px;
+  grid-template-areas:
+    ". ."
+    ". .";
+
+  .country {
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+}
+
+.consignments > div {
+  content: '';
+  border-top: 1px solid #d2d2d2;
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+  display: block;
+
+  &:first-of-type {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+tr {
+  &.consignment td {
+    border-top: 1px solid #aaaaaa;
+  }
+
+  &.separate td {
+    border-bottom: 1px solid #aaaaaa;
+  }
+
+  td.separate {
+    border-bottom: 1px solid #aaaaaa;
+  }
+}

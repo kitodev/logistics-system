@@ -1,0 +1,66 @@
+<ng-container *transloco="let t">
+  <div class="clr-row">
+    <div class="clr-col-12">
+      <div class="card max-card" *ngIf="consignment">
+        <div class="control">
+          <button
+            [disabled]="!(consignmentForm.dirty && consignmentForm.valid) && !(isTransshipmentDirty && isTransshipmentValid)"
+            type="button"
+            class="btn btn-primary"
+            (click)="saveConsignment()">{{ t('general.save') }}</button>
+        </div>
+        <div class="card-block locations">
+
+          <div class="loading-in" *ngIf="consignment" [formGroup]="consignmentForm">
+            <div class="location">
+              <app-location-selector [location]="consignment.consignmentBasicData.loadingInLocation"
+                                     [locationType]="LocationType.LOADING_IN"
+                                     [isNew]="false"
+                                     [showStatus]="true"
+                                     controlName="loadingInLocation"
+                                     [label]="t('consignment.loadingIn.label')"
+                                     [companies]="partners"
+                                     [parentForm]="$any(basicData)"
+                                     [consignmentId]="consignment.id"
+                                     [legs]="consignment.legs"
+                                     ></app-location-selector>
+            </div>
+          </div>
+
+          <app-locations-list [partners]="partners"
+                              [locations]="consignment.transshipmentLocations"
+                              [legs]="consignment.legs"
+                              (dirty)="onDirtyChange($event)"
+                              (valid)="onValidChange($event)"
+                              [consignmentId]="consignment.consignmentId"
+                              [consignmentVersion]="consignment.version"></app-locations-list>
+
+          <div class="loading-out" *ngIf="consignment" [formGroup]="consignmentForm">
+            <div class="location">
+              <app-location-selector [location]="consignment.consignmentBasicData.loadingOutLocation"
+                                     [locationType]="LocationType.LOADING_OUT"
+                                     [isNew]="false"
+                                     [showStatus]="true"
+                                     controlName="loadingOutLocation"
+                                     [label]="t('consignment.loadingOut.label')"
+                                     [companies]="partners"
+                                     [parentForm]="$any(consignmentForm.controls.consignmentBasicData)"
+                                     [consignmentId]="consignment.id"
+                                     [legs]="consignment.legs"
+                                     ></app-location-selector>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card" *ngIf="!consignment">
+        <div class="card-block no-consignment">
+          <fa-icon [icon]="faError"></fa-icon>
+          <br />
+          {{ t('consignment.noSavedConsignment') }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
